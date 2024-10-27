@@ -2,6 +2,8 @@ import torch
 from LSTM import LSTM
 
 def main():
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 
     print(f"Is CUDA supported by this system? {torch.cuda.is_available()}")
     print(f"CUDA version: {torch.version.cuda}")
