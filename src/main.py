@@ -1,6 +1,5 @@
-from torch import nn
-from torch.nn import functional as F
 import torch
+from LSTM import LSTM
 
 def main():
 
@@ -14,4 +13,5 @@ def main():
     print(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
 
-main()
+if __name__ == "__main__":
+    main()
