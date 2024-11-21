@@ -22,38 +22,47 @@ def main():
     LOGGER(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
     # Defining the model
-    vocab = "helo\n"
+    vocab = "heloap\n"  # Include all lowercase letters
+
     char2idx = {char: idx for idx, char in enumerate(vocab)}
     idx2char = {idx: char for idx, char in enumerate(vocab)}
     
-    text =  "hello\n"
+    text =  "hello\nhello\nhelp\nhell\nheal\n"
+    # play with the hidden size and the learning rate
+        # maybe an LR scheduler
+        # batch processing
+        # temperature
+        # Validation set
     model = RNN(1, 128, len(vocab), device).to(device)
 
-    text_idx = torch.tensor([char2idx[char] for char in text], dtype=torch.long)
-    text_idx.to(device)
+    text_idx = torch.tensor([char2idx[char] for char in text], dtype=torch.long).to(device)
 
     learning_rate = 0.0005
     criterion = nn.NLLLoss()
 
     loss = torch.Tensor([0])
 
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+
     def train(input_tensor, target_tensor):
         hidden = model.initHidden()
 
+        optimizer.zero_grad()
         model.zero_grad()
         loss = 0
 
         for i in range(input_tensor.size(0)):
             # Prepare input as a one-hot vector for each character
             input_char = input_tensor[i].view(1, -1).float().to(device)
-            
             output, hidden = model(input_char, hidden)
-            if i == target_tensor.size(0) - 1:
-                i-=1
-            target_char = target_tensor[i].view(-1).to(device)
+            
+            target_idx = (i + 1) % target_tensor.size(0)
+            target_char = target_tensor[target_idx].view(-1).to(device)
+
             l = criterion(output, target_char)
             loss += l
         loss.backward()
+        optimizer.step()
 
         return output, loss.item() / input_tensor.size(0)
 
@@ -70,7 +79,7 @@ def main():
 
     max_length = 100
     
-    def sample(start_letter = "h"):
+    def sample(start_letter = "h", temperature=0.5):
         with torch.no_grad():
             input = torch.tensor([[char2idx[start_letter]]], dtype=torch.float32).to(device)
             hidden = model.initHidden()
@@ -80,7 +89,13 @@ def main():
 
             for _ in range(max_length):
                 output, hidden = model(input, hidden)
-                topv, topi = output.topk(1)
+                # Apply temperature scaling
+                output = output.div(temperature)
+                LOGGER(output)
+                # Sample from the scaled distribution
+                output = torch.nn.functional.softmax(output, dim=1)
+                topi = torch.multinomial(output, 1)
+                LOGGER(f"topV = {output[0][topi]} topi = {topi}")
                 topi = topi[0][0].item()
                 LOGGER(f"Generated: {idx2char[topi]}")
                 if topi == char2idx['\n']:
@@ -91,7 +106,7 @@ def main():
                 input = torch.tensor([[char2idx[letter]]], dtype=torch.float32).to(device)
         return output_name
 
-    print(sample("h"))
+    print(sample("e"))
 
 
     # Loading the model
