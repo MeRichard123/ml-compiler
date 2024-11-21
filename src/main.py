@@ -2,8 +2,9 @@ import torch
 from LSTM import LSTM
 from torch import nn
 from RNN import RNN
+import config
 
-LOGGING = True
+LOGGING = config.LOGGING
 
 def LOGGER(string: str):
     if LOGGING:
@@ -106,7 +107,7 @@ def main():
                 input = torch.tensor([[char2idx[letter]]], dtype=torch.float32).to(device)
         return output_name
 
-    print(sample("e"))
+    print(sample("h"))
 
 
     # Loading the model
