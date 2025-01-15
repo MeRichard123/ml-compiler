@@ -43,7 +43,7 @@ class LanguageModel:
             self.loss += l
         self.loss.backward()
         #torch.nn.utils.clip_grad_norm(model.parameters(), args.clip)
-        nn.utils.clip_grad_norm_(self.model.parameters(), 1)
+        #nn.utils.clip_grad_norm_(self.model.parameters(), 1)
         self.optimizer.step()
 
         return output, self.loss.item() / input_tensor.size(0)
@@ -73,12 +73,6 @@ class LanguageModel:
             for _ in range(self.max_sample_length):
                 embedded_input = self.embedding(input).view(1, -1).to(self.device)
                 output, hidden = self.model(embedded_input, hidden)
-
-                '''
-                # Apply temperature scaling
-                output = output.div(temperature)
-                LOGGER(output)
-                '''
 
                 # Sample from the scaled distribution
                 output = nn.functional.softmax(output, dim=1)

@@ -67,18 +67,18 @@ def main():
 
     LM = LanguageModel(model_lstm, len(vocab), device)
     LM.init_model(text.split(), vocab)
-    LM.train_loop()
+    #LM.train_loop()
 
-    print(LM.sample("The"))
+    #print(LM.sample("The"))
     # Saving the model
-    LM.save_model("LSTM_model.pth")
+    #LM.save_model("LSTM_model.pth")
 
     # Loading the model
 
-    #LM.load_model("./trained_models/RNN_model.pth")
+    LM.load_model("./trained_models/LSTM_model.pth")
     #LM.init_model(text, vocab)
-    #test = LM.sample("h")
-    #print(test)
+    test = LM.sample("So")
+    print(test)
 
 
 if __name__ == "__main__":

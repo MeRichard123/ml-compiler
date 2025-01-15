@@ -5,21 +5,25 @@ from Utils.Logger import LOGGER
 from Architectures.RNN import RNN
 
 class LanguageModelOptuna:
-    def __init__(self, model: nn.Module, device: str):
+    def __init__(self, model: nn.Module, vocab_size: int, device: str):
         self.model = model
         self.criterion = nn.NLLLoss()
         self.loss = torch.Tensor([0]).to(device)
-        self.max_sample_length = 10
+        self.max_sample_length = 20
         self.device = device
+        self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
 
     def set_optimiser(self, lr):
         self.optimizer = torch.optim.Adam(self.model.parameters(), lr=lr)
 
 
     def init_model(self, text, vocab):
-        self.char2idx = {char: idx for idx, char in enumerate(vocab)}
-        self.idx2char = {idx: char for idx, char in enumerate(vocab)}
-        self.text_idx = torch.tensor([self.char2idx[char] for char in text], dtype=torch.long, device=self.device)
+        self.word2idx = {word: idx for idx, word in enumerate(vocab)}
+        self.idx2word = {idx: word for idx, word in enumerate(vocab)}
+        self.text_idx = torch.tensor([self.word2idx[word] for word in text], dtype=torch.long, device=self.device)
+
+    def tokenize(self, text):
+        return text.split(" ") + ["<eos>"]
 
     def __train(self, input_tensor, target_tensor):
         hidden = self.model.initHidden()
@@ -28,10 +32,12 @@ class LanguageModelOptuna:
         self.model.zero_grad()
         self.loss = 0
 
+        embedded_input = self.embedding(input_tensor.long()).to(self.device)
+
         for i in range(input_tensor.size(0)):
             # Prepare input as a one-hot vector for each character
-            input_char = input_tensor[i].view(1, -1).float().to(self.device)
-            output, hidden = self.model(input_char, hidden)
+            input_word = embedded_input[i].view(1, -1).float().to(self.device)
+            output, hidden = self.model(input_word, hidden)
             
             target_idx = (i + 1) % target_tensor.size(0)
             target_char = target_tensor[target_idx].view(-1).to(self.device)
@@ -43,7 +49,7 @@ class LanguageModelOptuna:
 
         return output, self.loss.item() / input_tensor.size(0)
     
-    def train_loop(self, n_iters=5000, learning_rate=0.0005):
+    def train_loop(self, n_iters=10000, learning_rate=0.0005):
         self.set_optimiser(learning_rate)
         total_loss = 0
         print_every = n_iters // 500
@@ -108,7 +114,7 @@ def objective(trial, model, device, text, vocab):
 
     # Define hyperparameters to tune
     learning_rate = trial.suggest_float('learning_rate', 1e-5, 1e-2, log=True)
-    n_iters = trial.suggest_int('n_iters', 1000, 10000, step=1000)
+    n_iters = trial.suggest_int('n_iters', 1000, 20000, step=1000)
 
     # Train with suggested hyperparameters
     try:
