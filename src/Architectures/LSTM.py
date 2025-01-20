@@ -16,6 +16,9 @@ class LSTM(nn.Module):
         # Defining the Fully Connected output layer - for reshaping the output to the desired output size
         self.fc = nn.Linear(hidden_size, output_size, device=device)
 
+    def __str__(self):
+        return "LSTM"
+
     def __repr__(self) -> str:
         return f"""LSTM(
             input_size={self.input_size},

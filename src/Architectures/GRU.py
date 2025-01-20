@@ -16,6 +16,9 @@ class GRU(nn.Module):
 
         self.dropout = nn.Dropout(0.1)
         self.softmax = nn.LogSoftmax(dim=1)
+    
+    def __str__(self):
+        return "GRU"
 
     def forward(self, input, hidden):
         input = input.to(self.device)

@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from Utils.Logger import LOGGER
+import matplotlib.pyplot as plt
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
@@ -52,13 +53,27 @@ class LanguageModel:
         n_iters = 10000
         total_loss = 0
         print_every = 500
+        plot_every = 250
+
+        loss_agg = []
+        iter_agg = []
 
         for iter in range(1, n_iters + 1):
             output, loss = self.__train(self.text_idx, self.text_idx) # add tensors
             total_loss += loss
 
+            if iter % plot_every == 0:
+                loss_agg.append(loss)
+                iter_agg.append(iter)
+
             if iter % print_every == 0:
                 print(f"{round(iter / n_iters * 100)}% Training, loss = {loss}%")
+
+        plt.title(f"Loss Plot {str(self.model)}")
+        plt.plot(iter_agg, loss_agg)
+        plt.xlabel("Iterations")
+        plt.ylabel("Loss")
+        plt.show()
 
 
 

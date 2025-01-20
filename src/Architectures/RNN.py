@@ -20,6 +20,9 @@ class RNN(nn.Module):
         '''
         self.softmax = nn.LogSoftmax(dim=1)
 
+    def __str__(self):
+        return "RNN"
+
     def forward(self, input, hidden):
         input_combined = torch.cat((input, hidden), 1).to(self.device)
         hidden = self.i2h(input_combined)
