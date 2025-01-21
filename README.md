@@ -2,7 +2,7 @@
 
 Project Proposal: [here](./Proposal.pdf)
 
-## Model Performanaces
+## Model Performances
 | model | inference |
 | ---- | ----- |
 | ![Standard RNN](./images/RNN_lossPlot.png) | Very noisy, but eventually learns. Could benefit from stopping sooner. |
