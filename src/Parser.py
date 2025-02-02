@@ -2,16 +2,11 @@ import torch.nn as nn
 import torch
 import enum
 
-class Keywords(enum.Enum):
-    FUNCTION = "function"
-    FOR = "for"
-    DO = "do"
-    IF = "if"
-    THEN = "then"
-    ELSEIF = "elseif"
-    ELSE = "else"
-    END = "end"
-    PRINT = "print"
+# convert this into a list of keywords, operators, symbols
+Keywords = ["function", "for", "do", "if", "then", "elseif", "else", "end", "return", "while", "repeat", "until", "break", "local", "nil", "true", "false", "and", "or", "not", "in"]
+Operators = ["+", "-", "*", "/", "%", "^", "#", "==", "~=", "<=", ">=", "<", ">", "="]
+Symbols = ["(", ")", "[", "]", "{", "}", ",", ".", "..", ";", ":", "..."]
+prompt_tokens = ['<PROGRAM END>']
 
 
 class Tokeniser:
@@ -30,6 +25,7 @@ class Tokeniser:
         token = ""
         tokens = []
         stringClosed = False
+        text = ' '.join(text.lstrip().rsptrip() for text in text.split("\n"))
 
         while self.current < len(text):
             char = text[self.current]

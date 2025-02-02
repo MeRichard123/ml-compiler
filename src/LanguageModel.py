@@ -3,7 +3,9 @@ import torch.nn as nn
 from Utils.Logger import LOGGER
 import matplotlib.pyplot as plt
 from torch.optim import Optimizer
+from torch.utils.data import DataLoader
 from typing import List 
+from Data import tokenizer
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
@@ -22,9 +24,6 @@ class LanguageModel:
         self.idx2word = {idx: word for idx, word in enumerate(vocab)}
         self.text_idx = torch.tensor([self.word2idx[word] for word in text], dtype=torch.long, device=self.device)
 
-    def tokenize(self, text: str):
-        return text.split(" ") + ["<eos>"]
-    
     def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor):
         hidden = self.model.initHidden()
 
@@ -36,7 +35,7 @@ class LanguageModel:
 
         for i in range(input_tensor.size(0)):
             # Prepare input as a one-hot vector for each word
-            input_word = embedded_input[i].view(1, -1).float().to(self.device)
+            input_word = embedded_input[:, i, :].view(1, -1).to(self.device)
             output, hidden = self.model(input_word, hidden)
 
             target_idx = (i + 1) % target_tensor.size(0)
@@ -51,9 +50,8 @@ class LanguageModel:
 
         return output, self.loss.item() / input_tensor.size(0)
     
-    def train_loop(self):
+    def train_loop(self, dataloader: DataLoader):
         n_iters = 10000
-        total_loss = 0
         print_every = 500
         plot_every = 250
 
@@ -61,15 +59,20 @@ class LanguageModel:
         iter_agg = []
 
         for iter in range(1, n_iters + 1):
-            output, loss = self.__train(self.text_idx, self.text_idx) # add tensors
-            total_loss += loss
+            total_loss = 0
+            for batch in dataloader:
+                self.input = batch[:, :-1].to(self.device)
+                self.target = batch[:, 1:].to(self.device)
 
-            if iter % plot_every == 0:
-                loss_agg.append(loss)
-                iter_agg.append(iter)
+                output, loss = self.__train(self.input, self.target) # add tensors
+                total_loss += loss
 
-            if iter % print_every == 0:
-                print(f"{round(iter / n_iters * 100)}% Training, loss = {loss}%")
+                if iter % plot_every == 0:
+                    loss_agg.append(loss)
+                    iter_agg.append(iter)
+
+                if iter % print_every == 0:
+                    print(f"Epoch {round(iter / n_iters * 100)}% Training, loss = {loss}%")
 
         plt.title(f"Loss Plot {str(self.model)}")
         plt.plot(iter_agg, loss_agg)
@@ -79,7 +82,7 @@ class LanguageModel:
 
 
 
-    def sample(self, start_word: str = "hello", temperature:float = 0.5):
+    def sample(self, start_word: str = "<PROGRAM END>", temperature:float = 0.5):
         with torch.no_grad():
             input = torch.tensor([[self.word2idx[start_word]]], dtype=torch.long).to(self.device)
             hidden = self.model.initHidden()
@@ -92,9 +95,9 @@ class LanguageModel:
                 output, hidden = self.model(embedded_input, hidden)
 
                 # Sample from the scaled distribution
-                output = nn.functional.softmax(output, dim=1)
-                output = output.div(temperature)
+                output = nn.functional.softmax(output / temperature, dim=1)
                 topi = torch.multinomial(output, 1)
+
                 LOGGER(f"topV = {output[0][topi]} topi = {topi}")
                 topi = topi[0][0].item()
 
