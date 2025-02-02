@@ -2,28 +2,30 @@ import torch
 import torch.nn as nn
 from Utils.Logger import LOGGER
 import matplotlib.pyplot as plt
+from torch.optim import Optimizer
+from typing import List 
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
-        self.model = model
-        self.learning_rate = 0.0006
-        self.criterion = nn.NLLLoss()  #  negative log likelihood loss
-        self.loss = torch.Tensor([0]).to(device)
-        self.optimizer = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
-        self.max_sample_length = 20
-        self.device = device
+        self.model: nn.Module        = model
+        self.learning_rate: float   = 0.0006
+        self.criterion: nn.Module   = nn.NLLLoss()  #  negative log likelihood loss
+        self.loss: torch.Tensor     = torch.Tensor([0]).to(device)
+        self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
+        self.max_sample_length: int = 20
+        self.device: str            = device
 
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
 
-    def init_model(self, text, vocab):
+    def init_model(self, text: str, vocab: List[str]):
         self.word2idx = {word: idx for idx, word in enumerate(vocab)}
         self.idx2word = {idx: word for idx, word in enumerate(vocab)}
         self.text_idx = torch.tensor([self.word2idx[word] for word in text], dtype=torch.long, device=self.device)
 
-    def tokenize(self, text):
+    def tokenize(self, text: str):
         return text.split(" ") + ["<eos>"]
     
-    def __train(self, input_tensor, target_tensor):
+    def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor):
         hidden = self.model.initHidden()
 
         self.optimizer.zero_grad()
@@ -77,7 +79,7 @@ class LanguageModel:
 
 
 
-    def sample(self, start_word = "hello", temperature=0.5):
+    def sample(self, start_word: str = "hello", temperature:float = 0.5):
         with torch.no_grad():
             input = torch.tensor([[self.word2idx[start_word]]], dtype=torch.long).to(self.device)
             hidden = self.model.initHidden()
@@ -105,10 +107,10 @@ class LanguageModel:
                 input = torch.tensor([[topi]], dtype=torch.long).to(self.device)
         return output_text
 
-    def save_model(self, path):
+    def save_model(self, path: str):
         torch.save(self.model.state_dict(), path)
 
-    def load_model(self, path):
+    def load_model(self, path: str):
         self.model.load_state_dict(torch.load(path, weights_only=True))
         self.model.eval()
         self.model.to(self.device)

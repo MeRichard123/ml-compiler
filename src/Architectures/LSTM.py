@@ -3,18 +3,20 @@ import torch
 from torch.nn import functional as F
 
 class LSTM(nn.Module):
-    def __init__(self, embedding_dim, hidden_size, num_layers, output_size, device = 'cpu'):
+    def __init__(self, embedding_dim: int, hidden_size: int, 
+                 num_layers: int, output_size: int, device: str = 'cpu'):
         super(LSTM, self).__init__()
-        self.embedding_dim = embedding_dim
-        self.hidden_size = hidden_size
-        self.num_layers = num_layers
-        self.output_size = output_size
-        self.device = device
+        self.embedding_dim: int   = embedding_dim
+        self.hidden_size: int     = hidden_size
+        self.num_layers: int      = num_layers
+        self.output_size: int     = output_size
+        self.device: str          = device
 
         # Defining the LSTM layer
         self.lstm = nn.LSTM(self.embedding_dim, hidden_size, num_layers, batch_first=True, device=device)
         # Defining the Fully Connected output layer - for reshaping the output to the desired output size
         self.fc = nn.Linear(hidden_size, output_size, device=device)
+        self.softmax = nn.LogSoftmax(dim=1)
 
     def __str__(self):
         return "LSTM"
@@ -34,7 +36,7 @@ class LSTM(nn.Module):
         out, hidden = self.lstm(input, hidden)
         out = self.fc(out)
         # log softmax
-        out = F.log_softmax(out, dim=1)
+        out = self.softmax(out, dim=1)
         return out, hidden
     
     def initHidden(self):

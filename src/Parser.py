@@ -1,5 +1,18 @@
 import torch.nn as nn
 import torch
+import enum
+
+class Keywords(enum.Enum):
+    FUNCTION = "function"
+    FOR = "for"
+    DO = "do"
+    IF = "if"
+    THEN = "then"
+    ELSEIF = "elseif"
+    ELSE = "else"
+    END = "end"
+    PRINT = "print"
+
 
 class Tokeniser:
     def __init__(self):
@@ -69,10 +82,27 @@ class Tokeniser:
     
 
 if __name__ == "__main__":
-    text = "print('Hello, World!')"
+    text = """
+function fizzbuzz(n)
+    for i = 1, n do
+        if i % 3 == 0 and i % 5 == 0 then
+            print("FizzBuzz") 
+        elseif i % 3 == 0 then
+            print("Fizz")     
+        elseif i % 5 == 0 then
+            print("Buzz")     
+        else
+            print(i)        
+        end
+    end
+end
+fizzbuzz(100)
+    """
     tokeniser = Tokeniser()
     tokens = tokeniser.tokenise_code(text)
     t_to_i = tokeniser.tokens_to_index(tokens)
+
+    print(tokens)
 
     indices = []
     for token in tokens:
