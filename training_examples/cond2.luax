@@ -1,0 +1,11 @@
+a = 1
+b = 5
+if a < b then
+    print("a is less than b")
+else    
+    print("a is not less than b")
+end
+
+<PROGRAM END>
+
+a is less than b

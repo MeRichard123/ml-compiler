@@ -1,0 +1,5 @@
+str = "hello"
+print(string.upper(str))
+<PROGRAM END>
+
+HELLO

@@ -1,0 +1,5 @@
+person = {name = "John", age = 30}
+print(person.name)
+<PROGRAM END>
+
+John
