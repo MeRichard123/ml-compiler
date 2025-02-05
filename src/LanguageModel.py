@@ -1,11 +1,10 @@
 import torch
 import torch.nn as nn
-from Utils.Logger import LOGGER
+from Utils.Logger import LOGGER, SHAPE_LOG
 import matplotlib.pyplot as plt
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from typing import List 
-from Data import tokenizer
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
@@ -19,33 +18,60 @@ class LanguageModel:
 
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
 
-    def init_model(self, text: str, vocab: List[str]):
-        self.word2idx = {word: idx for idx, word in enumerate(vocab)}
-        self.idx2word = {idx: word for idx, word in enumerate(vocab)}
-        self.text_idx = torch.tensor([self.word2idx[word] for word in text], dtype=torch.long, device=self.device)
+    def init_model(self, dataset):
+        """Initialize the model with vocabulary from the dataset."""
+        self.vocab = dataset.build_vocab()
+
+        self.word2idx = self.vocab["word2idx"]
+        self.idx2word = self.vocab["idx2word"]
+
+        # Collect all tokenized text from dataset
+        all_indices = []
+        for i in range(len(dataset)):
+            indexed_text = dataset[i].tolist()  # Convert tensor to list
+            all_indices.extend(indexed_text)
+
+        # Convert all tokens to a tensor
+        self.text_idx = torch.tensor(all_indices, dtype=torch.long, device=self.device)
+
+        print(f"Vocabulary Size: {len(self.word2idx)}")
+        print(f"Sample Indexed Text: {self.text_idx[:10]}")  # Display first few indices
 
     def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor):
-        hidden = self.model.initHidden()
+        # input_tensor: (batch_size, seq_length)
+        # target_tensor:(batch_size, seq_length)
+
+        batch_size = input_tensor.size(0)
+        hidden = self.model.initHidden(batch_size)
 
         self.optimizer.zero_grad()
         self.model.zero_grad()
         self.loss = 0
 
+        # [batch_size, seq_length, embedding_dim]
         embedded_input = self.embedding(input_tensor.long()).to(self.device)
 
-        for i in range(input_tensor.size(0)):
+        # iterate over seq_length
+        for i in range(input_tensor.size(1) - 1):
             # Prepare input as a one-hot vector for each word
-            input_word = embedded_input[:, i, :].view(1, -1).to(self.device)
+            input_word = embedded_input[:, i, :].unsqueeze(1) # [batch_size, 1, embedding_dim]
+
+            # SHAPE_LOG("LM.__TRAIN() INPUT SIZE", input_word)
+            # SHAPE_LOG("LM.__TRAIN() HIDDEN SIZE", hidden)
+
             output, hidden = self.model(input_word, hidden)
 
-            target_idx = (i + 1) % target_tensor.size(0)
-            target_word = target_tensor[target_idx].view(-1).to(self.device)
+            target_idx = (i + 1) 
+            #% target_tensor.size(0)
+            # SHAPE_LOG("LM.__TRAIN() Target Word", target_tensor)
+            target_word = target_tensor[:, target_idx].to(self.device)
+            # SHAPE_LOG("LM.__TRAIN() Target Size", target_tensor)
+            # SHAPE_LOG("LM.__TRAIN() Output Size", output)
 
-            l = self.criterion(output, target_word)
+            l = self.criterion(output.squeeze(1), target_word)
+            # print("Loss from __train %d", l)
             self.loss += l
         self.loss.backward()
-        #torch.nn.utils.clip_grad_norm(model.parameters(), args.clip)
-        #nn.utils.clip_grad_norm_(self.model.parameters(), 1)
         self.optimizer.step()
 
         return output, self.loss.item() / input_tensor.size(0)
@@ -60,19 +86,24 @@ class LanguageModel:
 
         for iter in range(1, n_iters + 1):
             total_loss = 0
+            num_batches = 0
             for batch in dataloader:
                 self.input = batch[:, :-1].to(self.device)
                 self.target = batch[:, 1:].to(self.device)
 
+
                 output, loss = self.__train(self.input, self.target) # add tensors
                 total_loss += loss
+                num_batches += 1
 
-                if iter % plot_every == 0:
-                    loss_agg.append(loss)
-                    iter_agg.append(iter)
+            avg_loss = total_loss / num_batches
 
-                if iter % print_every == 0:
-                    print(f"Epoch {round(iter / n_iters * 100)}% Training, loss = {loss}%")
+            if iter % plot_every == 0:
+                loss_agg.append(avg_loss)
+                iter_agg.append(iter)
+
+            if iter % print_every == 0:
+                print(f"Epoch {round(iter / n_iters * 100)}% Training, loss = {avg_loss}%")
 
         plt.title(f"Loss Plot {str(self.model)}")
         plt.plot(iter_agg, loss_agg)
@@ -82,20 +113,25 @@ class LanguageModel:
 
 
 
-    def sample(self, start_word: str = "<PROGRAM END>", temperature:float = 0.5):
+    def sample(self, prompt: str, temperature:float = 0.5):
+        prompt += " <PROGRAM END>"
         with torch.no_grad():
-            input = torch.tensor([[self.word2idx[start_word]]], dtype=torch.long).to(self.device)
+            # Split prompt into words and convert to indices
+            prompt_words = prompt.split()
+            input_indices = [self.word2idx[word] for word in prompt_words]
+            input = torch.tensor([input_indices], dtype=torch.long).to(self.device)
             hidden = self.model.initHidden()
 
-            output_text = start_word
-            LOGGER(f"Starting with: {output_text}")
+            # Process the entire prompt sequence first
+            embedded_input = self.embedding(input).to(self.device)
+            output, hidden = self.model(embedded_input, hidden)
+
+            output_text = prompt
+            LOGGER(f"Starting with prompt: {output_text}")
 
             for _ in range(self.max_sample_length):
-                embedded_input = self.embedding(input).view(1, -1).to(self.device)
-                output, hidden = self.model(embedded_input, hidden)
-
-                # Sample from the scaled distribution
-                output = nn.functional.softmax(output / temperature, dim=1)
+                # Use last output for next prediction
+                output = nn.functional.softmax(output[:,-1,:] / temperature, dim=1)
                 topi = torch.multinomial(output, 1)
 
                 LOGGER(f"topV = {output[0][topi]} topi = {topi}")
@@ -107,7 +143,12 @@ class LanguageModel:
                     break
                 else:
                     output_text += (' ' + next_word)
+
+                # Prepare input for next iteration
                 input = torch.tensor([[topi]], dtype=torch.long).to(self.device)
+                embedded_input = self.embedding(input).to(self.device)
+                output, hidden = self.model(embedded_input, hidden)
+
         return output_text
 
     def save_model(self, path: str):

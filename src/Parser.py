@@ -25,7 +25,7 @@ class Tokeniser:
         token = ""
         tokens = []
         stringClosed = False
-        text = ' '.join(text.lstrip().rsptrip() for text in text.split("\n"))
+        text = ' '.join(text.lstrip().rstrip() for text in text.split("\n"))
 
         while self.current < len(text):
             char = text[self.current]
@@ -75,7 +75,20 @@ class Tokeniser:
                 if token not in indices:
                     indices[token] = len(indices)
         return indices
-    
+
+def tokenizer(text):
+    tokeniser = Tokeniser()
+    tokens = tokeniser.tokenise_code(text)
+    t_to_i = tokeniser.tokens_to_index(tokens)
+
+    indices = []
+    for token in tokens:
+        if isinstance(token, list):
+            indices.extend([t_to_i[t] for t in token])
+        else:
+            indices.append(t_to_i[token])
+
+    return indices, t_to_i
 
 if __name__ == "__main__":
     text = """

@@ -26,25 +26,21 @@ def main():
 
     # Load the Data
     code_dataset = CodeDataset()
+
     batch_size = len(code_dataset) // 9
     trainset, testset = code_dataset.train_test_split()
 
     train_dataloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
     test_dataloader = DataLoader(testset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn)
 
-    text = """
-    print("Hello World")
-
-    <PROGRAM END>
-
-    Hello World
-    """
+    # print the shape of each batch
+    for i, batch in enumerate(train_dataloader):
+        print(f"Batch {i} shape: {batch.shape}")
 
 
-    text = text.split(" ") + ["<eos>"]
-    vocab = list(set(text))  
 
-    print(vocab)
+    vocab = code_dataset.build_vocab()["vocab"]
+
     # play with the hidden size and the learning rate
         # maybe an LR scheduler
         # batch processing
@@ -54,7 +50,7 @@ def main():
 
     model = RNN(10, 100, len(vocab), device).to(device)
     # The of of then and The Rabbit having she twice to and it of the for Oh and into or nor
-    model_gru = GRU(10, 100, len(vocab), device).to(device)
+    model_gru = GRU(10, batch_size, 100, len(vocab), device).to(device)
     # The dear I shall be worth getting a was and look that she to was had once of day after and
 
     model_lstm = LSTM(10, 100, 10, len(vocab), device).to(device)
@@ -62,18 +58,19 @@ def main():
 
 
     LM = LanguageModel(model_gru, len(vocab), device)
-    LM.init_model(text, vocab)
-    LM.train_loop()
+    # LM.init_model(code_dataset)
+    # LM.train_loop(train_dataloader)
 
-    print(LM.sample())
+    # print(LM.sample("print('Oliver')"))
     # Saving the model
     #LM.save_model("LSTM_model.pth")
 
     # Loading the model
 
-    #LM.load_model("./trained_models/LSTM_model.pth")
-    #LM.init_model(text, vocab)
+    LM.load_model("./trained_models/GRU_model.pth")
+    LM.init_model(code_dataset)
     #test = LM.sample("So")
+    print(LM.sample("print('Oliver')"))
     #print(test)
 
 

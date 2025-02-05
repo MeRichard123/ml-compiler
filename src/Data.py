@@ -2,25 +2,14 @@ import torch
 from torch.utils.data import Dataset, random_split
 from torch.nn.utils.rnn import pad_sequence
 import os
-from Parser import Tokeniser
+from Parser import tokenizer
 from torch import nn
 
-def tokenizer(text):
-    tokeniser = Tokeniser()
-    tokens = tokeniser.tokenise_code(text)
-    t_to_i = tokeniser.tokens_to_index(tokens)
-
-    indices = []
-    for token in tokens:
-        if isinstance(token, list):
-            indices.extend([t_to_i[t] for t in token])
-        else:
-            indices.append(t_to_i[token])
-
-    return indices, t_to_i
-
 def collate_fn(batch):
-    return pad_sequence(batch, batch_first=True)
+    batch = sorted(batch, key=lambda x: len(x), reverse=True)
+    lengths = torch.tensor([len(seq) for seq in batch])
+    padded_batch = pad_sequence(batch, batch_first=True)
+    return padded_batch
 
 class CodeDataset(Dataset):
     def __init__(self, curricum_num=1):
@@ -36,7 +25,7 @@ class CodeDataset(Dataset):
                 text = f.read()
                 tokens = self.tokenizer(text)[1].keys()
                 vocab.update(tokens)
-        vocab = ["<pad>", "<eos>"] + list(vocab)
+        vocab = ["<pad>", "<eos>", "<PROGRAM END>"] + list(vocab)
 
         word2idx = {word: idx for idx, word in enumerate(vocab)}
         idx2word = {idx: word for idx, word in enumerate(vocab)}
