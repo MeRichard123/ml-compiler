@@ -37,8 +37,6 @@ def main():
     for i, batch in enumerate(train_dataloader):
         print(f"Batch {i} shape: {batch.shape}")
 
-
-
     vocab = code_dataset.build_vocab()["vocab"]
 
     # play with the hidden size and the learning rate
@@ -48,9 +46,9 @@ def main():
         # Validation set
         # BPE
 
-    model = RNN(10, 100, len(vocab), device).to(device)
+    model = RNN(0, 100, len(vocab), device).to(device)
     # The of of then and The Rabbit having she twice to and it of the for Oh and into or nor
-    model_gru = GRU(10, batch_size, 100, len(vocab), device).to(device)
+    model_gru = GRU(50, batch_size, 300, len(vocab), device).to(device)
     # The dear I shall be worth getting a was and look that she to was had once of day after and
 
     model_lstm = LSTM(10, 100, 10, len(vocab), device).to(device)
@@ -58,19 +56,19 @@ def main():
 
 
     LM = LanguageModel(model_gru, len(vocab), device)
-    # LM.init_model(code_dataset)
-    # LM.train_loop(train_dataloader)
+    LM.init_model(code_dataset)
+    LM.train_loop(train_dataloader)
 
     # print(LM.sample("print('Oliver')"))
     # Saving the model
-    #LM.save_model("LSTM_model.pth")
+    LM.save_model("GRU_model.pth")
 
     # Loading the model
 
-    LM.load_model("./trained_models/GRU_model.pth")
-    LM.init_model(code_dataset)
+    #LM.load_model("./trained_models/GRU_model.pth")
+    #LM.init_model(code_dataset)
     #test = LM.sample("So")
-    print(LM.sample("print('Oliver')"))
+    print(LM.sample('print("Hello")'))
     #print(test)
 
 

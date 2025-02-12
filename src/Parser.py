@@ -1,27 +1,25 @@
 import torch.nn as nn
 import torch
-import enum
+import string
 
-# convert this into a list of keywords, operators, symbols
 Keywords = ["function", "for", "do", "if", "then", "elseif", "else", "end", "return", "while", "repeat", "until", "break", "local", "nil", "true", "false", "and", "or", "not", "in"]
 Operators = ["+", "-", "*", "/", "%", "^", "#", "==", "~=", "<=", ">=", "<", ">", "="]
 Symbols = ["(", ")", "[", "]", "{", "}", ",", ".", "..", ";", ":", "..."]
-prompt_tokens = ['<PROGRAM END>']
+prompt_tokens = ['<PROGRAM END>', '<eos>']
 
 
 class Tokeniser:
     def __init__(self):
         self.current = 0
 
-    def tokenise_word(self, text):
+    def tokenise_string(self, text):
         quotes = ['"', "'"]
         for quote in quotes:
             if quote in text:
                 text = text.replace(quote, "")
-        return text.split(" ")
+        return ' '.join(text.split(" "))
     
     def tokenise_code(self, text):
-        symbols = '()[]{}.,'
         token = ""
         tokens = []
         stringClosed = False
@@ -31,29 +29,49 @@ class Tokeniser:
             char = text[self.current]
             self.current += 1
 
-            if char in ['"', "'"] and not stringClosed:
+            if char == "<":
+                token_end = char
+                for c in self.advance_until(text, ">"):
+                    token_end += c
+                token_end += ">"
+                if token_end in prompt_tokens:
+                    tokens.append(token_end)
+            
+            elif char in string.ascii_letters:
+                token_variable = char
+                for c in self.advance_until(text, ['(', ')', " "]):
+                    token_variable += c
+                tokens.append(token_variable)
+                
+            elif char in ['"', "'"] and not stringClosed:
                 token = ""
                 endSymbol = char
                 token += char
 
-                for c in self.adance_until(text, endSymbol):
+                for c in self.advance_until(text, endSymbol):
                     token += c
                 token += endSymbol
-                tokens.append(self.tokenise_word(token))
+                tokens.append(self.tokenise_string(token))
                 token = ""
                 stringClosed = True
 
-            elif char in symbols:
-                if token != "''":
-                    tokens.append(token)
-                tokens.append(char)
-                token = ""
+            elif char in list(map(lambda op: op[0], Operators)):
+                pass
+            
+            elif char in Symbols:
+                pass
             
             token += char
         return tokens
 
-    def adance_until(self, text, endSymbol):
+    def advance_until(self, text, endSymbol):
         while self.current < len(text) and text[self.current] != endSymbol:
+            yield text[self.current]
+            self.current += 1
+        else:
+            return None
+    def advance_until(self, text, endSymbols):
+        while self.current < len(text) and text[self.current] not in endSymbols:
             yield text[self.current]
             self.current += 1
 
@@ -106,6 +124,9 @@ function fizzbuzz(n)
     end
 end
 fizzbuzz(100)
+<PROGRAM END>
+45
+<eos>
     """
     tokeniser = Tokeniser()
     tokens = tokeniser.tokenise_code(text)

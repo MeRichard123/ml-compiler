@@ -3,11 +3,9 @@ from torch.utils.data import Dataset, random_split
 from torch.nn.utils.rnn import pad_sequence
 import os
 from Parser import tokenizer
-from torch import nn
 
 def collate_fn(batch):
     batch = sorted(batch, key=lambda x: len(x), reverse=True)
-    lengths = torch.tensor([len(seq) for seq in batch])
     padded_batch = pad_sequence(batch, batch_first=True)
     return padded_batch
 
@@ -25,7 +23,7 @@ class CodeDataset(Dataset):
                 text = f.read()
                 tokens = self.tokenizer(text)[1].keys()
                 vocab.update(tokens)
-        vocab = ["<pad>", "<eos>", "<PROGRAM END>"] + list(vocab)
+        vocab = ["<eos>", "<PROGRAM END>", "<unk>"] + list(vocab)
 
         word2idx = {word: idx for idx, word in enumerate(vocab)}
         idx2word = {idx: word for idx, word in enumerate(vocab)}
@@ -49,6 +47,7 @@ class CodeDataset(Dataset):
         data_path = os.path.join(self.data_dir, self.data[index])
         with open(data_path, "r") as f:
             text = f.read()
+            text += "\n <eos>"
 
         indices, _ = self.tokenizer(text)
         return torch.tensor(indices, dtype=torch.long)

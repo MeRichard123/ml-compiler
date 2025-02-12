@@ -28,8 +28,10 @@ class GRU(nn.Module):
 
         # print(f"INPUT SHAPE GRU.forward(): {input.shape}")
         # print(f"HIDDEN SHAPE GRU.forward(): {hidden.shape}")
-            
+
+
         out, hidden = self.gru(input, hidden)
+            
         out = self.fc(out)
         out = self.dropout(out)
 

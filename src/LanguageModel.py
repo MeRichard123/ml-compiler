@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from typing import List 
+from Parser import tokenizer
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
@@ -15,7 +16,7 @@ class LanguageModel:
         self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.max_sample_length: int = 20
         self.device: str            = device
-
+        
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
 
     def init_model(self, dataset):
@@ -40,7 +41,7 @@ class LanguageModel:
     def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor):
         # input_tensor: (batch_size, seq_length)
         # target_tensor:(batch_size, seq_length)
-
+    
         batch_size = input_tensor.size(0)
         hidden = self.model.initHidden(batch_size)
 
@@ -56,18 +57,21 @@ class LanguageModel:
             # Prepare input as a one-hot vector for each word
             input_word = embedded_input[:, i, :].unsqueeze(1) # [batch_size, 1, embedding_dim]
 
-            # SHAPE_LOG("LM.__TRAIN() INPUT SIZE", input_word)
-            # SHAPE_LOG("LM.__TRAIN() HIDDEN SIZE", hidden)
+            SHAPE_LOG("LM.__TRAIN() INPUT SIZE", input_word)
+            SHAPE_LOG("LM.__TRAIN() HIDDEN SIZE", hidden)
 
+            # output (batch_size, seq_length, vocab_size)
+            # hidden (batch_size, seq_length, hidden_size)
             output, hidden = self.model(input_word, hidden)
 
             target_idx = (i + 1) 
             #% target_tensor.size(0)
-            # SHAPE_LOG("LM.__TRAIN() Target Word", target_tensor)
+            SHAPE_LOG("LM.__TRAIN() Target Tensor", target_tensor)
             target_word = target_tensor[:, target_idx].to(self.device)
-            # SHAPE_LOG("LM.__TRAIN() Target Size", target_tensor)
-            # SHAPE_LOG("LM.__TRAIN() Output Size", output)
+            SHAPE_LOG("LM.__TRAIN() Target Word", target_word)
+            SHAPE_LOG("LM.__TRAIN() Output Size", output)
 
+            # (N, vocab_size) (N)
             l = self.criterion(output.squeeze(1), target_word)
             # print("Loss from __train %d", l)
             self.loss += l
@@ -87,11 +91,13 @@ class LanguageModel:
         for iter in range(1, n_iters + 1):
             total_loss = 0
             num_batches = 0
+
             for batch in dataloader:
+                # (N, L-1) 
                 self.input = batch[:, :-1].to(self.device)
                 self.target = batch[:, 1:].to(self.device)
 
-
+                # (batch_size, seq_length, vocab_size), Scalar
                 output, loss = self.__train(self.input, self.target) # add tensors
                 total_loss += loss
                 num_batches += 1
@@ -113,11 +119,15 @@ class LanguageModel:
 
 
 
-    def sample(self, prompt: str, temperature:float = 0.5):
+    def sample(self, prompt: str = " ", temperature:float = 0.5):
         prompt += " <PROGRAM END>"
         with torch.no_grad():
             # Split prompt into words and convert to indices
-            prompt_words = prompt.split()
+            prompt_words = tokenizer(prompt)[1]
+
+            prompt_words = ["<unk>" if w not in self.vocab["vocab"] else w for w in prompt_words]
+            print(prompt_words)
+            
             input_indices = [self.word2idx[word] for word in prompt_words]
             input = torch.tensor([input_indices], dtype=torch.long).to(self.device)
             hidden = self.model.initHidden()
