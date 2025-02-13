@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
 from typing import List 
+from tqdm import tqdm
 from Parser import tokenizer
 
 class LanguageModel:
@@ -81,14 +82,16 @@ class LanguageModel:
         return output, self.loss.item() / input_tensor.size(0)
     
     def train_loop(self, dataloader: DataLoader):
-        n_iters = 10000
+        n_iters = 15000
         print_every = 500
         plot_every = 250
+
+        # {'learning_rate': 1.4515934828819934e-05, 'n_iters': 15000, 'input_layers': 50, 'hidden_layers': 300}
 
         loss_agg = []
         iter_agg = []
 
-        for iter in range(1, n_iters + 1):
+        for iter in tqdm(range(1, n_iters + 1), desc="Training Loop"):
             total_loss = 0
             num_batches = 0
 

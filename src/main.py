@@ -27,7 +27,7 @@ def main():
     # Load the Data
     code_dataset = CodeDataset()
 
-    batch_size = len(code_dataset) // 9
+    batch_size = len(code_dataset) // 3
     trainset, testset = code_dataset.train_test_split()
 
     train_dataloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
