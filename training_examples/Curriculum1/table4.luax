@@ -3,5 +3,5 @@ person.age = 31
 print(person.age)
 
 <PROGRAM END>
-
 31
+<eos>

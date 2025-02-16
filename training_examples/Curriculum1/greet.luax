@@ -2,5 +2,5 @@ greeting = "Hello"
 name = "World"
 print(greeting .. ", " .. name)
 <PROGRAM END>
-
 Hello, World
+<eos>

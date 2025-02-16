@@ -1,5 +1,5 @@
 name = "Lua"
 print("Hello, " .. name)
 <PROGRAM END>
-
 Hello, Lua
+<eos>

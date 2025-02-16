@@ -4,5 +4,5 @@ for i = 1, 3 do
 end
 print(sum)
 <PROGRAM END>
-
 6
+<eos>

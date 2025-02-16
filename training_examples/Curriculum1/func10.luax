@@ -3,5 +3,5 @@ function print_sum(x, y)
 end
 print_sum(2, 3)
 <PROGRAM END>
-
 5
+<eos>

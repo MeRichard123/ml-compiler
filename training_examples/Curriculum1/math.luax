@@ -3,5 +3,5 @@ a = 1
 c = a + b
 print(c)
 <PROGRAM END>
-
 3
+<eos>

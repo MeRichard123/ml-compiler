@@ -7,5 +7,5 @@ function absolute_value(n)
 end
 print(absolute_value(-5))
 <PROGRAM END>
-
 5
+<eos>

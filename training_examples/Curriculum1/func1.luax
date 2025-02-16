@@ -3,5 +3,5 @@ function say_hello()
 end
 say_hello()
 <PROGRAM END>
-
 Hello
+<eos>

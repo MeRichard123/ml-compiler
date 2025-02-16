@@ -73,7 +73,7 @@ class LanguageModel:
             SHAPE_LOG("LM.__TRAIN() Output Size", output)
 
             # (N, vocab_size) (N)
-            l = self.criterion(output.squeeze(1), target_word)
+            l = self.criterion(output[:, -1, :], target_word)
             # print("Loss from __train %d", l)
             self.loss += l
         self.loss.backward()
@@ -137,12 +137,17 @@ class LanguageModel:
 
             # Process the entire prompt sequence first
             embedded_input = self.embedding(input).to(self.device)
-            output, hidden = self.model(embedded_input, hidden)
+
+                    # Process one token at a time to match training
+            for i in range(embedded_input.size(1)):
+                curr_input = embedded_input[:, i:i+1, :]  # [1, 1, embedding_dim]
+                output, hidden = self.model(curr_input, hidden)
 
             output_text = prompt
             LOGGER(f"Starting with prompt: {output_text}")
+            next_word = None
 
-            for _ in range(self.max_sample_length):
+            while next_word != '<eos>':
                 # Use last output for next prediction
                 output = nn.functional.softmax(output[:,-1,:] / temperature, dim=1)
                 topi = torch.multinomial(output, 1)

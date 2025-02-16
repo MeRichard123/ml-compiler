@@ -4,6 +4,8 @@ from torch.utils.data import DataLoader
 from Architectures.LSTM import LSTM
 from Architectures.RNN import RNN
 from Architectures.GRU import GRU
+from Architectures.minGRU import minGRU
+from Architectures.minLSTM import minLSTM
 
 from Utils.Logger import LOGGER
 from LanguageModel import LanguageModel
@@ -50,25 +52,28 @@ def main():
     # The of of then and The Rabbit having she twice to and it of the for Oh and into or nor
     model_gru = GRU(50, batch_size, 300, len(vocab), device).to(device)
     # The dear I shall be worth getting a was and look that she to was had once of day after and
+    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device).to(device)
+    model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device).to(device)
 
     model_lstm = LSTM(10, 100, 10, len(vocab), device).to(device)
     # The was beginning to get very tired of sitting by her sister the on to and having having nothing do once
 
 
-    LM = LanguageModel(model_gru, len(vocab), device)
-    LM.init_model(code_dataset)
-    LM.train_loop(train_dataloader)
+    LM = LanguageModel(model_minLSTM, len(vocab), device)
+    #LM.init_model(code_dataset)
+    #LM.train_loop(train_dataloader)
 
     # print(LM.sample("print('Oliver')"))
     # Saving the model
-    LM.save_model("GRU_model.pth")
+    
+    #LM.save_model("minLSTM_model.pth")
 
     # Loading the model
 
-    #LM.load_model("./trained_models/GRU_model.pth")
-    #LM.init_model(code_dataset)
+    LM.load_model("./trained_models/minLSTM_model.pth")
+    LM.init_model(code_dataset)
     #test = LM.sample("So")
-    print(LM.sample('print("Hello")'))
+    print(LM.sample('print("Hello World")'))
     #print(test)
 
 

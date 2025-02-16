@@ -1,2 +1,2 @@
-LOGGING = False 
-SHAPE_LOG = False
+LOGGING = not True 
+SHAPE_LOG = not True

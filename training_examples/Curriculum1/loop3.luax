@@ -4,5 +4,5 @@ while i <= 5 do
     i = i + 1
 end
 <PROGRAM END>
-
 1
+<eos>

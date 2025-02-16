@@ -4,5 +4,5 @@ repeat
     print(counter)
 until counter == 3
 <PROGRAM END>
-
 1
+<eos>

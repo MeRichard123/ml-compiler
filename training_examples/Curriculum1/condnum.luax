@@ -6,5 +6,5 @@ elseif x == 15 then
     print("x is 15")
 end
 <PROGRAM END>
-
 x is 15
+<eos>

@@ -3,7 +3,6 @@ repeat
     print(a)
     a = a + 1
 until a == 5
-
 <PROGRAM END>
-
 1
+<eos>

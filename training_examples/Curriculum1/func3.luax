@@ -3,5 +3,5 @@ function square(x)
 end
 print(square(5))
 <PROGRAM END>
-
 25
+<eos>
