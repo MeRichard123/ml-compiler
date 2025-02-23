@@ -14,10 +14,16 @@ def parallel_scan_log(log_coeffs: torch.Tensor, log_values: torch.Tensor):
     hidden_size = log_coeffs.size(-1)
     log_values = log_values.split(hidden_size, dim=-1)[0]  # Take first half
 
+    SHAPE_LOG("After Split, log_values shapes", log_values)
+    SHAPE_LOG("Log Coeffs", log_coeffs)
+
     a_star = F.pad(
         torch.cumsum(log_coeffs, dim=1),
         (0, 0, 1, 0)
     )
+
+    SHAPE_LOG("a_star", a_star)
+
     log_h0_plus_b_star = torch.logcumsumexp(log_values - a_star, dim=1)
     log_h = a_star + log_h0_plus_b_star
     return torch.exp(log_h)[:, 1:]

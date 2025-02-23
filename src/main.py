@@ -33,7 +33,7 @@ def main():
     trainset, testset = code_dataset.train_test_split()
 
     train_dataloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
-    test_dataloader = DataLoader(testset, batch_size=batch_size, shuffle=False, collate_fn=collate_fn)
+    test_dataloader = DataLoader(testset, batch_size=1, shuffle=False, collate_fn=collate_fn)
 
     # print the shape of each batch
     for i, batch in enumerate(train_dataloader):
@@ -73,9 +73,15 @@ def main():
     LM.load_model("./trained_models/minLSTM_model.pth")
     LM.init_model(code_dataset)
     #test = LM.sample("So")
-    print(LM.sample('print("Hello World")'))
+    #print(LM.sample('print("Hello World")'))
     #print(test)
 
+    for prompt in testset.dataset.get_prompts():
+        print(prompt)
+        idx = prompt.index("<PROGRAM END>")
+        prompt = ' '.join(prompt[0: idx])
+        print(LM.sample(prompt))
+        print("\n\n\n")
 
 if __name__ == "__main__":
     main()

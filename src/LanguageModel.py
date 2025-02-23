@@ -122,7 +122,7 @@ class LanguageModel:
 
 
 
-    def sample(self, prompt: str = " ", temperature:float = 0.5):
+    def sample(self, prompt: str = " ", temperature:float = 1.0):
         prompt += " <PROGRAM END>"
         with torch.no_grad():
             # Split prompt into words and convert to indices
@@ -168,6 +168,51 @@ class LanguageModel:
                 output, hidden = self.model(embedded_input, hidden)
 
         return output_text
+    
+
+    def sample_raw(self, input: torch.Tensor, temperature:float = 1.0):
+        with torch.no_grad():
+            input = input.to(self.device)
+            hidden = self.model.initHidden()
+
+            # convert input tensor to the original text
+            input_text = ""
+            for i in input[0]:
+                input_text += self.idx2word[i.item()] + " "
+            LOGGER(f"Starting with prompt: {input_text}")
+
+            # Process the entire prompt sequence first
+            embedded_input = self.embedding(input).to(self.device)
+
+                    # Process one token at a time to match training
+            for i in range(embedded_input.size(1)):
+                curr_input = embedded_input[:, i:i+1, :]  # [1, 1, embedding_dim]
+                output, hidden = self.model(curr_input, hidden)
+
+            output_text = ""
+            next_word = None
+
+            while next_word != '<eos>':
+                # Use last output for next prediction
+                output = nn.functional.softmax(output[:,-1,:] / temperature, dim=1)
+                topi = torch.multinomial(output, 1)
+
+                topi = topi[0][0].item()
+
+                next_word = self.idx2word[topi]
+                if next_word == '<eos>':
+                    break
+                else:
+                    output_text += (' ' + next_word)
+
+                # Prepare input for next iteration
+                input = torch.tensor([[topi]], dtype=torch.long).to(self.device)
+                embedded_input = self.embedding(input).to(self.device)
+                output, hidden = self.model(embedded_input, hidden)
+
+        return output_text
+
+
 
     def save_model(self, path: str):
         torch.save(self.model.state_dict(), path)

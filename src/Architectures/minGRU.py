@@ -25,7 +25,6 @@ class minGRU(nn.Module):
         # x_t: (batch_size, input_size)
         # h_0: (batch_size, hidden_size)
 
-        batch_size = x.size(0)
         x = x.squeeze(1)
         h_0 = h_0.squeeze(1)
 
@@ -39,7 +38,7 @@ class minGRU(nn.Module):
         SHAPE_LOG("minGRU.FORWARD() LOG_H_0", log_h_0)
         SHAPE_LOG("minGRU.FORWARD() LOG_TILDE_H + LOG_Z", log_tilde_h + log_z)
 
-        log_coeffs = log_coeffs.unsqueeze(1) # (batch_size, 1, hidden_size)
+        #log_coeffs = log_coeffs.unsqueeze(1) # (batch_size, 1, hidden_size)
         # (batch_size, 2*hidden_size)
         combined = torch.cat([log_h_0, (log_z + log_tilde_h)], dim=1)
 

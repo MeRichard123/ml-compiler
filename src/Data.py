@@ -2,7 +2,7 @@ import torch
 from torch.utils.data import Dataset, random_split
 from torch.nn.utils.rnn import pad_sequence
 import os
-from Parser import tokenizer
+from Parser import tokenizer, Tokeniser
 
 def collate_fn(batch):
     batch = sorted(batch, key=lambda x: len(x), reverse=True)
@@ -34,6 +34,19 @@ class CodeDataset(Dataset):
             "idx2word": idx2word,
             "size": len(vocab)
         }
+    
+    def get_prompts(self):
+        tokeniser = Tokeniser()
+        
+        prompts = []
+        for data_path in self.data:
+            data_path = os.path.join(self.data_dir, data_path)
+            with open(data_path, "r") as f:
+                text = f.read()
+                tokens = tokeniser.tokenise_code(text)
+                if len(tokens) > 0:
+                    prompts.append(tokens)
+        return prompts
 
     def __len__(self):
         return len(self.data)
