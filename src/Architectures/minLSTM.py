@@ -24,8 +24,8 @@ class minLSTM(nn.Module):
         return "minLSTM"
     
     def forward(self, x, h_0):
+        # h_0: (batch_size, 1, hidden_size)  <- Note this shape
         # x_t: (batch_size, seq_length, input_size)
-        # h_0: (batch_size, 1, hidden_size)
 
         SHAPE_LOG("minLSTM.FORWARD() x", x)
 

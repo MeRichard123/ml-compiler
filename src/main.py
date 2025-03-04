@@ -59,19 +59,19 @@ def main():
     # The was beginning to get very tired of sitting by her sister the on to and having having nothing do once
 
 
-    LM = LanguageModel(model_minLSTM, len(vocab), device)
-    #LM.init_model(code_dataset)
-    #LM.train_loop(train_dataloader)
+    LM = LanguageModel(model_minGRU, len(vocab), device)
+    LM.init_model(code_dataset)
+    LM.train_loop(train_dataloader)
 
     # print(LM.sample("print('Oliver')"))
     # Saving the model
     
-    #LM.save_model("minLSTM_model.pth")
+    LM.save_model("minGRU_model.pth")
 
     # Loading the model
 
-    LM.load_model("./trained_models/minLSTM_model.pth")
-    LM.init_model(code_dataset)
+    #LM.load_model("./trained_models/minLSTM_model.pth")
+    #LM.init_model(code_dataset)
     #test = LM.sample("So")
     #print(LM.sample('print("Hello World")'))
     #print(test)

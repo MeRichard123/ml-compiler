@@ -22,17 +22,15 @@ class minGRU(nn.Module):
         return "minGRU"
 
     def forward(self, x, h_0):
-        # x_t: (batch_size, input_size)
-        # h_0: (batch_size, hidden_size)
-
-        x = x.squeeze(1)
-        h_0 = h_0.squeeze(1)
-
-        k = self.linear_z(x) # (batch_size, hidden_size)
-        log_z = -F.softplus(-k) # (batch_size, hidden_size)
-        log_coeffs = -F.softplus(k) # (batch_size, hidden_size)
-        log_h_0 = log_g(h_0) # (batch_size, hidden_size)
-        log_tilde_h = log_g(self.linear_h(x)) # (batch_size, hidden_size)
+        # x_t: (batch_size, seq_length, input_size)
+        # h_0: (batch_size, 1, hidden_size)
+        
+        # Remove the squeeze operations
+        k = self.linear_z(x) 
+        log_z = -F.softplus(-k)
+        log_coeffs = -F.softplus(k)
+        log_h_0 = log_g(h_0)
+        log_tilde_h = log_g(self.linear_h(x))
 
         SHAPE_LOG("minGRU.FORWARD() LOG_COEFFS", log_coeffs)
         SHAPE_LOG("minGRU.FORWARD() LOG_H_0", log_h_0)
@@ -53,6 +51,6 @@ class minGRU(nn.Module):
         return output, h
     
     def initHidden(self, batch_size=1):
-        # Initialize h0 with the correct dimensions
-        h0 = torch.zeros(batch_size, self.hidden_size, device=self.device)
+        # Match the minLSTM hidden state shape
+        h0 = torch.zeros(batch_size, 1, self.hidden_size, device=self.device)
         return h0
