@@ -10,6 +10,7 @@ from Architectures.minLSTM import minLSTM
 from Utils.Logger import LOGGER
 from LanguageModel import LanguageModel
 from Data import collate_fn, CodeDataset
+from Evaluation import Evaluator
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -32,12 +33,17 @@ def main():
     batch_size = len(code_dataset) // 3
     trainset, testset = code_dataset.train_test_split()
 
-    train_dataloader = DataLoader(trainset, batch_size=batch_size, shuffle=True, collate_fn=collate_fn)
+    train_dataloader = DataLoader(
+        trainset, 
+        batch_size=batch_size, 
+        shuffle=True, 
+        collate_fn=collate_fn,
+    )
     test_dataloader = DataLoader(testset, batch_size=1, shuffle=False, collate_fn=collate_fn)
 
     # print the shape of each batch
     for i, batch in enumerate(train_dataloader):
-        print(f"Batch {i} shape: {batch.shape}")
+        print(f"Batch {i} shape: {batch['input'].shape}")
 
     vocab = code_dataset.build_vocab()["vocab"]
 
@@ -59,29 +65,26 @@ def main():
     # The was beginning to get very tired of sitting by her sister the on to and having having nothing do once
 
 
-    LM = LanguageModel(model_minGRU, len(vocab), device)
-    LM.init_model(code_dataset)
-    LM.train_loop(train_dataloader)
+    LM = LanguageModel(model_minLSTM, len(vocab), device)
+    #LM.init_model(code_dataset)
+    #LM.train_loop(train_dataloader)
 
-    # print(LM.sample("print('Oliver')"))
+    #print(LM.sample('print("Hello")'))
     # Saving the model
     
-    LM.save_model("minGRU_model.pth")
+    #LM.save_model("minLSTM_model_code.pth")
 
     # Loading the model
 
-    #LM.load_model("./trained_models/minLSTM_model.pth")
-    #LM.init_model(code_dataset)
+    LM.load_model("./trained_models/minLSTM_model_code.pth")
+    LM.init_model(code_dataset)
     #test = LM.sample("So")
     #print(LM.sample('print("Hello World")'))
     #print(test)
 
-    for prompt in testset.dataset.get_prompts():
-        print(prompt)
-        idx = prompt.index("<PROGRAM END>")
-        prompt = ' '.join(prompt[0: idx])
-        print(LM.sample(prompt))
-        print("\n\n\n")
+    eval = Evaluator(testset.dataset, LM)
+    eval.evalulate()
+
 
 if __name__ == "__main__":
     main()

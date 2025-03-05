@@ -5,9 +5,20 @@ import os
 from Parser import tokenizer, Tokeniser
 
 def collate_fn(batch):
-    batch = sorted(batch, key=lambda x: len(x), reverse=True)
-    padded_batch = pad_sequence(batch, batch_first=True)
-    return padded_batch
+    # Sort by input length
+    batch = sorted(batch, key=lambda x: len(x['input']), reverse=True)
+    
+    # Pad sequences
+    input_sequences = [x['input'] for x in batch]
+    output_sequences = [x['output'] for x in batch]
+    
+    padded_input = pad_sequence(input_sequences, batch_first=True)
+    padded_output = pad_sequence(output_sequences, batch_first=True)
+    
+    return {
+        'input': padded_input,
+        'output': padded_output
+    }
 
 class CodeDataset(Dataset):
     def __init__(self, curricum_num=1):
@@ -16,15 +27,17 @@ class CodeDataset(Dataset):
         self.data = os.listdir(self.data_dir)
 
     def build_vocab(self):
-        vocab = set()
+        vocab = set()  # Use a set to accumulate unique tokens
+        # Add literals from training data
         for data_path in self.data:
             data_path = os.path.join(self.data_dir, data_path)
             with open(data_path, "r") as f:
                 text = f.read()
-                tokens = self.tokenizer(text)[1].keys()
-                vocab.update(tokens)
-        vocab = ["<eos>", "<PROGRAM END>", "<unk>"] + list(vocab)
+                current_vocab = self.tokenizer(text)[1].keys()
+                vocab.update(current_vocab)  # Update instead of overwrite
 
+        vocab = sorted(list(vocab))  # Convert to sorted list for consistent indexing
+        
         word2idx = {word: idx for idx, word in enumerate(vocab)}
         idx2word = {idx: word for idx, word in enumerate(vocab)}
 
@@ -43,9 +56,8 @@ class CodeDataset(Dataset):
             data_path = os.path.join(self.data_dir, data_path)
             with open(data_path, "r") as f:
                 text = f.read()
-                tokens = tokeniser.tokenise_code(text)
-                if len(tokens) > 0:
-                    prompts.append(tokens)
+                if len(text) > 0:
+                    prompts.append(text)
         return prompts
 
     def __len__(self):
@@ -62,6 +74,9 @@ class CodeDataset(Dataset):
             text = f.read()
             text += "\n <eos>"
 
-        indices, _ = self.tokenizer(text)
-        return torch.tensor(indices, dtype=torch.long)
+        (input_indices, output_indices), _ = self.tokenizer(text)
+        return {
+            'input': torch.tensor(input_indices, dtype=torch.long),
+            'output': torch.tensor(output_indices, dtype=torch.long)
+        }
 
