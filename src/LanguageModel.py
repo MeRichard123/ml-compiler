@@ -72,7 +72,7 @@ class LanguageModel:
 
         return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
     
-    def train_loop(self, dataloader: DataLoader):
+    def train_loop(self, dataloader: DataLoader, suffix: str = ""):
         n_iters = 1500
         print_every = 500
         plot_every = 250
@@ -105,11 +105,12 @@ class LanguageModel:
             if iter % print_every == 0:
                 print(f"loss = {avg_loss}%")
 
+        plt.figure()
         plt.title(f"Loss Plot {str(self.model)}")
         plt.plot(iter_agg, loss_agg)
         plt.xlabel("Iterations")
         plt.ylabel("Loss")
-        plt.show()
+        plt.savefig(f"{str(self.model)}_lossPlot_{suffix}.png")
 
 
 

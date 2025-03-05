@@ -20,3 +20,14 @@ Project Proposal: [here](./Proposal.pdf)
 | ![LSTM](./images/LSTM_lossPlot_code.png)| *(17/02/25)* Overall more stable and a small decrease in error.|
 | ![GRU Min](./images/gru-code-min.png) | *(16/02/25)* Mini GRU stable and error drops faster.|
 | ![LSTM Min](./images/LSTM_lossPlot_code_min.png) |*(16/02/25)* Mini LSTM less stable than GRU but similar performance acheived. |
+
+### Models Trained on S-Expressions
+- Trained for 1500
+
+| model | inference |
+| ---- | ----- |
+| ![RNN](./images/RNN_lossPlot_code_ast.png) | *(05/03/25)* Lower error value, and less noisy but error jumps back up and wouldn't benefit from early stopping. |
+| ![GRU](./images/GRU_lossPlot_code_ast.png)| *(05/03/25)* As before similar results to the RNN but overall decrease in error. |
+| ![LSTM](./images/LSTM_lossPlot_code_ast.png)| *(05/03/25)* Loss drops quickly and remains stable. |
+| ![Mini GRU](./images/minGRU_lossPlot_code_ast.png) | *(05/03/25)* Achieved a lower error than without AST |
+| ![Mini LSTM](./images/minLSTM_lossPlot_code_ast.png) | *(05/03/25)* smoother curve - more stable reaches a lower error|

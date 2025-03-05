@@ -18,7 +18,7 @@ class Evaluator:
         self.test = test_dataset
         self.lm = lm
 
-    def evalulate(self):
+    def evaluate(self):
         for prompt in self.test.get_prompts():
             idx = prompt.index("<PROGRAM END>")
             input_prompt = ''.join(prompt[0: idx])  # Extract the input prompt

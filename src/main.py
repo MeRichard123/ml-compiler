@@ -54,15 +54,40 @@ def main():
         # Validation set
         # BPE
 
-    model = RNN(0, 100, len(vocab), device).to(device)
-    # The of of then and The Rabbit having she twice to and it of the for Oh and into or nor
+    model = RNN(50, batch_size, 300, len(vocab), device).to(device)
     model_gru = GRU(50, batch_size, 300, len(vocab), device).to(device)
-    # The dear I shall be worth getting a was and look that she to was had once of day after and
     model_minGRU = minGRU(50, batch_size, 300, len(vocab), device).to(device)
     model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device).to(device)
+    model_lstm = LSTM(50, batch_size, 300, len(vocab), device).to(device)
 
-    model_lstm = LSTM(10, 100, 10, len(vocab), device).to(device)
-    # The was beginning to get very tired of sitting by her sister the on to and having having nothing do once
+    model_file_names = [
+        "rnn_model_code_ast",
+        "gru_model_code_ast",
+        "minGRU_model_code_ast",
+        "lstm_model_code_ast",
+        "minLSTM_model_code_ast"
+    ]
+
+    for model_file_name in model_file_names:
+        match model_file_name:
+            case "rnn_model_code_ast":
+                LM = LanguageModel(model, len(vocab), device)
+            case "gru_model_code_ast":
+                LM = LanguageModel(model_gru, len(vocab), device)
+            case "minGRU_model_code_ast":
+                LM = LanguageModel(model_minGRU, len(vocab), device)
+            case "lstm_model_code_ast":
+                LM = LanguageModel(model_lstm, len(vocab), device)
+            case "minLSTM_model_code_ast":
+                LM = LanguageModel(model_minLSTM, len(vocab), device)
+            case _:
+                raise ValueError("Invalid model file name")
+        
+        LM.init_model(code_dataset)
+        LM.train_loop(train_dataloader, "code_ast")
+        #LM.save_model(f"./trained_models/{model_file_name}.pth")
+    
+    return 0
 
 
     LM = LanguageModel(model_minLSTM, len(vocab), device)
@@ -83,7 +108,7 @@ def main():
     #print(test)
 
     eval = Evaluator(testset.dataset, LM)
-    eval.evalulate()
+    eval.evaluate()
 
 
 if __name__ == "__main__":
