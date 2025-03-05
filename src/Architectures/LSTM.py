@@ -3,20 +3,20 @@ import torch
 from torch.nn import functional as F
 
 class LSTM(nn.Module):
-    def __init__(self, embedding_dim: int, hidden_size: int, 
-                 num_layers: int, output_size: int, device: str = 'cpu'):
+    def __init__(self, embedding_dim: int, batch_size: int, hidden_size: int, 
+                 output_size: int, device: str = 'cpu'):
         super(LSTM, self).__init__()
         self.embedding_dim: int   = embedding_dim
         self.hidden_size: int     = hidden_size
-        self.num_layers: int      = num_layers
         self.output_size: int     = output_size
+        self.batch_size: int      = batch_size
         self.device: str          = device
 
         # Defining the LSTM layer
-        self.lstm = nn.LSTM(self.embedding_dim, hidden_size, num_layers, batch_first=True, device=device)
+        self.lstm = nn.LSTM(self.embedding_dim, hidden_size, batch_first=True, device=device)
         # Defining the Fully Connected output layer - for reshaping the output to the desired output size
         self.fc = nn.Linear(hidden_size, output_size, device=device)
-        self.softmax = nn.LogSoftmax(dim=1)
+        self.softmax = nn.LogSoftmax(dim=-1)
 
     def __str__(self):
         return "LSTM"
@@ -36,11 +36,11 @@ class LSTM(nn.Module):
         out, hidden = self.lstm(input, hidden)
         out = self.fc(out)
         # log softmax
-        out = self.softmax(out, dim=1)
+        out = self.softmax(out)
         return out, hidden
     
-    def initHidden(self):
-        # Initialize h0 and c0 with the correct dimensions
-        h0 = torch.zeros(self.num_layers, self.hidden_size, device=self.device)
-        c0 = torch.zeros(self.num_layers, self.hidden_size, device=self.device)
+    def initHidden(self, batch_size=1):
+        # Initialize h0 and c0 with the correct dimensions (num_layers, batch_size, hidden_size)
+        h0 = torch.zeros(1, batch_size, self.hidden_size, device=self.device)
+        c0 = torch.zeros(1, batch_size, self.hidden_size, device=self.device)
         return h0, c0
