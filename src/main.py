@@ -49,14 +49,17 @@ def main():
 
     # play with the hidden size and the learning rate
         # maybe an LR scheduler
-        # batch processing
-        # temperature
         # Validation set
         # BPE
+    
+    MOE = {
+        "number_of_experts": 10,
+        "k": 3
+    }
 
     model = RNN(50, batch_size, 300, len(vocab), device).to(device)
     model_gru = GRU(50, batch_size, 300, len(vocab), device).to(device)
-    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device).to(device)
+    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device, MOE).to(device)
     model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device).to(device)
     model_lstm = LSTM(50, batch_size, 300, len(vocab), device).to(device)
 
@@ -65,47 +68,27 @@ def main():
         "gru_model_code_ast",
         "minGRU_model_code_ast",
         "lstm_model_code_ast",
-        "minLSTM_model_code_ast"
+        "minLSTM_model_code_ast",
+        "minGRU_code_ast_moe"
     ]
 
-    for model_file_name in model_file_names:
-        match model_file_name:
-            case "rnn_model_code_ast":
-                LM = LanguageModel(model, len(vocab), device)
-            case "gru_model_code_ast":
-                LM = LanguageModel(model_gru, len(vocab), device)
-            case "minGRU_model_code_ast":
-                LM = LanguageModel(model_minGRU, len(vocab), device)
-            case "lstm_model_code_ast":
-                LM = LanguageModel(model_lstm, len(vocab), device)
-            case "minLSTM_model_code_ast":
-                LM = LanguageModel(model_minLSTM, len(vocab), device)
-            case _:
-                raise ValueError("Invalid model file name")
-        
-        LM.init_model(code_dataset)
-        LM.train_loop(train_dataloader, "code_ast")
-        #LM.save_model(f"./trained_models/{model_file_name}.pth")
-    
-    return 0
 
 
+    LM = LanguageModel(model_minGRU, len(vocab), device)
+    LM.init_model(code_dataset)
+    LM.train_loop(train_dataloader, model_file_names[5])
+
+
+
+    """"
+    # Min LSTM - Code, AST
+    print("Min LSTM - Code, AST")
     LM = LanguageModel(model_minLSTM, len(vocab), device)
-    #LM.init_model(code_dataset)
-    #LM.train_loop(train_dataloader)
-
-    #print(LM.sample('print("Hello")'))
-    # Saving the model
-    
-    #LM.save_model("minLSTM_model_code.pth")
-
-    # Loading the model
-
     LM.load_model("./trained_models/minLSTM_model_code.pth")
     LM.init_model(code_dataset)
-    #test = LM.sample("So")
-    #print(LM.sample('print("Hello World")'))
-    #print(test)
+    print(LM.sample("print('Hello World!')"))
+    """
+
 
     eval = Evaluator(testset.dataset, LM)
     eval.evaluate()

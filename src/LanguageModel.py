@@ -39,7 +39,7 @@ class LanguageModel:
         print(f"Vocabulary Size: {len(self.word2idx)}")
         print(f"Sample Indexed Text: {self.text_idx[:10]}")  # Display first few indices
 
-    def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor):
+    def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor, use_teacher_forcing: bool = False):
         batch_size = input_tensor.size(0)
         hidden = self.model.initHidden(batch_size)
 
@@ -58,21 +58,30 @@ class LanguageModel:
         # Now generate output sequence
         output_seq = []
         current_hidden = hidden
-        
+        current_input = embedded_input[:, 0, :].unsqueeze(1)
+
         for i in range(target_tensor.size(1) - 1):
-            output, current_hidden = self.model(embedded_input[:, i, :].unsqueeze(1), current_hidden)
+            output, current_hidden = self.model(current_input, current_hidden)
             output_seq.append(output)
             
             target_word = target_tensor[:, i+1].to(self.device)
             l = self.criterion(output[:, -1, :], target_word)
             self.loss += l
 
+            if use_teacher_forcing: 
+                # feed the target as the next input
+                current_input = self.embedding(target_word.long()).unsqueeze(1)
+            else:
+                # take the last output and feed it back into the model
+                predicted_word = torch.argmax(output[:, -1, :], dim=1)
+                current_input = self.embedding(predicted_word.long()).unsqueeze(1)
+
         self.loss.backward()
         self.optimizer.step()
 
         return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
     
-    def train_loop(self, dataloader: DataLoader, suffix: str = ""):
+    def train_loop(self, dataloader: DataLoader, suffix: str = "", use_teacher_forcing: bool = False):
         n_iters = 1500
         print_every = 500
         plot_every = 250
@@ -92,7 +101,7 @@ class LanguageModel:
                 self.target = batch['output'].to(self.device)  # Get target tensor
 
                 # (batch_size, seq_length, vocab_size), Scalar
-                output, loss = self.__train(self.input, self.target) # add tensors
+                output, loss = self.__train(self.input, self.target, use_teacher_forcing) # add tensors
                 total_loss += loss
                 num_batches += 1
 

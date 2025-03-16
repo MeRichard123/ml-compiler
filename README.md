@@ -31,3 +31,14 @@ Project Proposal: [here](./Proposal.pdf)
 | ![LSTM](./images/LSTM_lossPlot_code_ast.png)| *(05/03/25)* Loss drops quickly and remains stable. |
 | ![Mini GRU](./images/minGRU_lossPlot_code_ast.png) | *(05/03/25)* Achieved a lower error than without AST |
 | ![Mini LSTM](./images/minLSTM_lossPlot_code_ast.png) | *(05/03/25)* smoother curve - more stable reaches a lower error|
+
+### Models Trained using Teacher Forcing
+
+| model | inference |
+| ---- | ----- |
+| ![minGRU](./images/minGRU_lossPlot_code_ast_tf.png) | *(10/03/25)* Lower error (expected), smoother curve. |
+
+### Models Trained using Mixture of Experts
+| model | inference |
+| ---- | ----- |
+| ![RNN](./images/minGRU_lossPlot_minGRU_code_ast_moe.png) | *(16/03/25)* faster divergence |

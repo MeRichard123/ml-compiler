@@ -3,15 +3,20 @@ import torch
 from torch.nn import functional as F
 from Utils.scan import log_g, parallel_scan_log
 from Utils.Logger import SHAPE_LOG
+from Utils.Moe import MoeLayer 
 
 class minGRU(nn.Module):
-    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device = 'cpu'):
+    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device = 'cpu', MOE = None):
         super(minGRU, self).__init__()
         self.batch_size = batch_size
         self.device = device
         self.hidden_size = hidden_size
         self.output_size = output_size
         self.embedding_dim = embedding_dim
+
+        if MOE is not None:
+            self.moe = MoeLayer(MOE['number_of_experts'], embedding_dim, MOE['k'])  
+    
 
         self.linear_z = nn.Linear(embedding_dim, hidden_size, device=device)
         self.linear_h = nn.Linear(embedding_dim, hidden_size, device=device)
@@ -22,6 +27,8 @@ class minGRU(nn.Module):
         return "minGRU"
 
     def forward(self, x, h_0):
+        if hasattr(self, 'moe'):
+            x = self.moe(x)
         # x_t: (batch_size, seq_length, input_size)
         # h_0: (batch_size, 1, hidden_size)
         

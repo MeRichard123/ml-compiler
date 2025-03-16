@@ -40,6 +40,7 @@ class Tokeniser:
 
         # Parse the program
         tree = self.generate_ast(program)
+
         input_tokens = self.traverse_ast(tree)
         input_tokens.append(PROMPT_TOKENS.PROGRAM_END.value)
         
@@ -113,3 +114,17 @@ fizzbuzz(100)
     print("\n\nOUTPUT: \n")
     print(output)
 
+    program = """
+    print("Hello Sheep!")
+    <PROGRAM END>
+    Hello Sheep!
+    """
+
+    (input, output), t_to_i = tokenizer(program)
+    print("INPUT: \n")
+    print(input)
+    print("\n\nOUTPUT: \n")
+    print(output)
+
+
+    print(t_to_i)
