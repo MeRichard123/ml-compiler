@@ -41,4 +41,4 @@ Project Proposal: [here](./Proposal.pdf)
 ### Models Trained using Mixture of Experts
 | model | inference |
 | ---- | ----- |
-| ![RNN](./images/minGRU_lossPlot_minGRU_code_ast_moe.png) | *(16/03/25)* faster divergence |
+| ![RNN](./images/minGRU_lossPlot_code_ast_moe.png) | *(16/03/25)* faster divergence |
