@@ -1,5 +1,0 @@
-num = 123
-print(tostring(num))
-<PROGRAM END>
-123
-<eos>

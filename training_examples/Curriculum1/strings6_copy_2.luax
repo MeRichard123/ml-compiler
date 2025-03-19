@@ -1,0 +1,4 @@
+print(tonumber("  42  "))
+<PROGRAM END>
+
+42

@@ -1,0 +1,5 @@
+truth = false
+print(truth)
+<PROGRAM END>
+
+false

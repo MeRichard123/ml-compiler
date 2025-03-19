@@ -1,0 +1,7 @@
+a = 4
+b = 6
+if b > a then
+    print("a is less than b")
+else
+    print("a is not less than b")
+end

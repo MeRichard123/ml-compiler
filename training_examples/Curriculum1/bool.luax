@@ -1,5 +1,0 @@
-truth = true
-print(truth)
-<PROGRAM END>
-true
-<eos>

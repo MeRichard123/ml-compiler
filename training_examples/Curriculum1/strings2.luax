@@ -1,5 +1,0 @@
-s = "Hello"
-print(#s)
-<PROGRAM END>
-5
-<eos>

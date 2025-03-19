@@ -1,0 +1,7 @@
+function greet(name)
+    return "Hello, " .. name
+end
+print(greet("Lua"))
+<PROGRAM END>
+
+Hello, Lua

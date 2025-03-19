@@ -1,7 +1,0 @@
-x = 10
-if x == 10 then
-    print("x is 10")
-end
-<PROGRAM END>
-x is 10
-<eos>

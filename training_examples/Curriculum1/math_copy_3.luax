@@ -1,0 +1,8 @@
+b = 2
+a = 3
+c = a * b
+print(c)
+
+<PROGRAM END>
+
+6

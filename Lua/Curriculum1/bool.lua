@@ -1,2 +1,0 @@
-truth = true
-print(truth)

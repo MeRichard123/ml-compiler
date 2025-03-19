@@ -1,5 +1,0 @@
-i = 1
-while i < 4 do
-    print("Loop")
-    i = i + 1
-end

@@ -1,6 +1,0 @@
-for i = 1, 5 do
-    if i == 3 then
-        break
-    end
-    print(i)
-end

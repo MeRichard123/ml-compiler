@@ -63,7 +63,7 @@ void write_to_example_file(char* program_file, char* output, char* program_name)
 }
 
 
-const size_t NUMBER_OF_EXAMPLES = 10;
+const size_t NUMBER_OF_EXAMPLES = 138;
 
 char* example_files[NUMBER_OF_EXAMPLES];
 char* program_names[NUMBER_OF_EXAMPLES];
@@ -81,7 +81,9 @@ void BUILD_EXAMPLES()
   struct dirent *dir;
 
   directory = opendir("./Lua");
-   
+  
+  printf("Opened DIR\n");
+
   if (directory) {
     int counter = 0;
     while((dir = readdir(directory)) != NULL) {

@@ -1,0 +1,6 @@
+str = "HELLOOO@WORLD"
+print(string.lower(str))
+
+<PROGRAM END>
+
+hellooo@world

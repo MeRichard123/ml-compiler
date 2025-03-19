@@ -1,0 +1,9 @@
+a = 2
+repeat
+    print(a)
+    a = a + 1
+until a == 6
+
+<PROGRAM END>
+
+2

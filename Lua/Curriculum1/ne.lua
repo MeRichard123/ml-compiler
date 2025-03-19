@@ -1,6 +1,0 @@
-a = 10 
-b = 20
-
-if a ~= b then
-    print("a is not equal to b")
-end

@@ -1,4 +1,0 @@
-function print_sum(x, y)
-    print(x + y)
-end
-print_sum(2, 3)

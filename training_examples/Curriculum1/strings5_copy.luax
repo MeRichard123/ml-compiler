@@ -1,0 +1,6 @@
+num = 456
+print(tostring(num))
+
+<PROGRAM END>
+
+456

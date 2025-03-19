@@ -1,5 +1,0 @@
-counter = 0
-repeat
-    counter = counter + 1
-    print(counter)
-until counter == 3

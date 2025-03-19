@@ -1,5 +1,0 @@
-str = "WORLD"
-print(string.lower(str))
-<PROGRAM END>
-world
-<eos>
