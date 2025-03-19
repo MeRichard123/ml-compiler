@@ -1,0 +1,4 @@
+function is_even(n)
+    return not (n % 2 ~= 0)
+end
+print(is_even(4))

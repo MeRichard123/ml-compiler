@@ -1,0 +1,5 @@
+function multiply(a, b)
+    return a * b, "The product is:"
+end
+result, message = multiply(3, 4)
+print(message, result)

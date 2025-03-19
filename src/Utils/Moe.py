@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch
 
 class MoeLayer(nn.Module):
+    # Dense layer with a mixture of experts
     def __init__(self, num_experts, n_embed, k = 1):
         super(MoeLayer, self).__init__()
         self.experts = nn.ModuleList(

@@ -1,0 +1,2 @@
+s = "Lua"
+print(#s)

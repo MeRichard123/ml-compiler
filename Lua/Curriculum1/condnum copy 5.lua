@@ -1,0 +1,5 @@
+x = 30
+
+if x == 10 or x == 30 then
+    print("x is either 10 or 30")
+end

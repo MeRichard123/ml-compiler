@@ -1,0 +1,5 @@
+function is_even(n)
+    local result = n % 2 == 0
+    return result
+end
+print(is_even(4))

@@ -34,7 +34,8 @@ class CodeDataset(Dataset):
             with open(data_path, "r") as f:
                 text = f.read()
                 current_vocab = self.tokenizer(text)[1].keys()
-                vocab.update(current_vocab)  # Update instead of overwrite
+                current_vocab = filter(lambda x: not (x in ['"', "'",'", "']), current_vocab)
+                vocab.update(current_vocab)  # Update
 
         vocab = sorted(list(vocab))  # Convert to sorted list for consistent indexing
         

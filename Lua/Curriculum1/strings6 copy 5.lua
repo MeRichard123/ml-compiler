@@ -1,0 +1,1 @@
+print(tonumber("42"))

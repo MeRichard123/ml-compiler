@@ -1,0 +1,5 @@
+function add(a, b)
+    return a + b, "The result is:"
+end
+result, message = add(1, 2)
+print(message, result)

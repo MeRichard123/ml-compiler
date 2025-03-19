@@ -1,0 +1,5 @@
+function greet(person)
+    return { message = "Hello, " .. person }
+end
+result = greet("Lua")
+print(result.message)

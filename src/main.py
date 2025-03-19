@@ -57,11 +57,16 @@ def main():
         "k": 3
     }
 
-    model = RNN(50, batch_size, 300, len(vocab), device).to(device)
-    model_gru = GRU(50, batch_size, 300, len(vocab), device).to(device)
-    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device, MOE).to(device)
-    model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device).to(device)
-    model_lstm = LSTM(50, batch_size, 300, len(vocab), device).to(device)
+    model = RNN(50, batch_size, 300, len(vocab), device)\
+        .to(device)
+    model_gru = GRU(50, batch_size, 300, len(vocab), device)\
+        .to(device)
+    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device, MOE)\
+        .to(device)
+    model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device)\
+        .to(device)
+    model_lstm = LSTM(50, batch_size, 300, len(vocab), device).\
+        to(device)
 
     model_file_names = [
         "rnn_model_code_ast",
