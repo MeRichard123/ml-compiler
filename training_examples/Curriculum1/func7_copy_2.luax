@@ -5,5 +5,4 @@ result = is_even(4)
 print(result.is_even)
 
 <PROGRAM END>
-
 true

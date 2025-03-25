@@ -12,5 +12,4 @@ end
 print(compare(a, b))
 
 <PROGRAM END>
-
 a is less than b

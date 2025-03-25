@@ -1,0 +1,4 @@
+is_sunny = false
+print(is_sunny)
+<PROGRAM END>
+false

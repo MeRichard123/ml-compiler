@@ -5,5 +5,4 @@ result = max(3, 7)
 print(result.max_value)
 
 <PROGRAM END>
-
 7

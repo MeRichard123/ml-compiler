@@ -5,5 +5,4 @@ result = sum(5, 6)
 print(result)
 
 <PROGRAM END>
-
 11

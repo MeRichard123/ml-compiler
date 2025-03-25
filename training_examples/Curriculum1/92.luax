@@ -1,0 +1,6 @@
+function greeting(name)
+    print("Hello, " .. name .. "!")
+end
+greeting("Alice")
+<PROGRAM END>
+Hello, Alice!

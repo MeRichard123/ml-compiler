@@ -4,5 +4,4 @@ end
 print(square(2))
 
 <PROGRAM END>
-
-4.0
+4

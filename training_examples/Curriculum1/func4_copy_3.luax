@@ -4,5 +4,4 @@ end
 print(greet("Lua"))
 
 <PROGRAM END>
-
 Greetings, Lua!

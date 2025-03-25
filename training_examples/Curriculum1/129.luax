@@ -1,0 +1,10 @@
+i = 1
+while i <= 3 do
+    print("While loop running: " .. i)
+    i = i + 1
+end
+
+<PROGRAM END>
+While loop running: 1
+While loop running: 2
+While loop running: 3

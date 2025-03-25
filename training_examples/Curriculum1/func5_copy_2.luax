@@ -10,5 +10,4 @@ end
 print(max(3, 7))
 
 <PROGRAM END>
-
 7

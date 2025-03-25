@@ -5,5 +5,4 @@ if x == 10 or x == 30 then
 end
 
 <PROGRAM END>
-
 x is either 10 or 30

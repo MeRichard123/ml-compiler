@@ -8,5 +8,4 @@ end
 print(factorial(5))
 
 <PROGRAM END>
-
 120

@@ -3,5 +3,4 @@ function greet(name)
 end
 print(greet("Lua"))
 <PROGRAM END>
-
 Hello, Lua

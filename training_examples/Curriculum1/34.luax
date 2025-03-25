@@ -1,0 +1,11 @@
+n = 1
+while n < 6 do
+    print("Counting: " .. n)
+    n = n + 1
+end
+<PROGRAM END>
+Counting: 1
+Counting: 2
+Counting: 3
+Counting: 4
+Counting: 5

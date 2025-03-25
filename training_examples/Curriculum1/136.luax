@@ -1,0 +1,9 @@
+for a = 1, 5 do
+    print("Hello from loop " .. a)
+end
+<PROGRAM END>
+Hello from loop 1
+Hello from loop 2
+Hello from loop 3
+Hello from loop 4
+Hello from loop 5

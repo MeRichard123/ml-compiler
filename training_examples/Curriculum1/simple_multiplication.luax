@@ -1,0 +1,8 @@
+-- Simple multiplication in Lua
+a = 6
+b = 7
+product = a * b
+print("The product is: " .. product)
+
+<PROGRAM END>
+The product is: 42

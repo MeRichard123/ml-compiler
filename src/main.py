@@ -30,20 +30,22 @@ def main():
     # Load the Data
     code_dataset = CodeDataset()
 
-    batch_size = len(code_dataset) // 3
+    batch_size = min(64, len(code_dataset) // 10)
     trainset, testset = code_dataset.train_test_split()
 
     train_dataloader = DataLoader(
         trainset, 
-        batch_size=batch_size, 
-        shuffle=True, 
+        batch_size=batch_size,  
         collate_fn=collate_fn,
     )
-    test_dataloader = DataLoader(testset, batch_size=1, shuffle=False, collate_fn=collate_fn)
+    test_dataloader = DataLoader(
+        testset, 
+        batch_size=1, 
+        shuffle=False, 
+        collate_fn=collate_fn
+    )
 
-    # print the shape of each batch
-    for i, batch in enumerate(train_dataloader):
-        print(f"Batch {i} shape: {batch['input'].shape}")
+
 
     vocab = code_dataset.build_vocab()["vocab"]
 

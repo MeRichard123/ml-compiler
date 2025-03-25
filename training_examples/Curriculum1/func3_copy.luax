@@ -4,5 +4,4 @@ end
 print(power_of_two(6))
 
 <PROGRAM END>
-
 36

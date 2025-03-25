@@ -5,5 +5,4 @@ result, message = multiply(3, 4)
 print(message, result)
 
 <PROGRAM END>
-
 The product is:	12

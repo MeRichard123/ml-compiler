@@ -1,0 +1,4 @@
+math_constant = math.pi
+print("Pi value: " .. math_constant)
+<PROGRAM END>
+Pi value: 3.1415926535898

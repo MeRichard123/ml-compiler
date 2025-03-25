@@ -1,0 +1,13 @@
+-- Simple while loop in Lua
+count = 1
+while count <= 5 do
+    print("Count: " .. count)
+    count = count + 1
+end
+
+<PROGRAM END>
+Count: 1
+Count: 2
+Count: 3
+Count: 4
+Count: 5

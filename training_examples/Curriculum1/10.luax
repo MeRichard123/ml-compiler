@@ -1,0 +1,4 @@
+speed = 55.5
+print("Speed: " .. speed)
+<PROGRAM END>
+Speed: 55.5

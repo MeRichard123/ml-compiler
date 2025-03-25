@@ -1,0 +1,4 @@
+e = nil
+print(e)
+<PROGRAM END>
+nil

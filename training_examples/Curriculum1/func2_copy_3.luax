@@ -5,5 +5,4 @@ result = add(10, 15)
 print(result.sum)
 
 <PROGRAM END>
-
 25

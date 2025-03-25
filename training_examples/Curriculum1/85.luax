@@ -1,0 +1,9 @@
+for num = 1, 10, 2 do
+    print("Odd number: " .. num)
+end
+<PROGRAM END>
+Odd number: 1
+Odd number: 3
+Odd number: 5
+Odd number: 7
+Odd number: 9

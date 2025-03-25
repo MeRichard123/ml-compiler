@@ -4,5 +4,4 @@ end
 print(is_even(4))
 
 <PROGRAM END>
-
 true

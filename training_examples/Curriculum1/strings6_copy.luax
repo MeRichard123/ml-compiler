@@ -1,4 +1,3 @@
 print(tonumber("123"))
 <PROGRAM END>
-
 123

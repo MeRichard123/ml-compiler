@@ -4,5 +4,4 @@ end
 print(product(3, 4))
 
 <PROGRAM END>
-
 12

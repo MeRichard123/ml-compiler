@@ -1,5 +1,4 @@
 untruth = false
 print(untruth)
 <PROGRAM END>
-
 false

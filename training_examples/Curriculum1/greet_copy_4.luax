@@ -3,5 +3,4 @@ name = "World"
 print(table.concat({greeting, ",", name}))
 
 <PROGRAM END>
-
 Hello,World

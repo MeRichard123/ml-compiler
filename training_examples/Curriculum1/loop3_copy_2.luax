@@ -4,5 +4,6 @@ while i <= 3 do
     i = i + 1
 end
 <PROGRAM END>
-
 1
+2
+3

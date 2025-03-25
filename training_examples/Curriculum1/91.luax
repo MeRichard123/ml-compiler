@@ -1,0 +1,6 @@
+function cube(x)
+    print("Cube: " .. (x * x * x))
+end
+cube(3)
+<PROGRAM END>
+Cube: 27

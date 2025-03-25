@@ -5,5 +5,4 @@ if a ~= b then
 end
 
 <PROGRAM END>
-
 a is not b

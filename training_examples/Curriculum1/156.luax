@@ -1,0 +1,4 @@
+formatted_date = os.date("%d-%m-%Y")
+print("Today is: " .. formatted_date)
+<PROGRAM END>
+Today is: 25-03-2025

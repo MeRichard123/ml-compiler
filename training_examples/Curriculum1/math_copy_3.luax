@@ -4,5 +4,4 @@ c = a * b
 print(c)
 
 <PROGRAM END>
-
 6

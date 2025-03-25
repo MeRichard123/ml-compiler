@@ -10,5 +10,4 @@ x = 7
 checkX(x)
 
 <PROGRAM END>
-
 x is 7

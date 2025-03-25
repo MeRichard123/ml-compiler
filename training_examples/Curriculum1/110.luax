@@ -1,0 +1,4 @@
+pi_value = 3.1416
+print("Pi: " .. pi_value)
+<PROGRAM END>
+Pi: 3.1416

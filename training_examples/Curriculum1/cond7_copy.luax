@@ -4,5 +4,4 @@ if x > 10 then
 end
 
 <PROGRAM END>
-
 x is greater than 10

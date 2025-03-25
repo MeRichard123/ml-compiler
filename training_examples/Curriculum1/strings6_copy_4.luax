@@ -1,5 +1,4 @@
 print(tonumber("3.14"))
 
 <PROGRAM END>
-
 3.14

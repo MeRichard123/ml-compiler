@@ -2,5 +2,4 @@ s = "Lua"
 print(#s)
 
 <PROGRAM END>
-
 3

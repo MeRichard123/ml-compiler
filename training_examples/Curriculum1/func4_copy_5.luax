@@ -5,5 +5,5 @@ print(greet())
 print(greet("Lua")) 
 
 <PROGRAM END>
-
 Hello, stranger
+Hello, Lua

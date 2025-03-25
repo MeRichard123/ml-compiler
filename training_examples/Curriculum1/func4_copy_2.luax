@@ -5,5 +5,4 @@ result = greet("Lua")
 print(result.message)
 
 <PROGRAM END>
-
 Hello, Lua

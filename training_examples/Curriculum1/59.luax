@@ -1,0 +1,4 @@
+city = "London"
+print("City: " .. city)
+<PROGRAM END>
+City: London

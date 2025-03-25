@@ -3,5 +3,4 @@ name = "Lua"
 print(greeting .. ", " .. name)
 
 <PROGRAM END>
-
 Hi, Lua

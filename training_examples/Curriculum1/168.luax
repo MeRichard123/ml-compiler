@@ -1,0 +1,4 @@
+time = os.date("%H:%M:%S")
+print("Current time: " .. time)
+<PROGRAM END>
+Current time: 19:42:43

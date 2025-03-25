@@ -7,6 +7,7 @@ from torch.utils.data import DataLoader
 from typing import List 
 from tqdm import tqdm
 from Parser import tokenizer
+from itertools import chain
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
@@ -28,10 +29,7 @@ class LanguageModel:
         self.idx2word = self.vocab["idx2word"]
 
         # Collect all tokenized text from dataset
-        all_indices = []
-        for i in range(len(dataset)):
-            indexed_data = dataset[i]  # Get the dictionary returned by __getitem__
-            all_indices.extend(indexed_data['input'].tolist())  # Access 'input' and convert to list
+        all_indices = list(chain.from_iterable(data['input'].tolist() for data in dataset))
 
         # Convert all tokens to a tensor
         self.text_idx = torch.tensor(all_indices, dtype=torch.long, device=self.device)

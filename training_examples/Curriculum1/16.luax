@@ -1,0 +1,4 @@
+my_bool = true
+print("Boolean value: " .. tostring(my_bool))
+<PROGRAM END>
+Boolean value: true

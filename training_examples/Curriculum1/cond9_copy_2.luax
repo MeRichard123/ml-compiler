@@ -5,5 +5,4 @@ if not (b > 2) then
 end
 
 <PROGRAM END>
-
 b is at most 2

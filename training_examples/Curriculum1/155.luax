@@ -1,0 +1,4 @@
+current_time = os.time()
+print("Current timestamp: " .. current_time)
+<PROGRAM END>
+Current timestamp: 1742931763

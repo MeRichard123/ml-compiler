@@ -4,5 +4,4 @@ end
 print(multiply(3, 4))
 
 <PROGRAM END>
-
 12

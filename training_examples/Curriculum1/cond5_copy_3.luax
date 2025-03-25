@@ -3,5 +3,4 @@ if x == -3 then
     print("x is -3")
 end
 <PROGRAM END>
-
 x is -3

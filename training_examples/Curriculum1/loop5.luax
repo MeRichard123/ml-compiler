@@ -4,5 +4,7 @@ repeat
     a = a + 1
 until a == 5
 <PROGRAM END>
-
 1
+2
+3
+4

@@ -1,0 +1,11 @@
+x = 10
+repeat
+    print("x is: " .. x)
+    x = x - 2
+until x <= 0
+<PROGRAM END>
+x is: 10
+x is: 8
+x is: 6
+x is: 4
+x is: 2

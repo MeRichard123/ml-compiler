@@ -1,0 +1,21 @@
+-- Metatables in Lua
+local t1 = {value = 5}
+local t2 = {value = 10}
+
+-- Create a metatable with the __add metamethod
+local mt = {
+    __add = function(a, b)
+        return {value = a.value + b.value}
+    end
+}
+
+-- Set the metatable for t1
+setmetatable(t1, mt)
+
+-- Now we can add t1 and t2 using the + operator
+local result = t1 + t2
+
+print("The result of adding the tables is " .. result.value)  -- Output: The result of adding the tables is 15
+
+<PROGRAM END>
+The result of adding the tables is 15

@@ -5,5 +5,4 @@ result, message = add(1, 2)
 print(message, result)
 
 <PROGRAM END>
-
 The result is:	3
