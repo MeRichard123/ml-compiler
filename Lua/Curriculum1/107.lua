@@ -1,0 +1,2 @@
+square_root = math.sqrt(16)
+print("Square root: " .. square_root)

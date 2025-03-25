@@ -1,0 +1,2 @@
+is_sunny = false
+print(is_sunny)

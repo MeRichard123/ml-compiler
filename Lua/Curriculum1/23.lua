@@ -1,0 +1,6 @@
+value = -1
+if value < 0 then
+    print("Negative number")
+else
+    print("Non-negative number")
+end

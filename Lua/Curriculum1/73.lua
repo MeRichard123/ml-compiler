@@ -1,0 +1,4 @@
+is_admin = false
+if not is_admin then
+    print("Access denied")
+end

@@ -1,0 +1,2 @@
+values = {5, 10, 15}
+print("Sum: " .. (values[1] + values[2] + values[3]))

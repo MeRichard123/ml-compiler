@@ -1,0 +1,4 @@
+speed = 80
+if speed > 60 then
+    print("Slow down!")
+end

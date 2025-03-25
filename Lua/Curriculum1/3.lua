@@ -1,0 +1,2 @@
+c = true
+print(c)

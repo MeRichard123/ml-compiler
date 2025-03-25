@@ -1,0 +1,8 @@
+grade = 85
+if grade >= 90 then
+    print("A grade")
+elseif grade >= 80 then
+    print("B grade")
+else
+    print("Lower than B")
+end

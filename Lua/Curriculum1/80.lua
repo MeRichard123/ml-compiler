@@ -1,0 +1,5 @@
+n = 0
+while n < 3 do
+    print("Loop count: " .. n)
+    n = n + 1
+end
