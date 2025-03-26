@@ -97,6 +97,7 @@ class LanguageModel:
                 # Access 'input' and 'output' from the batch dictionary
                 self.input = batch['input'].to(self.device)  # Get input tensor
                 self.target = batch['output'].to(self.device)  # Get target tensor
+                self.literals = batch['literals']  # Get literals tensor
 
                 # (batch_size, seq_length, vocab_size), Scalar
                 output, loss = self.__train(self.input, self.target, use_teacher_forcing) # add tensors
@@ -125,7 +126,7 @@ class LanguageModel:
         prompt += " <PROGRAM END>"
         with torch.no_grad():
             # Split prompt into words and convert to indices
-            indices, _ = tokenizer(prompt)
+            indices, _, literals = tokenizer(prompt)
             
             input = torch.tensor([indices[0]], dtype=torch.long).to(self.device)
             hidden = self.model.initHidden()
@@ -154,6 +155,10 @@ class LanguageModel:
 
                 next_word = self.idx2word[topi]
                 LOGGER(f"Generated: {next_word}")
+
+                if next_word.startswith("<LIT"):
+                    next_word = literals.get(next_word, next_word)
+
                 if next_word == '<eos>' and generated_count == 0:
                     LOGGER("Warning: Model generated <eos> immediately, check input processing.")
                     return "ERROR: Model terminated generation immediately."

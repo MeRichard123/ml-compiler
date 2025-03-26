@@ -23,7 +23,8 @@ class PROMPT_TOKENS(Enum):
 class Tokeniser:
     def __init__(self):
         self.parser = Parser(LANGUAGE)
-        self.literals = []
+        self.literals = {}
+        self.literal_counter = 0
 
     def generate_ast(self, code):
         tree = self.parser.parse(code.encode("utf8"))
@@ -50,7 +51,7 @@ class Tokeniser:
         # Combine for vocabulary building but keep track of what's output
         all_tokens = input_tokens + output_tokens
         
-        return input_tokens, output_tokens, all_tokens
+        return input_tokens, output_tokens, all_tokens, self.literals
 
     def traverse_ast(self, node):
         tokens = []
@@ -60,9 +61,11 @@ class Tokeniser:
         
         # For nodes containing literal values, add the actual value
         if node.type in ["string", "number", "identifier"]:
+            placeholder = f"<LIT_{node.type.upper()}_{self.literal_counter}>"
             literal = node.text.decode('utf8')
-            tokens.append(literal)
-            self.literals.append(literal)
+            self.literals[placeholder] = literal
+            tokens.append(placeholder)
+            self.literal_counter += 1
             
         # Recursively process children
         for child in node.children:
@@ -72,7 +75,7 @@ class Tokeniser:
 
 def tokenizer(text):
     tokeniser = Tokeniser()
-    input_tokens, output_tokens, all_tokens = tokeniser.tokenise_code(text)
+    input_tokens, output_tokens, all_tokens, literals = tokeniser.tokenise_code(text)
     
     # Create vocabulary from all tokens
     vocab = set(all_tokens)
@@ -85,7 +88,7 @@ def tokenizer(text):
     input_indices = [t_to_i[token] for token in input_tokens]
     output_indices = [t_to_i[token] for token in output_tokens]
     
-    return (input_indices, output_indices), t_to_i
+    return (input_indices, output_indices), t_to_i, literals
 
 if __name__ == "__main__":
     text = """

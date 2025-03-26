@@ -10,6 +10,7 @@ def collate_fn(batch):
     
     input_sequences = [x['input'] for x in batch]  # Already tensors from your dataset
     output_sequences = [x['output'] for x in batch]
+    literals_list = [x.get('literals', {}) for x in batch]
     
     # Add length checks
     max_len = max(len(seq) for seq in input_sequences)
@@ -18,8 +19,12 @@ def collate_fn(batch):
     
     padded_input = pad_sequence(input_sequences, batch_first=True, padding_value=0)
     padded_output = pad_sequence(output_sequences, batch_first=True, padding_value=0)
+
+    merged_literals = {}
+    for lit_dict in literals_list:
+        merged_literals.update(lit_dict)
     
-    return {'input': padded_input, 'output': padded_output}
+    return {'input': padded_input, 'output': padded_output, 'literals': merged_literals}
 
 
 class CodeDatasetSubset(IterableDataset):
@@ -34,11 +39,12 @@ class CodeDatasetSubset(IterableDataset):
             with open(data_path, "r") as f:
                 text = f.read().strip() + "\n <eos>"
             
-            (input_indices, output_indices), _ = self.tokenizer(text)
+            (input_indices, output_indices), _, literals = self.tokenizer(text)
             
             yield {
                 'input': torch.tensor(input_indices, dtype=torch.long),
-                'output': torch.tensor(output_indices, dtype=torch.long)
+                'output': torch.tensor(output_indices, dtype=torch.long),
+                'literals': literals
             }
 
 class CodeDataset(IterableDataset):
@@ -104,7 +110,7 @@ class CodeDataset(IterableDataset):
             with open(data_path, "r") as f:
                 text = f.read().strip() + "\n <eos>"
 
-            (input_indices, output_indices), _ = self.tokenizer(text)
+            (input_indices, output_indices), _, literals = self.tokenizer(text)
             
                     # Add validation
             if len(output_indices) > 1000:  # Adjust threshold as needed
@@ -115,7 +121,8 @@ class CodeDataset(IterableDataset):
             
             yield {
                 'input': torch.tensor(input_indices, dtype=torch.long),
-                'output': torch.tensor(output_indices, dtype=torch.long)
+                'output': torch.tensor(output_indices, dtype=torch.long),
+                'literals': literals
             }
 
     def __iter__(self):
