@@ -2,6 +2,10 @@ import os
 import threading
 import subprocess
 
+BASE_DIR = os.path.dirname(os.path.abspath(__file__)).replace("src\\Utils", "")
+LUA_DIR = os.path.join(BASE_DIR, "Lua")
+CURRICULUM_DIR = os.path.join(BASE_DIR, "training_examples", "Curriculum1")
+
 def list_and_process_files(directory, file_list):
     """Function to list all files and process them with Lua."""
     try:
@@ -26,9 +30,12 @@ def process_lua_file(file_path):
             content = original_file.read()
         
         # edit this to save inside of training_examples/Curriculum1
-        new_file_path = file_path + "x"
+        filename = file_path.split("\\")[-1] + "x"
+        new_file_path = os.path.join(CURRICULUM_DIR, filename)
+
         with open(new_file_path, "w") as new_file:
             new_file.write(content + "\n<PROGRAM END>\n" + output)
+
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
 
@@ -44,4 +51,4 @@ def main(directory):
 
         
 if __name__ == "__main__":
-    main("./Lua/Curriculum1")
+    main(os.path.join(LUA_DIR, "Curriculum1"))
