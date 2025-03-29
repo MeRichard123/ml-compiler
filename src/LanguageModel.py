@@ -18,6 +18,7 @@ class LanguageModel:
         self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.max_sample_length: int = 10
         self.device: str            = device
+        self.vocab_size: int        = vocab_size
         
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
 
@@ -80,7 +81,7 @@ class LanguageModel:
         return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
     
     def train_loop(self, dataloader: DataLoader, suffix: str = "", use_teacher_forcing: bool = False):
-        n_iters = 1500
+        n_iters = 15
         print_every = 500
         plot_every = 250
 

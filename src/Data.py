@@ -47,6 +47,17 @@ class CodeDatasetSubset(IterableDataset):
                 'literals': literals
             }
 
+    def get_prompts(self):
+        prompts = []
+        for data_path in self.data:
+            data_path = os.path.join(self.data_dir, data_path)
+            with open(data_path, "r") as f:
+                text = f.read()
+                if len(text) > 0:
+                    prompts.append(text)
+        return prompts
+
+
 class CodeDataset(IterableDataset):
     def __init__(self, curricum_num=1):
         self.data_dir = f"./training_examples/Curriculum{curricum_num}"
@@ -75,18 +86,6 @@ class CodeDataset(IterableDataset):
             "idx2word": idx2word,
             "size": len(vocab)
         }
-    
-    def get_prompts(self):
-        tokeniser = Tokeniser()
-        
-        prompts = []
-        for data_path in self.data:
-            data_path = os.path.join(self.data_dir, data_path)
-            with open(data_path, "r") as f:
-                text = f.read()
-                if len(text) > 0:
-                    prompts.append(text)
-        return prompts
 
     def __len__(self):
         return len(self.data)

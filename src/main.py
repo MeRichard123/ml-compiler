@@ -63,7 +63,7 @@ def main():
         .to(device)
     model_gru = GRU(50, batch_size, 300, len(vocab), device)\
         .to(device)
-    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device, MOE)\
+    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device)\
         .to(device)
     model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device)\
         .to(device)
@@ -97,7 +97,7 @@ def main():
     """
 
 
-    eval = Evaluator(testset.dataset, LM)
+    eval = Evaluator(testset, LM)
     eval.evaluate()
 
 
