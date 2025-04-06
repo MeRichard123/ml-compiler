@@ -3,10 +3,11 @@ import torch
 from torch.nn import functional as F
 from Utils.scan import log_g, parallel_scan_log
 from Utils.Logger import SHAPE_LOG
-from Utils.Moe import MoeLayer 
+from Utils.Moe import MoeLayer
+from Utils.Attention import AttentionLayer
 
 class minGRU(nn.Module):
-    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device = 'cpu', MOE = None):
+    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device = 'cpu', MOE = None, Attention = False):
         super(minGRU, self).__init__()
         self.batch_size = batch_size
         self.device = device
@@ -15,13 +16,16 @@ class minGRU(nn.Module):
         self.embedding_dim = embedding_dim
 
         if MOE is not None:
-            self.moe = MoeLayer(MOE['number_of_experts'], embedding_dim, MOE['k'])  
-    
-
+            self.moe = MoeLayer(MOE['number_of_experts'], embedding_dim)  
+        
+        if Attention:
+            self.attention = AttentionLayer(embedding_dim, 10) 
+            
         self.linear_z = nn.Linear(embedding_dim, hidden_size, device=device)
         self.linear_h = nn.Linear(embedding_dim, hidden_size, device=device)
         self.fc = nn.Linear(hidden_size, output_size, device=device)
         self.softmax = nn.LogSoftmax(dim=-1)
+        self.dropout = nn.Dropout(0.5)
 
     def __str__(self):
         return "minGRU"
@@ -29,10 +33,11 @@ class minGRU(nn.Module):
     def forward(self, x, h_0):
         if hasattr(self, 'moe'):
             x = self.moe(x)
+        if hasattr(self, 'attention'):
+            x = self.attention(x)
         # x_t: (batch_size, seq_length, input_size)
         # h_0: (batch_size, 1, hidden_size)
-        
-        # Remove the squeeze operations
+
         k = self.linear_z(x) 
         log_z = -F.softplus(-k)
         log_coeffs = -F.softplus(k)
@@ -51,9 +56,11 @@ class minGRU(nn.Module):
         SHAPE_LOG("minGRU.FORWARD() LOG_COMBINED", combined)
 
         h = parallel_scan_log(log_coeffs, combined)
+        
         output = self.fc(h)
 
         output = self.softmax(output)
+        ##output = self.dropout(output)
 
         return output, h
     

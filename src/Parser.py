@@ -1,13 +1,13 @@
 import torch.nn as nn
-import tree_sitter_lua as lua_grammar
 from tree_sitter import Language, Parser
 from enum import Enum
 
-LANGUAGE = Language(lua_grammar.language())
+
+LANGUAGE = Language("./src/Utils/lua.dll", name="lua")
 
 node_types = LANGUAGE.node_kind_count
 AST_NODES = {
-    LANGUAGE.node_kind_for_id(i): i for i in range(node_types)
+   LANGUAGE.node_kind_for_id(i): i for i in range(node_types)
 }
 
 class PROMPT_TOKENS(Enum):
@@ -22,9 +22,8 @@ class PROMPT_TOKENS(Enum):
 
 class Tokeniser:
     def __init__(self):
-        self.parser = Parser(LANGUAGE)
-        self.literals = {}
-        self.literal_counter = 0
+        self.parser = Parser()
+        self.parser.set_language(LANGUAGE)
 
     def generate_ast(self, code):
         tree = self.parser.parse(code.encode("utf8"))
@@ -38,6 +37,7 @@ class Tokeniser:
         else:
             program = text
             output = ""
+        self.program = program
 
         # Parse the program
         tree = self.generate_ast(program)
@@ -46,88 +46,183 @@ class Tokeniser:
         input_tokens.append(PROMPT_TOKENS.PROGRAM_END.value)
         
         # Tokenize the output directly (no AST needed for output)
-        output_tokens = output.split()
+        output_tokens = output.split() if output else []
         
         # Combine for vocabulary building but keep track of what's output
         all_tokens = input_tokens + output_tokens
         
-        return input_tokens, output_tokens, all_tokens, self.literals
+        return input_tokens, output_tokens, all_tokens
 
     def traverse_ast(self, node):
         tokens = []
-        
-        # Only include node type for program structure
-        tokens.append(node.type)
-        
-        # For nodes containing literal values, add the actual value
-        if node.type in ["string", "number", "identifier"]:
-            placeholder = f"<LIT_{node.type.upper()}_{self.literal_counter}>"
-            literal = node.text.decode('utf8')
-            self.literals[placeholder] = literal
-            tokens.append(placeholder)
-            self.literal_counter += 1
+
+        match node.type:
+            case 'end':
+                tokens.append('END')
+            case 'identifier':
+                tokens.append(f"IDENTIFIER({self.program[node.start_byte:node.end_byte]})")
+            case 'return':
+                tokens.append('RETURN')
+            case ';':
+                tokens.append('SEMICOLON')
+            case '=':
+                tokens.append('EQUALS')
+            case ',':
+                tokens.append('COMMA')
+            case '::':
+                tokens.append('LABEL')
+            case 'break_statement':
+                tokens.append('BREAK')
+            case 'goto':
+                tokens.append('GOTO')
+            case 'do':
+                tokens.append('DO')
+            case 'while':
+                tokens.append('WHILE')
+            case 'repeat':
+                tokens.append('REPEAT')
+            case 'until':
+                tokens.append('UNTIL')
+            case 'if':
+                tokens.append('IF')
+            case 'then':
+                tokens.append('THEN')
+            case 'elseif_statement':
+                tokens.append('ELSEIF')
+            case 'else':
+                tokens.append('ELSE')
+            case 'for_statement':
+                tokens.append('FOR')
+            case 'in':
+                tokens.append('IN')
+            case 'function':
+                tokens.append('FUNCTION')
+            case 'local':
+                tokens.append('LOCAL')
+            case 'nil':
+                tokens.append('NIL')
+            case 'false':
+                tokens.append('FALSE')
+            case 'true':
+                tokens.append('TRUE')
+            case 'number':
+                tokens.append(f'NUMBER({self.program[node.start_byte:node.end_byte]})')
+            case 'string_content':
+                tokens.append(f'STRING({self.program[node.start_byte:node.end_byte]})')
+            case '+':
+                tokens.append('PLUS')
+            case '-':
+                tokens.append('MINUS')
+            case '*':
+                tokens.append('MULTIPLY')
+            case '/':
+                tokens.append('DIVIDE')
+            case '..':
+                tokens.append('CONCAT')
+            case '==':
+                tokens.append('EQUALITY')
+            case '~=':
+                tokens.append('NOT_EQUAL')
+            case '<':
+                tokens.append('LESS_THAN')
+            case '<=':
+                tokens.append('LESS_THAN_EQUAL')
+            case '>':
+                tokens.append('GREATER_THAN')
+            case '>=':
+                tokens.append('GREATER_THAN_EQUAL')
+            case '%':
+                tokens.append('MODULUS')
+            case 'function_call':
+                tokens.extend(self.process_function_call(node))
+                return tokens
+            case _:
+                pass
+                #tokens.append(f'UNKNOWN({node.type})')
+    
             
         # Recursively process children
         for child in node.children:
             tokens.extend(self.traverse_ast(child))
             
         return tokens
+    
+    def process_function_call(self, node):
+        """Process a function_call node and return its tokens."""
+        tokens = []
+        if node.child_count > 0:
+            func_node = node.children[0]  # First child is the function expression
+            if func_node.type == 'identifier':
+                func_name = self.program[func_node.start_byte:func_node.end_byte]
+                tokens.append(f'FUNCTION_CALL({func_name})')
+            elif func_node.type == 'field_expression':
+                func_name = self._extract_field_expression(func_node)
+                tokens.append(f'FUNCTION_CALL({func_name})')
+            elif func_node.type == 'variable' and node.child_count > 1 and node.children[1].type == ':':
+                obj_node = func_node.children[0]
+                method_node = node.children[2]
+                if obj_node.type == 'identifier' and method_node.type == 'identifier':
+                    obj_name = self.program[obj_node.start_byte:obj_node.end_byte]
+                    method_name = self.program[method_node.start_byte:method_node.end_byte]
+                    tokens.append(f'FUNCTION_CALL({obj_name}:{method_name})')
+            # Process arguments (skip the function name child)
+            for child in node.children[1:]:
+                tokens.extend(self.traverse_ast(child))
+        return tokens
+    
+    def _extract_field_expression(self, node):
+        """Helper to extract full name from a field_expression like table.insert"""
+        parts = []
+        current = node
+        while current.child_count > 0:
+            if current.type == 'field_expression':
+                # Left part is the base (e.g., table), right is the field (e.g., insert)
+                if current.child_count >= 3:  # base, dot, field
+                    base = current.children[0]
+                    field = current.children[2]
+                    if base.type == 'identifier':
+                        parts.insert(0, self.program[base.start_byte:base.end_byte])
+                    if field.type == 'identifier':
+                        parts.append(self.program[field.start_byte:field.end_byte])
+                    current = base  # Continue with nested base if any
+                else:
+                    break
+            else:
+                break
+        return '.'.join(parts[::-1])  # Reverse to get table.insert order
 
-def tokenizer(text):
+def tokenizer(text, word2idx):
     tokeniser = Tokeniser()
-    input_tokens, output_tokens, all_tokens, literals = tokeniser.tokenise_code(text)
+    input_tokens, output_tokens, all_tokens = tokeniser.tokenise_code(text)
     
     # Create vocabulary from all tokens
     vocab = set(all_tokens)
     vocab.update(PROMPT_TOKENS.get_list())
     
     # Convert to index mapping
-    t_to_i = {token: idx for idx, token in enumerate(sorted(vocab))}
+    t_to_i = word2idx
+    i_to_t = {idx: token for token, idx in t_to_i.items()}
+
+    unk_idx = t_to_i.get(PROMPT_TOKENS.UNK.value, -1)  # Ensure <unk> exists
+    if unk_idx == -1:
+        raise ValueError("<unk> not found in provided word2idx")
     
     # Convert tokens to indices
     input_indices = [t_to_i[token] for token in input_tokens]
     output_indices = [t_to_i[token] for token in output_tokens]
     
-    return (input_indices, output_indices), t_to_i, literals
+    return (input_indices, output_indices), (t_to_i, i_to_t)
 
 if __name__ == "__main__":
     text = """
-                       function fizzbuzz(n)
-    for i = 1, n do
-        if i % 3 == 0 and i % 5 == 0 then
-            print("FizzBuzz") 
-        elseif i % 3 == 0 then
-            print("Fizz")     
-        elseif i % 5 == 0 then
-            print("Buzz")     
-        else
-            print(i)        
-        end
-    end
-end
-fizzbuzz(100)
+print('Xenophile')
 <PROGRAM END>
-1
-2
-3
 """
-    (input, output), t_to_i = tokenizer(text)
+    (input, output), (t_to_i, i_to_t) = tokenizer(text)
     print("INPUT: \n")
     print(input)
+    print([i_to_t[i] for i in input])
+    
     print("\n\nOUTPUT: \n")
     print(output)
-
-    program = """
-    print("Hello Sheep!")
-    <PROGRAM END>
-    Hello Sheep!
-    """
-
-    (input, output), t_to_i = tokenizer(program)
-    print("INPUT: \n")
-    print(input)
-    print("\n\nOUTPUT: \n")
-    print(output)
-
-
-    print(t_to_i)
+    print([i_to_t[i] for i in output])

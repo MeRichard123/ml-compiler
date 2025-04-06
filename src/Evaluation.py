@@ -18,6 +18,7 @@ class Evaluator:
         self.test = test_dataset
         self.lm = lm
         self.k = k
+        self.word2idx = self.lm.word2idx
 
     def pad_vectors(self, vec1, vec2):
         max_len = max(vec1.size(1), vec2.size(1))
@@ -31,18 +32,28 @@ class Evaluator:
 
         return vec1, vec2
 
-    def evaluate(self):
+    def evaluate(self, log = True):
+        metrics_sum = {
+            'perplexity': 0,
+            'pass_at_k': 0,
+            'exact_match': 0,
+            'similarity': 0
+        }
+        n_samples = 0
+
         for prompt in self.test.get_prompts():
             idx = prompt.index("<PROGRAM END>")
             input_prompt = ''.join(prompt[0: idx])  # Extract the input prompt
 
-            generated_output = self.lm.sample(input_prompt).split("<PROGRAM END>")[1] # Generate output based on the input prompt
+            generated_output = self.lm.sample(input_prompt)  # Generate output based on the input prompt
+            print(f"Generated Output: {generated_output}")
+            #generated_output = self.lm.sample(input_prompt).split("<PROGRAM END>")[1] # Generate output based on the input prompt
         
             expected_output = prompt.split("<PROGRAM END>")[1]
 
-            (exp_int, _), _, _ = tokenizer(expected_output)
+            (exp_int, _), _ = tokenizer(expected_output, self.word2idx)
             exp_vec = torch.tensor([exp_int], dtype=torch.long, device=self.lm.device)
-            (out_int, _), _, _ = tokenizer(generated_output)
+            (out_int, _), _ = tokenizer(generated_output, self.word2idx)
             out_vec = torch.tensor([out_int], dtype=torch.long, device=self.lm.device)
 
             out_vec, exp_vec = self.pad_vectors(out_vec, exp_vec)
@@ -52,17 +63,26 @@ class Evaluator:
             perplexity = self.perplexity(out_vec, exp_vec)
             pass_at_k = self.pass_at_k(out_vec, exp_vec, self.k)
             exact_match = self.exact_match(out_vec, exp_vec)
-
-            print("-------------------- Data -----------------")
-            print(f"Input: {input_prompt}")
-            print(f"Output: {generated_output}")
-            print(f"Expected: {expected_output}")
-            print("----------------- Metrics ------------------")
-            print(f"Sentence Similarity: {similarity}")
-            print(f"Perplexity: {perplexity}")
-            print(f"Pass@{self.k}: {pass_at_k}")
-            print(f"Exact Match: {exact_match}")
-            print("\n\n\n\n\n")
+            if log:
+                print("-------------------- Data -----------------")
+                print(f"Input: {input_prompt}")
+                print(f"Output: {generated_output}")
+                print(f"Expected: {expected_output}")
+                print("----------------- Metrics ------------------")
+                print(f"Sentence Similarity: {similarity}")
+                print(f"Perplexity: {perplexity}")
+                print(f"Pass@{self.k}: {pass_at_k}")
+                print(f"Exact Match: {exact_match}")
+                print("\n\n\n\n\n")
+            
+            metrics_sum['perplexity'] += perplexity
+            metrics_sum['pass_at_k'] += pass_at_k
+            metrics_sum['exact_match'] += exact_match
+            metrics_sum['similarity'] += similarity
+            n_samples += 1
+            
+        metrics_avg = {k : v/n_samples for k,v in metrics_sum.items()}
+        return metrics_avg
 
     def sentence_similarity(self, vec1, vec2):
         similarity = nn.functional.cosine_similarity(

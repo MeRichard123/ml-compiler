@@ -3,14 +3,13 @@ import torch
 
 class MoeLayer(nn.Module):
     # Dense layer with a mixture of experts
-    def __init__(self, num_experts, n_embed, k = 1):
+    def __init__(self, num_experts, n_embed):
         super(MoeLayer, self).__init__()
         self.experts = nn.ModuleList(
             [nn.Linear(n_embed, n_embed) for _ in range(num_experts)]
             )
         assert len(self.experts) > 0
         self.gate = nn.Linear(n_embed, num_experts, bias=False)
-        self.k = k
 
     def forward(self, inputs: torch.Tensor):
         batch_size, seq_len, n_embed = inputs.shape 

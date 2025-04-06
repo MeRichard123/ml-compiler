@@ -16,7 +16,7 @@ class LanguageModel:
         self.criterion: nn.Module   = nn.NLLLoss()  #  negative log likelihood loss
         self.loss: torch.Tensor     = torch.Tensor([0]).to(device)
         self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
-        self.max_sample_length: int = 10
+        self.max_sample_length: int = 2
         self.device: str            = device
         self.vocab_size: int        = vocab_size
         
@@ -36,52 +36,59 @@ class LanguageModel:
         self.text_idx = torch.tensor(all_indices, dtype=torch.long, device=self.device)
 
         print(f"Vocabulary Size: {len(self.word2idx)}")
-        print(f"Sample Indexed Text: {self.text_idx[:10]}")  # Display first few indices
 
     def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor, use_teacher_forcing: bool = False):
         batch_size = input_tensor.size(0)
         hidden = self.model.initHidden(batch_size)
 
         self.optimizer.zero_grad()
-        self.model.zero_grad()
         self.loss = 0
 
         # Process input sequence
         embedded_input = self.embedding(input_tensor.long()).to(self.device)
-        
-        # Get final hidden state from processing input
-        for i in range(input_tensor.size(1)):
-            input_word = embedded_input[:, i, :].unsqueeze(1)
-            _, hidden = self.model(input_word, hidden)
+
+        for t in range(input_tensor.size(1)):
+            curr_input = embedded_input[:, t:t+1, :]
+            output, hidden = self.model(curr_input, hidden)
 
         # Now generate output sequence
         output_seq = []
-        current_hidden = hidden
-        current_input = embedded_input[:, 0, :].unsqueeze(1)
+        current_input = embedded_input[:, 0, :].unsqueeze(1)  # Start with the first token of the input sequence
 
-        for i in range(target_tensor.size(1) - 1):
-            output, current_hidden = self.model(current_input, current_hidden)
+        # Iterate over the target sequence
+        for t in range(target_tensor.size(1) - 1):  # Exclude the last token for teacher forcing
+            # Generate the model's output for the current input
+            output, hidden = self.model(current_input, hidden)
             output_seq.append(output)
-            
-            target_word = target_tensor[:, i+1].to(self.device)
+
+            # Get the target word for the current timestep
+            target_word = target_tensor[:, t].to(self.device)
+
+            # decode the target word
+            target_tokens = [self.idx2word[idx.item()] for idx in target_word]
+            predicted_word = torch.argmax(output[:, -1, :], dim=1)
+            predicted_tokens = [self.idx2word[idx.item()] for idx in predicted_word]
+
+            # Compute the loss between model output and target word
             l = self.criterion(output[:, -1, :], target_word)
             self.loss += l
 
-            if use_teacher_forcing: 
-                # feed the target as the next input
+            if use_teacher_forcing:
+                # Feed the target as the next input
                 current_input = self.embedding(target_word.long()).unsqueeze(1)
             else:
-                # take the last output and feed it back into the model
+                # Use the predicted word as the next input
                 predicted_word = torch.argmax(output[:, -1, :], dim=1)
                 current_input = self.embedding(predicted_word.long()).unsqueeze(1)
 
+        # Backpropagate and optimize the model
         self.loss.backward()
         self.optimizer.step()
 
         return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
-    
+        
     def train_loop(self, dataloader: DataLoader, suffix: str = "", use_teacher_forcing: bool = False):
-        n_iters = 15
+        n_iters = 1250
         print_every = 500
         plot_every = 250
 
@@ -98,10 +105,9 @@ class LanguageModel:
                 # Access 'input' and 'output' from the batch dictionary
                 self.input = batch['input'].to(self.device)  # Get input tensor
                 self.target = batch['output'].to(self.device)  # Get target tensor
-                self.literals = batch['literals']  # Get literals tensor
 
                 # (batch_size, seq_length, vocab_size), Scalar
-                output, loss = self.__train(self.input, self.target, use_teacher_forcing) # add tensors
+                _, loss = self.__train(self.input, self.target, use_teacher_forcing) # add tensors
                 total_loss += loss
                 num_batches += 1
 
@@ -123,19 +129,24 @@ class LanguageModel:
 
 
 
-    def sample(self, prompt: str = " ", temperature:float = 0.8):
+    def sample(self, prompt: str = " ", temperature: float = 1):
         prompt += " <PROGRAM END>"
+        print(f"Prompt: {prompt}")
         with torch.no_grad():
-            # Split prompt into words and convert to indices
-            indices, _, literals = tokenizer(prompt)
-            
-            input = torch.tensor([indices[0]], dtype=torch.long).to(self.device)
+            (input_indices, _), (_, _) = tokenizer(prompt, self.word2idx)
+            #print(f"Input Indices: {input_indices}")
+            #print([i_to_t[idx] for idx in input_indices])
+
+            input = torch.tensor(input_indices, dtype=torch.long).unsqueeze(0).to(self.device)
             hidden = self.model.initHidden()
+
+            # decodce the input
+            #input_tokens = [i_to_t[idx] for idx in input_indices]
+            #print(f"Input Tokens: {input_tokens}")
 
             # Process the entire prompt sequence first
             embedded_input = self.embedding(input).to(self.device)
 
-                    # Process one token at a time to match training
             for i in range(embedded_input.size(1)):
                 curr_input = embedded_input[:, i:i+1, :]  # [1, 1, embedding_dim]
                 output, hidden = self.model(curr_input, hidden)
@@ -146,19 +157,15 @@ class LanguageModel:
             generated_count = 0
 
             while next_word != '<eos>' and generated_count < self.max_sample_length: 
-                # Use last output for next prediction
-                output = nn.functional.softmax(output[:,-1,:] / temperature, dim=1)
-                top_probs, top_indices = torch.topk(output, 10)
+                output_probs = nn.functional.softmax(output[:, -1, :] / temperature, dim=1)
+                topprobs = torch.topk(output_probs, 10, dim=1)
 
-                topi = torch.multinomial(output, 1)[0][0].item()
-                LOGGER(f"topV = {output[0][topi]} topi = {topi}")
-                # Sample next token
+                # Sample from full probability distribution
+                topi = torch.multinomial(output_probs, 1).item()
+                LOGGER(f"topV = {output_probs[0][topi]} topi = {topi}")
 
                 next_word = self.idx2word[topi]
                 LOGGER(f"Generated: {next_word}")
-
-                if next_word.startswith("<LIT"):
-                    next_word = literals.get(next_word, next_word)
 
                 if next_word == '<eos>' and generated_count == 0:
                     LOGGER("Warning: Model generated <eos> immediately, check input processing.")
@@ -166,20 +173,20 @@ class LanguageModel:
                 
                 if next_word == '<eos>':
                     break
-                
-                output_text += (' ' + next_word)
+
+                output_text += ' ' + next_word
                 generated_count += 1
 
-                # Prepare input for next iteration
+                # Update input and hidden state
                 input = torch.tensor([[topi]], dtype=torch.long).to(self.device)
                 embedded_input = self.embedding(input).to(self.device)
                 output, hidden = self.model(embedded_input, hidden)
 
         return output_text
 
-
-
     def save_model(self, path: str):
+        if not path.endswith(".pth"):
+            path += ".pth"
         torch.save(self.model.state_dict(), path)
 
     def load_model(self, path: str):

@@ -3,35 +3,27 @@ from torch.utils.data import random_split, IterableDataset
 from torch.nn.utils.rnn import pad_sequence
 import os
 from Parser import tokenizer, Tokeniser
-
+from itertools import chain
+from Parser import PROMPT_TOKENS
 
 def collate_fn(batch):
     batch = sorted(batch, key=lambda x: len(x['input']), reverse=True)
     
     input_sequences = [x['input'] for x in batch]  # Already tensors from your dataset
     output_sequences = [x['output'] for x in batch]
-    literals_list = [x.get('literals', {}) for x in batch]
-    
-    # Add length checks
-    max_len = max(len(seq) for seq in input_sequences)
-    if max_len > 10000:  # Arbitrary large number
-        raise ValueError(f"Sequence too long: {max_len} tokens")
     
     padded_input = pad_sequence(input_sequences, batch_first=True, padding_value=0)
     padded_output = pad_sequence(output_sequences, batch_first=True, padding_value=0)
-
-    merged_literals = {}
-    for lit_dict in literals_list:
-        merged_literals.update(lit_dict)
     
-    return {'input': padded_input, 'output': padded_output, 'literals': merged_literals}
+    return {'input': padded_input, 'output': padded_output}
 
 
 class CodeDatasetSubset(IterableDataset):
-    def __init__(self, data_dir, file_list, tokenizer):
+    def __init__(self, data_dir, file_list, tokenizer, word2idx):
         self.data_dir = data_dir
         self.data = file_list
         self.tokenizer = tokenizer
+        self.word2idx = word2idx
     
     def __iter__(self):
         for filename in self.data:
@@ -39,12 +31,11 @@ class CodeDatasetSubset(IterableDataset):
             with open(data_path, "r") as f:
                 text = f.read().strip() + "\n <eos>"
             
-            (input_indices, output_indices), _, literals = self.tokenizer(text)
+            (input_indices, output_indices), _, = self.tokenizer(text, self.word2idx)
             
             yield {
                 'input': torch.tensor(input_indices, dtype=torch.long),
                 'output': torch.tensor(output_indices, dtype=torch.long),
-                'literals': literals
             }
 
     def get_prompts(self):
@@ -56,30 +47,47 @@ class CodeDatasetSubset(IterableDataset):
                 if len(text) > 0:
                     prompts.append(text)
         return prompts
-
+    
+    def build_vocab(self):
+        t_to_i = {}
+        i_to_t = {}
+        all_tokens = set()
+        for data_path in self.data:
+            with open(os.path.join(self.data_dir, data_path), "r") as f:
+                text = f.read()
+                input_tokens, output_tokens, _ = Tokeniser().tokenise_code(text)
+                all_tokens.update(input_tokens + output_tokens)
+        all_tokens.update(PROMPT_TOKENS.get_list())
+        vocab = sorted(list(all_tokens))  # Convert to sorted list for consistent indexing
+        word2idx = {token: idx for idx, token in enumerate(vocab)}
+        idx2word = {idx: token for token, idx in word2idx.items()}
+        return {
+            "vocab": vocab,
+            "word2idx": word2idx,
+            "idx2word": idx2word,
+            "size": len(vocab)
+        }
 
 class CodeDataset(IterableDataset):
     def __init__(self, curricum_num=1):
-        self.data_dir = f"./training_examples/Curriculum{curricum_num}"
+        #self.data_dir = f"./training_examples/Curriculum{curricum_num}"
+        self.data_dir = f"./training_examples/Testing"
         self.tokenizer = tokenizer
         self.data = os.listdir(self.data_dir)
+        self.vocab = self.build_vocab()
+        self.word2idx = self.vocab["word2idx"]
 
     def build_vocab(self):
-        vocab = set()  # Use a set to accumulate unique tokens
-        # Add literals from training data
+        all_tokens = set()
         for data_path in self.data:
-            data_path = os.path.join(self.data_dir, data_path)
-            with open(data_path, "r") as f:
+            with open(os.path.join(self.data_dir, data_path), "r") as f:
                 text = f.read()
-                current_vocab = self.tokenizer(text)[1].keys()
-                current_vocab = filter(lambda x: not (x in ['"', "'",'", "']), current_vocab)
-                vocab.update(current_vocab)  # Update
-
-        vocab = sorted(list(vocab))  # Convert to sorted list for consistent indexing
-        
-        word2idx = {word: idx for idx, word in enumerate(vocab)}
-        idx2word = {idx: word for idx, word in enumerate(vocab)}
-
+                input_tokens, output_tokens, _ = Tokeniser().tokenise_code(text)
+                all_tokens.update(input_tokens + output_tokens)
+        all_tokens.update(PROMPT_TOKENS.get_list())
+        vocab = sorted(list(all_tokens))  # Convert to sorted list for consistent indexing
+        word2idx = {token: idx for idx, token in enumerate(vocab)}
+        idx2word = {idx: token for token, idx in word2idx.items()}
         return {
             "vocab": vocab,
             "word2idx": word2idx,
@@ -97,10 +105,42 @@ class CodeDataset(IterableDataset):
         train_files = self.data[:split_idx]
         test_files = self.data[split_idx:]
         
-        train_dataset = CodeDatasetSubset(self.data_dir, train_files, self.tokenizer)
-        test_dataset = CodeDatasetSubset(self.data_dir, test_files, self.tokenizer)
+        train_dataset = CodeDatasetSubset(
+            self.data_dir, 
+            train_files,
+            self.tokenizer,
+            self.word2idx
+            )
+        test_dataset = CodeDatasetSubset(
+            self.data_dir,
+            test_files,
+            self.tokenizer,
+            self.word2idx
+            )
         
         return train_dataset, test_dataset
+    
+    def lpocv_split(self, p = 10):
+        splits = []
+        for i in range(len(self.data) - p + 1):
+            test_file = [self.data[i:i+p]]
+            train_files = self.data[:i] + self.data[i+p:]
+
+            train_dataset = CodeDatasetSubset(
+                self.data_dir, 
+                train_files, 
+                self.tokenizer,
+                self.word2idx
+                )
+            test_dataset = CodeDatasetSubset(
+                self.data_dir, 
+                test_file, 
+                self.tokenizer,
+                self.word2idx
+                )
+
+            splits.append((train_dataset, test_dataset))
+        return splits
     
     def load_data(self):
         """ Generator function that lazily reads files and tokenizes data. """
@@ -109,7 +149,7 @@ class CodeDataset(IterableDataset):
             with open(data_path, "r") as f:
                 text = f.read().strip() + "\n <eos>"
 
-            (input_indices, output_indices), _, literals = self.tokenizer(text)
+            (input_indices, output_indices), (_,_),  = self.tokenizer(text, self.word2idx)
             
                     # Add validation
             if len(output_indices) > 1000:  # Adjust threshold as needed
@@ -117,11 +157,10 @@ class CodeDataset(IterableDataset):
                 print(f"Input len: {len(input_indices)}, Output len: {len(output_indices)}")
                 print(f"First 100 chars: {text[:100]}...")
                 continue  # Skip this file or raise an error
-            
+
             yield {
                 'input': torch.tensor(input_indices, dtype=torch.long),
                 'output': torch.tensor(output_indices, dtype=torch.long),
-                'literals': literals
             }
 
     def __iter__(self):

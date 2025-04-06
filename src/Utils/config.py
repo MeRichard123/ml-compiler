@@ -1,2 +1,2 @@
 LOGGING = not True 
-SHAPE_LOG = not True
+SHAPE_LOGGING = not True
