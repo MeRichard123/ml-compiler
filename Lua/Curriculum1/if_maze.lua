@@ -1,0 +1,5 @@
+if true then
+   print("maze")
+else
+   print("Keep it simple")
+end

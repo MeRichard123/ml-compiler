@@ -1,6 +1,0 @@
--- Simple while loop in Lua
-count = 1
-while count <= 5 do
-    print("Count: " .. count)
-    count = count + 1
-end

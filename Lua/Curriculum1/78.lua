@@ -1,4 +1,0 @@
-battery = 5
-if battery < 10 then
-    print("Low battery")
-end

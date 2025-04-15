@@ -1,5 +1,0 @@
-falsehood = false
-
-if not (not falsehood) then
-    print("This is false")
-end

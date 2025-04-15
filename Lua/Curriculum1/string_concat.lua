@@ -1,6 +1,0 @@
--- String concatenation in Lua
-local firstName = "John"
-local lastName = "Doe"
-local fullName = firstName .. " " .. lastName
-
-print(fullName)  -- Output: John Doe

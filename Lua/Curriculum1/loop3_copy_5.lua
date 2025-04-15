@@ -1,5 +1,0 @@
-i = 5
-while i <= 9 do
-    print(i)
-    i = i + 1
-end

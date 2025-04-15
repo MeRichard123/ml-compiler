@@ -1,5 +1,0 @@
-function add(a, b)
-    return { sum = a + b }
-end
-result = add(10, 15)
-print(result.sum)

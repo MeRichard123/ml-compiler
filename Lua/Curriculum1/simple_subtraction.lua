@@ -1,5 +1,0 @@
--- Simple subtraction in Lua
-a = 20
-b = 7
-difference = a - b
-print("The difference is: " .. difference)

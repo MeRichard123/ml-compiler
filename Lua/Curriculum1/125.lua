@@ -1,6 +1,0 @@
-time = 14
-if time < 12 then
-    print("Good morning!")
-else
-    print("Good afternoon!")
-end

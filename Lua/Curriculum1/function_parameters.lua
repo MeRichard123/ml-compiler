@@ -1,7 +1,0 @@
--- Function with parameters in Lua
-function calculateArea(length, width)
-    return length * width
-end
-
-local rectangleArea = calculateArea(5, 3)
-print("The area of a 5x3 rectangle is " .. rectangleArea .. " square units")  -- Output: The area of a 5x3 rectangle is 15 square units

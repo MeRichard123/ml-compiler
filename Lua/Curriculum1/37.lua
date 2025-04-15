@@ -1,5 +1,0 @@
-z = 5
-while z > 0 do
-    print("Z countdown: " .. z)
-    z = z - 1
-end

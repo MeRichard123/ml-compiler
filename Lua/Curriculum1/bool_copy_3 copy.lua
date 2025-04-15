@@ -1,2 +1,0 @@
-fact = false
-print(fact)

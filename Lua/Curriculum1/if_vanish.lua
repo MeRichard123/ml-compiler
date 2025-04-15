@@ -1,0 +1,5 @@
+if false then
+   print("vanish")
+else
+   print("Fuel the fire")
+end

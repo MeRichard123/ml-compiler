@@ -1,0 +1,5 @@
+if true then
+   print("jolt")
+else
+   print("Keep rising")
+end

@@ -1,2 +1,0 @@
-numbers = {4, 8, 12}
-print("Total: " .. (numbers[1] + numbers[2] + numbers[3]))

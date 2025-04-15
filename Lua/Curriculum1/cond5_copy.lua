@@ -1,4 +1,0 @@
-x = 20
-if x == 20 then
-    print("x is 20")
-end

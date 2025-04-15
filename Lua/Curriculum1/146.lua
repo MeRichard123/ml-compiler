@@ -1,8 +1,0 @@
-function divide(a, b)
-    if b ~= 0 then
-        print("Result: " .. (a / b))
-    else
-        print("Cannot divide by zero")
-    end
-end
-divide(10, 2)

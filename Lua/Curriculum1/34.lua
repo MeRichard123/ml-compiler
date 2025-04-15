@@ -1,5 +1,0 @@
-n = 1
-while n < 6 do
-    print("Counting: " .. n)
-    n = n + 1
-end

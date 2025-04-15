@@ -1,0 +1,8 @@
+if false then
+   print("giant")
+else
+   print("Think slow")
+end
+
+<PROGRAM END>
+Think slow

@@ -1,4 +1,0 @@
-temperature = 5
-if temperature < 10 then
-    print("It's cold!")
-end

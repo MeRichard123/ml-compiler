@@ -1,4 +1,0 @@
-x = 100
-if x == 100 then
-    print("x is 100")
-end

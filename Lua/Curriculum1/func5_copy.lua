@@ -1,4 +1,0 @@
-function max(a, b)
-    return math.max(a, b)
-end
-print(max(3, 7))

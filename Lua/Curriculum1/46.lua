@@ -1,4 +1,0 @@
-function get_message()
-    return "Lua is fun!"
-end
-print(get_message())

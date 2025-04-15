@@ -1,3 +1,0 @@
-for i = 2, 6 do
-    print(i)
-end

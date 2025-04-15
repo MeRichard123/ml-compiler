@@ -1,6 +1,0 @@
-x, y = 5, 10
-if x == y then
-    print("x equals y")
-else
-    print("x does not equal y")
-end

@@ -1,8 +1,0 @@
-function compare(a, b)
-    if a > b then
-        print(a .. " is greater")
-    else
-        print(b .. " is greater")
-    end
-end
-compare(8, 3)

@@ -1,0 +1,5 @@
+if true then
+   print("river")
+else
+   print("Stay light")
+end

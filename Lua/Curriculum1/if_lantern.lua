@@ -1,0 +1,5 @@
+if false then
+   print("lantern")
+else
+   print("Keep it simple")
+end

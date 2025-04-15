@@ -1,0 +1,5 @@
+if true then
+   print("glint")
+else
+   print("Find your fire")
+end

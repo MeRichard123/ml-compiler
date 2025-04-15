@@ -1,5 +1,0 @@
-m = 5
-n = 10
-if n > m then
-    print("n is greater than m")
-end

@@ -4,7 +4,7 @@ import subprocess
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)).replace("src\\Utils", "")
 LUA_DIR = os.path.join(BASE_DIR, "Lua")
-CURRICULUM_DIR = os.path.join(BASE_DIR, "training_examples", "Curriculum1")
+CURRICULUM_DIR = os.path.join(BASE_DIR, "training_examples", "out")
 
 def list_and_process_files(directory, file_list):
     """Function to list all files and process them with Lua."""

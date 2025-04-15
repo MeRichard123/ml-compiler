@@ -1,0 +1,1 @@
+print("Seize the day")

@@ -1,2 +1,0 @@
-pi_value = 3.14159
-print("Approximate Pi: " .. pi_value)

@@ -1,0 +1,5 @@
+if true then
+   print("battle")
+else
+   print("Think slow")
+end

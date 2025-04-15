@@ -144,16 +144,17 @@ def main():
         "minGRU_code_ast_moe_tf",
         "Testing_Model_Fast",
         "Attention_Model",
+        "minGRU_curriculum1",
     ]
 
 
 
     LM = LanguageModel(model_minGRU, len(vocab), device) 
     
-    LM.init_model(code_dataset)
     
-    LM.train_loop(train_dataloader, model_file_names[6])
-    LM.save_model(model_file_names[8])
+    LM.init_model(code_dataset)
+    LM.train_loop(train_dataloader, model_file_names[len(model_file_names) - 1])
+    LM.save_model(model_file_names[len(model_file_names) - 1])
 
 
 
@@ -168,14 +169,14 @@ def main():
     LM.load_model("./trained_models/minGRU_attention.pth")
     LM.init_model(code_dataset)
     """
-    #LM.load_model("./Testing_Model_Fast.pth")
-    #LM.init_model(code_dataset)
+    #LM.load_model("./minGRU_curriculum12025-04-15.pth")
+
     
+    print(LM.sample('print("Hello, Lua!")'))
+    print(LM.sample("print('Hello, Dude!')"))
     #eval = Evaluator(testset, LM)
     #eval.evaluate()
 
-    print(LM.sample("print('Xenophile')"))
-    print(LM.sample("print('Fandango')"))
 
 if __name__ == "__main__":
     main()

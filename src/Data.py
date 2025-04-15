@@ -70,8 +70,8 @@ class CodeDatasetSubset(IterableDataset):
 
 class CodeDataset(IterableDataset):
     def __init__(self, curricum_num=1):
-        #self.data_dir = f"./training_examples/Curriculum{curricum_num}"
-        self.data_dir = f"./training_examples/Testing"
+        self.data_dir = f"./training_examples/Curriculum{curricum_num}"
+        #self.data_dir = f"./training_examples/Testing"
         self.tokenizer = tokenizer
         self.data = os.listdir(self.data_dir)
         self.vocab = self.build_vocab()
@@ -94,6 +94,7 @@ class CodeDataset(IterableDataset):
             "idx2word": idx2word,
             "size": len(vocab)
         }
+
 
     def __len__(self):
         return len(self.data)

@@ -1,0 +1,1 @@
+print("Less is more")

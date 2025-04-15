@@ -1,0 +1,8 @@
+if false then
+   print("anchor")
+else
+   print("Silence speaks")
+end
+
+<PROGRAM END>
+Silence speaks

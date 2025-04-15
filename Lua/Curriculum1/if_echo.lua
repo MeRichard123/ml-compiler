@@ -1,0 +1,5 @@
+if true then
+   print("echo")
+else
+   print("Time flies")
+end

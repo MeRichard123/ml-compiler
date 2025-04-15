@@ -1,8 +1,0 @@
-function check_number(n)
-    if n > 0 then
-        print(n .. " is positive")
-    else
-        print(n .. " is not positive")
-    end
-end
-check_number(-5)

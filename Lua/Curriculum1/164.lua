@@ -1,2 +1,0 @@
-animals = {"Dog", "Cat", "Elephant"}
-print("First animal: " .. animals[1])

@@ -1,6 +1,0 @@
-num = 5
-if num % 2 == 0 then
-    print(num .. " is even")
-else
-    print(num .. " is odd")
-end

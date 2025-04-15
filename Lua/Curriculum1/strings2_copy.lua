@@ -1,2 +1,0 @@
-s = "Lua"
-print(#s)

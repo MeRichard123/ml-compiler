@@ -1,2 +1,0 @@
-info = {name = "Lua", version = "5.4"}
-print("Lua version: " .. info.version)

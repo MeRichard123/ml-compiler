@@ -1,8 +1,0 @@
-function check_temperature(temp)
-    if temp > 25 then
-        print("Hot")
-    else
-        print("Cold")
-    end
-end
-check_temperature(30)

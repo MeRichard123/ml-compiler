@@ -1,4 +1,0 @@
-function add(a, b)
-    print(a + b)
-end
-add(4, 6)

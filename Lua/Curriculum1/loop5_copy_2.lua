@@ -1,5 +1,0 @@
-a = 1
-repeat
-    print(a)
-    a = a + 2
-until a == 5

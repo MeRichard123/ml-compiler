@@ -1,6 +1,0 @@
-day = "Monday"
-if day == "Monday" then
-    print("Start of the work week")
-else
-    print("Not Monday")
-end

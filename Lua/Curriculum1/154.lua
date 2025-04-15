@@ -1,2 +1,0 @@
-random_value = math.random(1, 50)
-print("Random number: " .. random_value)

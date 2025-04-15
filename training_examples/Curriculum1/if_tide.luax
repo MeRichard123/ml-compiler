@@ -1,0 +1,8 @@
+if true then
+   print("tide")
+else
+   print("Stay real")
+end
+
+<PROGRAM END>
+tide

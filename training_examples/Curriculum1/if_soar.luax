@@ -1,0 +1,8 @@
+if false then
+   print("soar")
+else
+   print("Find your fire")
+end
+
+<PROGRAM END>
+Find your fire

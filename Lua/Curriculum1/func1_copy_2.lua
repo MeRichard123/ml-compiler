@@ -1,4 +1,0 @@
-hello_function = function()
-    print("Hey!")
-end
-hello_function()

@@ -1,0 +1,1 @@
+print("Walk your way")

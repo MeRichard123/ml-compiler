@@ -1,2 +1,0 @@
-e = nil
-print(e)

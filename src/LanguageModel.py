@@ -37,6 +37,30 @@ class LanguageModel:
 
         print(f"Vocabulary Size: {len(self.word2idx)}")
 
+    def update_vocab(self, new_word2idx):
+        new_vocab_size = len(new_word2idx)
+        old_embedding = self.embedding 
+        old_fc = self.model.fc
+
+        # resize the embedding layer
+        self.embedding = nn.Embedding(new_vocab_size, self.model.embedding_dim).to(self.device)
+        with torch.no_grad():
+            for token, idx in new_word2idx.items():
+                if idx < old_embedding.num_embeddings:
+                    self.embedding.weight[idx] = old_embedding.weight[idx]
+
+        # resize the final fully connected layer
+        self.model.fc = nn.Linear(old_fc.in_features, new_vocab_size).to(self.device)
+        with torch.no_grad():
+            for idx in range(min(old_fc.out_features, new_vocab_size)):
+                self.model.fc.weight[idx] = old_fc.weight[idx]
+                self.model.fc.bias[idx] = old_fc.bias[idx]
+        
+        self.vocab["word2idx"] = new_word2idx
+        self.word2idx = new_word2idx
+        self.idx2word = {idx: token for token, idx in new_word2idx.items()}
+        self.vocab_size = new_vocab_size 
+
     def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor, use_teacher_forcing: bool = False):
         batch_size = input_tensor.size(0)
         hidden = self.model.initHidden(batch_size)
@@ -47,16 +71,16 @@ class LanguageModel:
         # Process input sequence
         embedded_input = self.embedding(input_tensor.long()).to(self.device)
 
-        for t in range(input_tensor.size(1)):
-            curr_input = embedded_input[:, t:t+1, :]
-            output, hidden = self.model(curr_input, hidden)
-
         # Now generate output sequence
         output_seq = []
         current_input = embedded_input[:, 0, :].unsqueeze(1)  # Start with the first token of the input sequence
 
+        for t in range(input_tensor.size(1)):
+            curr_input = embedded_input[:, t:t+1, :]
+            _, hidden = self.model(curr_input, hidden)
+
         # Iterate over the target sequence
-        for t in range(target_tensor.size(1) - 1):  # Exclude the last token for teacher forcing
+        for t in range(target_tensor.size(1)):
             # Generate the model's output for the current input
             output, hidden = self.model(current_input, hidden)
             output_seq.append(output)
@@ -64,22 +88,21 @@ class LanguageModel:
             # Get the target word for the current timestep
             target_word = target_tensor[:, t].to(self.device)
 
-            # decode the target word
-            target_tokens = [self.idx2word[idx.item()] for idx in target_word]
-            predicted_word = torch.argmax(output[:, -1, :], dim=1)
-            predicted_tokens = [self.idx2word[idx.item()] for idx in predicted_word]
-
             # Compute the loss between model output and target word
             l = self.criterion(output[:, -1, :], target_word)
             self.loss += l
 
-            if use_teacher_forcing:
-                # Feed the target as the next input
-                current_input = self.embedding(target_word.long()).unsqueeze(1)
-            else:
-                # Use the predicted word as the next input
-                predicted_word = torch.argmax(output[:, -1, :], dim=1)
-                current_input = self.embedding(predicted_word.long()).unsqueeze(1)
+            #print(f"Input: {[self.idx2word[i.item()] for i in input_tensor[0]]}")
+            #print(f"Target: {[self.idx2word[i.item()] for i in target_tensor[0]]}")
+
+            if t < target_tensor.size(1) - 1:
+                if use_teacher_forcing:
+                    # Feed the target as the next input
+                    current_input = self.embedding(target_word.long()).unsqueeze(1)
+                else:
+                    # Use the predicted word as the next input
+                    predicted_word = torch.argmax(output[:, -1, :], dim=1)
+                    current_input = self.embedding(predicted_word.long()).unsqueeze(1)
 
         # Backpropagate and optimize the model
         self.loss.backward()
@@ -88,7 +111,7 @@ class LanguageModel:
         return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
         
     def train_loop(self, dataloader: DataLoader, suffix: str = "", use_teacher_forcing: bool = False):
-        n_iters = 1250
+        n_iters = 1500
         print_every = 500
         plot_every = 250
 
@@ -133,16 +156,17 @@ class LanguageModel:
         prompt += " <PROGRAM END>"
         print(f"Prompt: {prompt}")
         with torch.no_grad():
-            (input_indices, _), (_, _) = tokenizer(prompt, self.word2idx)
-            #print(f"Input Indices: {input_indices}")
-            #print([i_to_t[idx] for idx in input_indices])
+            (input_indices, _), (t_to_i, _) = tokenizer(prompt, self.word2idx)
+
+            new_tokens = [token for token, idx in t_to_i.items() if token not in self.word2idx]
+
+            if new_tokens:
+                # Update the model's vocabulary
+                new_word2idx = {token: idx for idx, token in enumerate(new_tokens, start=len(self.word2idx))}
+                self.update_vocab(new_word2idx)
 
             input = torch.tensor(input_indices, dtype=torch.long).unsqueeze(0).to(self.device)
             hidden = self.model.initHidden()
-
-            # decodce the input
-            #input_tokens = [i_to_t[idx] for idx in input_indices]
-            #print(f"Input Tokens: {input_tokens}")
 
             # Process the entire prompt sequence first
             embedded_input = self.embedding(input).to(self.device)
@@ -185,13 +209,37 @@ class LanguageModel:
         return output_text
 
     def save_model(self, path: str):
+        import datetime
+        if path.endswith(".pth"):
+            path = path[:-4]
+            
+        path += datetime.datetime.now().strftime("%Y-%m-%d")
         if not path.endswith(".pth"):
             path += ".pth"
-        torch.save(self.model.state_dict(), path)
+
+        state = {
+            'model_state_dict': self.model.state_dict(),
+            'optimizer_state_dict': self.optimizer.state_dict(),
+            'loss': self.loss,
+            'vocab_size': self.vocab_size,
+            'word2idx': self.word2idx,
+            'idx2word': self.idx2word,
+            'embedding': self.embedding.state_dict(),
+        }
+        torch.save(state, path)
 
     def load_model(self, path: str):
-        self.model.load_state_dict(torch.load(path, weights_only=True))
-        self.model.eval()
+        state = torch.load(path, weights_only=True)
+        self.model.load_state_dict(state['model_state_dict'])
+        self.optimizer.load_state_dict(state['optimizer_state_dict'])
+        self.loss = state['loss']
+        self.vocab_size = state['vocab_size']
+        self.word2idx = state['word2idx']
+        self.idx2word = state['idx2word']
+        self.embedding.load_state_dict(state['embedding'])
+        self.embedding.to(self.device)
         self.model.to(self.device)
+        self.model.eval()
+
         LOGGER(f"Model loaded from {path}")
         return self.model

@@ -1,8 +1,0 @@
-function is_positive(n)
-    if n > 0 then
-        print(n .. " is positive")
-    else
-        print(n .. " is non-positive")
-    end
-end
-is_positive(-2)

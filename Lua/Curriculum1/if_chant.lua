@@ -1,0 +1,5 @@
+if true then
+   print("chant")
+else
+   print("Stay real")
+end

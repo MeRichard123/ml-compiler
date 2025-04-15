@@ -1,0 +1,1 @@
+print("Light the spark")

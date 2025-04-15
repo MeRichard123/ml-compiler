@@ -1,9 +1,0 @@
-x = 20
-
-if x == 5 then
-    print("x is 5")
-elseif x == 15 then
-    print("x is 15")
-else
-    print("x is neither 5 nor 15")
-end

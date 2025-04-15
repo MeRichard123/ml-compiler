@@ -1,4 +1,0 @@
-function is_even(n)
-    return n / 2 == math.floor(n / 2)
-end
-print(is_even(4))

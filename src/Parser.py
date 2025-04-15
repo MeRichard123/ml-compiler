@@ -1,7 +1,7 @@
 import torch.nn as nn
 from tree_sitter import Language, Parser
 from enum import Enum
-
+import re
 
 LANGUAGE = Language("./src/Utils/lua.dll", name="lua")
 
@@ -33,10 +33,10 @@ class Tokeniser:
         # Split into input and output parts
         if PROMPT_TOKENS.PROGRAM_END.value in text:
             program, output = text.split(PROMPT_TOKENS.PROGRAM_END.value)
-            output = output.strip()
+            output = self.traverse_output(output)
         else:
             program = text
-            output = ""
+            output = []
         self.program = program
 
         # Parse the program
@@ -44,14 +44,34 @@ class Tokeniser:
 
         input_tokens = self.traverse_ast(tree)
         input_tokens.append(PROMPT_TOKENS.PROGRAM_END.value)
+        output_tokens = output
         
-        # Tokenize the output directly (no AST needed for output)
-        output_tokens = output.split() if output else []
-        
+
         # Combine for vocabulary building but keep track of what's output
         all_tokens = input_tokens + output_tokens
         
         return input_tokens, output_tokens, all_tokens
+    
+    def traverse_output(self, text):
+        # Tokenize the output directly (no AST needed for output)
+        text = text.strip().split("\n")
+
+        tokens = []
+        for line in text:
+            line = line.strip()
+            line = re.sub('[^A-Za-z0-9 ]+', '', line) 
+
+            if line.isnumeric():
+                tokens.append(f'NUMBER({line})')
+            elif line == 'eos':
+                tokens.append(PROMPT_TOKENS.EOS.value)
+            else:
+                for word in line.split():
+                    if word.isnumeric():
+                        tokens.append(f'NUMBER({word})')
+                    else:
+                        tokens.append(f'STRING({word})')
+        return tokens
 
     def traverse_ast(self, node):
         tokens = []
@@ -108,7 +128,14 @@ class Tokeniser:
             case 'number':
                 tokens.append(f'NUMBER({self.program[node.start_byte:node.end_byte]})')
             case 'string_content':
-                tokens.append(f'STRING({self.program[node.start_byte:node.end_byte]})')
+                string = self.program[node.start_byte:node.end_byte]
+                string = re.sub('[^A-Za-z0-9 ]+', '', string)
+                for word in string.split():
+                    if word.isnumeric():
+                        tokens.append(f'NUMBER({word})')
+                    else:
+                        tokens.append(f'STRING({word})')
+                #tokens.append(f'STRING({string})')
             case '+':
                 tokens.append('PLUS')
             case '-':
@@ -200,29 +227,38 @@ def tokenizer(text, word2idx):
     vocab.update(PROMPT_TOKENS.get_list())
     
     # Convert to index mapping
-    t_to_i = word2idx
-    i_to_t = {idx: token for token, idx in t_to_i.items()}
+    t_to_i = word2idx.copy()
+    next_index = max(t_to_i.values()) + 1 if t_to_i else 0
+    for token in vocab:
+        if token not in t_to_i:
+            t_to_i[token] = next_index
+            next_index += 1
 
     unk_idx = t_to_i.get(PROMPT_TOKENS.UNK.value, -1)  # Ensure <unk> exists
     if unk_idx == -1:
-        raise ValueError("<unk> not found in provided word2idx")
+        t_to_i[PROMPT_TOKENS.UNK.value] = next_index
+        unk_idx = next_index
+        next_index += 1
     
+    i_to_t = {idx: token for token, idx in t_to_i.items()}
     # Convert tokens to indices
-    input_indices = [t_to_i[token] for token in input_tokens]
-    output_indices = [t_to_i[token] for token in output_tokens]
+    input_indices = [t_to_i.get(token, unk_idx) for token in input_tokens]
+    output_indices = [t_to_i.get(token, unk_idx) for token in output_tokens]
     
     return (input_indices, output_indices), (t_to_i, i_to_t)
 
 if __name__ == "__main__":
     text = """
-print('Xenophile')
+str = "LUA123"
+print(string.lower(str))
+
 <PROGRAM END>
+lua123
+ <eos>
 """
-    (input, output), (t_to_i, i_to_t) = tokenizer(text)
+    input_tokens, output_tokens, all_tokens = Tokeniser().tokenise_code(text)
     print("INPUT: \n")
-    print(input)
-    print([i_to_t[i] for i in input])
+    print(input_tokens)
     
     print("\n\nOUTPUT: \n")
-    print(output)
-    print([i_to_t[i] for i in output])
+    print(output_tokens)

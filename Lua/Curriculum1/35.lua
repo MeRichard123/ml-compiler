@@ -1,5 +1,0 @@
-x = 10
-repeat
-    print("x is: " .. x)
-    x = x - 2
-until x <= 0

@@ -1,9 +1,0 @@
-x = 50
-
-if x == 25 then
-    print("x is 25")
-else
-    if x == 50 then
-        print("x is 50")
-    end
-end

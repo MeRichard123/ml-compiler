@@ -1,0 +1,1 @@
+print("Lift others")

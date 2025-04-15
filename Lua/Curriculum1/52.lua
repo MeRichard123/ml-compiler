@@ -1,2 +1,0 @@
-my_string = "Lua programming"
-print("String length: " .. #my_string)

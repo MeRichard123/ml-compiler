@@ -1,4 +1,0 @@
-clock_time = os.clock()
-print("Clock time: " .. clock_time)
-<PROGRAM END>
-Clock time: 0.001

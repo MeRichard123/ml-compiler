@@ -1,2 +1,0 @@
-c = true
-print(c)

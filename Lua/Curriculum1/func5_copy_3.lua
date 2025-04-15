@@ -1,5 +1,0 @@
-function max(a, b)
-    return { max_value = a > b and a or b }
-end
-result = max(3, 7)
-print(result.max_value)

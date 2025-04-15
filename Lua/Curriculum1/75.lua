@@ -1,6 +1,0 @@
-wallet = 20
-if wallet >= 50 then
-    print("You can buy it!")
-else
-    print("Not enough money")
-end

@@ -1,5 +1,0 @@
-d = 10
-g = 20
-if g > d then
-    print("g is greater than d")
-end

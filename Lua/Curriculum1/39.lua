@@ -1,3 +1,0 @@
-for k = 1, 3 do
-    print("For loop round " .. k)
-end

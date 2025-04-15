@@ -1,0 +1,8 @@
+if false then
+   print("humble")
+else
+   print("Let it be")
+end
+
+<PROGRAM END>
+Let it be

@@ -1,4 +1,0 @@
-is_warm = true
-if is_warm then
-    print("It's a warm day")
-end

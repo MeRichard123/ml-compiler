@@ -1,0 +1,5 @@
+if true then
+   print("rush")
+else
+   print("Be present")
+end

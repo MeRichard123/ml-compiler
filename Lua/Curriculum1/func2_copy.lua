@@ -1,5 +1,0 @@
-function sum(x, y)
-    return x + y
-end
-result = sum(5, 6)
-print(result)

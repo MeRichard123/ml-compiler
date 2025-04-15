@@ -1,4 +1,0 @@
-x = 5
-if x == 5 then
-    print("x is 5")
-end

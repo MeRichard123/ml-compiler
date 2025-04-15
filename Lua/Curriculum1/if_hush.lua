@@ -1,0 +1,5 @@
+if true then
+   print("hush")
+else
+   print("Stay awake")
+end
