@@ -25,18 +25,19 @@ class minGRU(nn.Module):
         self.linear_h = nn.Linear(embedding_dim, hidden_size, device=device)
         self.fc = nn.Linear(hidden_size, output_size, device=device)
         self.softmax = nn.LogSoftmax(dim=-1)
-        self.dropout = nn.Dropout(0.5)
+        self.dropout = nn.Dropout(0.1)
 
     def __str__(self):
         return "minGRU"
 
     def forward(self, x, h_0):
-        if hasattr(self, 'moe'):
-            x = self.moe(x)
         if hasattr(self, 'attention'):
             x = self.attention(x)
         # x_t: (batch_size, seq_length, input_size)
         # h_0: (batch_size, 1, hidden_size)
+
+        if hasattr(self, 'moe'):
+            x = self.moe(x)
 
         k = self.linear_z(x) 
         log_z = -F.softplus(-k)
@@ -58,9 +59,8 @@ class minGRU(nn.Module):
         h = parallel_scan_log(log_coeffs, combined)
         
         output = self.fc(h)
-
+        output = self.dropout(output)
         output = self.softmax(output)
-        ##output = self.dropout(output)
 
         return output, h
     

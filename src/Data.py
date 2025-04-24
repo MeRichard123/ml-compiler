@@ -38,6 +38,7 @@ class CodeDatasetSubset(IterableDataset):
                 'output': torch.tensor(output_indices, dtype=torch.long),
             }
 
+
     def get_prompts(self):
         prompts = []
         for data_path in self.data:
@@ -73,18 +74,28 @@ class CodeDataset(IterableDataset):
         self.data_dir = f"./training_examples/Curriculum{curricum_num}"
         #self.data_dir = f"./training_examples/Testing"
         self.tokenizer = tokenizer
-        self.data = os.listdir(self.data_dir)
+        self.data = []
+
+        if os.path.exists(self.data_dir):
+            self.data = os.listdir(self.data_dir)
+        else:
+            print(f"Directory {self.data_dir} does not exist.")
+
+        self.data = self.data
         self.vocab = self.build_vocab()
         self.word2idx = self.vocab["word2idx"]
 
     def build_vocab(self):
         all_tokens = set()
+
         for data_path in self.data:
             with open(os.path.join(self.data_dir, data_path), "r") as f:
                 text = f.read()
                 input_tokens, output_tokens, _ = Tokeniser().tokenise_code(text)
                 all_tokens.update(input_tokens + output_tokens)
+
         all_tokens.update(PROMPT_TOKENS.get_list())
+
         vocab = sorted(list(all_tokens))  # Convert to sorted list for consistent indexing
         word2idx = {token: idx for idx, token in enumerate(vocab)}
         idx2word = {idx: token for token, idx in word2idx.items()}
@@ -98,16 +109,20 @@ class CodeDataset(IterableDataset):
 
     def __len__(self):
         return len(self.data)
-
-    def train_test_split(self, test_size=0.2):
+    
+    """
+        def train_test_split(self, test_size=0.15, val_size=0.15):
         import random
         random.shuffle(self.data)
+        # Split the data into training and testing sets and validation sets
         split_idx = int(len(self.data) * (1 - test_size))
-        train_files = self.data[:split_idx]
+        val_idx = int(len(self.data) * (1 - test_size - val_size))
+        train_files = self.data[:val_idx]
+        val_files = self.data[val_idx:split_idx]
         test_files = self.data[split_idx:]
         
         train_dataset = CodeDatasetSubset(
-            self.data_dir, 
+            self.data_dir,
             train_files,
             self.tokenizer,
             self.word2idx
@@ -118,6 +133,38 @@ class CodeDataset(IterableDataset):
             self.tokenizer,
             self.word2idx
             )
+        
+        val_dataset = CodeDatasetSubset(
+            self.data_dir,
+            val_files,
+            self.tokenizer,
+            self.word2idx
+            )
+        
+        return train_dataset, test_dataset, val_dataset
+    """
+
+    def train_test_split(self, test_size=0.2):
+        import random
+        random.shuffle(self.data)
+        # Split the data into training and testing sets and validation sets
+        split_idx = int(len(self.data) * (1 - test_size))
+        train_files = self.data[:split_idx]
+        test_files = self.data[split_idx:]
+        
+        train_dataset = CodeDatasetSubset(
+            self.data_dir,
+            train_files,
+            self.tokenizer,
+            self.word2idx
+            )
+        test_dataset = CodeDatasetSubset(
+            self.data_dir,
+            test_files,
+            self.tokenizer,
+            self.word2idx
+            )
+        
         
         return train_dataset, test_dataset
     
@@ -150,19 +197,19 @@ class CodeDataset(IterableDataset):
             with open(data_path, "r") as f:
                 text = f.read().strip() + "\n <eos>"
 
-            (input_indices, output_indices), (_,_),  = self.tokenizer(text, self.word2idx)
-            
-                    # Add validation
-            if len(output_indices) > 1000:  # Adjust threshold as needed
-                print(f"ERROR: Corrupted file '{filename}'")
-                print(f"Input len: {len(input_indices)}, Output len: {len(output_indices)}")
-                print(f"First 100 chars: {text[:100]}...")
-                continue  # Skip this file or raise an error
+                (input_indices, output_indices), (_,_),  = self.tokenizer(text, self.word2idx)
+                
+                        # Add validation
+                if len(output_indices) > 1000:  # Adjust threshold as needed
+                    print(f"ERROR: Corrupted file '{filename}'")
+                    print(f"Input len: {len(input_indices)}, Output len: {len(output_indices)}")
+                    print(f"First 100 chars: {text[:100]}...")
+                    continue  # Skip this file or raise an error
 
-            yield {
-                'input': torch.tensor(input_indices, dtype=torch.long),
-                'output': torch.tensor(output_indices, dtype=torch.long),
-            }
+                yield {
+                    'input': torch.tensor(input_indices, dtype=torch.long),
+                    'output': torch.tensor(output_indices, dtype=torch.long),
+                }
 
     def __iter__(self):
         return self.load_data()

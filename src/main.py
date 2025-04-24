@@ -11,6 +11,7 @@ from Utils.Logger import LOGGER
 from LanguageModel import LanguageModel
 from Data import collate_fn, CodeDataset
 from Evaluation import Evaluator
+import datetime
 
 def calculate_average_metrics(metrics):
     avg_metrics = {
@@ -83,6 +84,128 @@ def main_LPOCV():
     LOGGER(f"Average Sentence Similarity: {avg_metrics['ss']:.4f}")
 
 
+def main_curriculum():
+    device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+    LOGGER(f"Is CUDA supported by this system? {torch.cuda.is_available()}")
+
+    if torch.cuda.is_available():
+        LOGGER(f"CUDA version: {torch.version.cuda}")
+
+        # Storing ID of current CUDA device
+        cuda_id = torch.cuda.current_device()
+        LOGGER(f"ID of current CUDA device: {torch.cuda.current_device()}")
+
+        LOGGER(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
+
+
+    num_curricula = 3
+    LM = None
+    perplexity = 0
+
+    for curriculum_num in range(1, num_curricula + 1):
+    # Load the Data
+        code_dataset = CodeDataset(curricum_num=curriculum_num)
+        vocab = code_dataset.build_vocab()["vocab"]
+
+        batch_size = min(64, len(code_dataset) // 20)
+        trainset, testset = code_dataset.train_test_split()
+
+        train_dataloader = DataLoader(
+            trainset, 
+            batch_size=batch_size,  
+            collate_fn=collate_fn,
+        )
+
+    
+        MOE = {
+            "number_of_experts": 2
+        }
+        # before - 12 Experts 
+
+        model = RNN(50, batch_size, 300, len(vocab), device)\
+            .to(device)
+        model_gru = GRU(50, batch_size, 300, len(vocab), device)\
+            .to(device)
+        model_minGRU = minGRU(50, batch_size, 300, len(vocab), device)\
+            .to(device)
+        model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device)\
+            .to(device)
+        model_lstm = LSTM(50, batch_size, 300, len(vocab), device).\
+            to(device)
+
+        model_file_names = [
+            "rnn_model_code_ast",
+            "gru_model_code_ast",
+            "minGRU_model_code_ast",
+            "lstm_model_code_ast",
+            "minLSTM_model_code_ast",
+            "minGRU_code_ast_moe_attn",
+            "minGRU_code_ast_moe_tf",
+            "Testing_Model_Fast",
+            "Attention_Model",
+            "minGRU_curriculum",
+            "TestingPass",
+        ]
+
+
+        LM = LanguageModel(model_minGRU, len(vocab), device) 
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
+
+        model_filename = model_file_names[len(model_file_names) - 1]
+        filename = f"{model_filename}_curriculum{curriculum_num}"
+
+        #if curriculum_num > 1:
+            #LM.load_model(f"{model_filename}_curriculum{curriculum_num - 1}{date}.pth")
+        
+
+        LM.init_model(code_dataset)
+
+        print(f"Training {model_filename} - Curriculum {curriculum_num}")
+        perplexity = LM.train_loop(train_dataloader, filename)
+        LM.save_model(filename)
+
+
+
+        """"
+        # Min LSTM - Code, AST
+        print("Min LSTM - Code, AST")
+        LM = LanguageModel(model_minLSTM, len(vocab), device)
+        LM.load_model("./trained_models/minLSTM_model_code.pth")
+        LM.init_model(code_dataset)
+        print(LM.sample("print('Hello World!')"))
+
+        LM.load_model("./trained_models/minGRU_attention.pth")
+        LM.init_model(code_dataset)
+        """
+        LM_Test = LanguageModel(model_minGRU, len(vocab), device)
+        LM_Test.init_model(code_dataset)
+        LM_Test.load_model(f"{filename}{date}.pth")
+
+        eval = Evaluator(testset, LM, k = 1)
+        metrics = eval.evaluate(perplexity, log=False)
+        print(f"Curriculum {curriculum_num} - Model {model_filename} - Metrics:")
+        print(f"Pass@k (sample): {metrics['pass_at_k']:.4f}")
+        print(f"Exact Match: {metrics['exact_match']:.4f}")
+        print(f"Sentence Similarity: {metrics['similarity']:.4f}")
+        print(f"F1: {metrics['f1']:.4f}")
+        print(f"Precision: {metrics['precision']:.4f}")
+        print(f"Recall: {metrics['recall']:.4f}")
+        print(f"Perplexity: {metrics['perplexity']:.4f}")
+        print(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
+
+    print("Final Metrics:")
+    eval = Evaluator(testset, LM, k = 1)
+    metrics = eval.evaluate(perplexity, log=False)
+    print(f"Pass@k (sample): {metrics['pass_at_k']:.4f}")
+    print(f"Exact Match: {metrics['exact_match']:.4f}")
+    print(f"Sentence Similarity: {metrics['similarity']:.4f}")
+    print(f"F1: {metrics['f1']:.4f}")
+    print(f"Precision: {metrics['precision']:.4f}")
+    print(f"Recall: {metrics['recall']:.4f}")
+    print(f"Perplexity: {metrics['perplexity']:.4f}")
+    print(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
+
 
 def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
@@ -99,7 +222,6 @@ def main():
         LOGGER(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
 
-    # Load the Data
     code_dataset = CodeDataset()
     vocab = code_dataset.build_vocab()["vocab"]
 
@@ -112,13 +234,13 @@ def main():
         collate_fn=collate_fn,
     )
 
-    #print(vocab)
+    # validation_dataloader = DataLoader(
+    #     validation, 
+    #     batch_size=batch_size,  
+    #     collate_fn=collate_fn,
+    # )
 
-    # play with the hidden size and the learning rate
-        # maybe an LR scheduler
-        # Validation set
-        # BPE
-    
+
     MOE = {
         "number_of_experts": 12
     }
@@ -127,7 +249,7 @@ def main():
         .to(device)
     model_gru = GRU(50, batch_size, 300, len(vocab), device)\
         .to(device)
-    model_minGRU = minGRU(50, batch_size, 200, len(vocab), device, MOE, True)\
+    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device, MOE)\
         .to(device)
     model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device)\
         .to(device)
@@ -144,17 +266,21 @@ def main():
         "minGRU_code_ast_moe_tf",
         "Testing_Model_Fast",
         "Attention_Model",
-        "minGRU_curriculum1",
+        "minGRU_curriculum",
+        "TestingPass",
+        "LSTM_test",
     ]
 
 
-
     LM = LanguageModel(model_minGRU, len(vocab), device) 
+
+    model_filename = model_file_names[len(model_file_names) - 1]
+    filename = f"{model_filename}"
     
     
-    LM.init_model(code_dataset)
-    LM.train_loop(train_dataloader, model_file_names[len(model_file_names) - 1])
-    LM.save_model(model_file_names[len(model_file_names) - 1])
+    #LM.init_model(code_dataset)
+    #perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader)
+    #LM.save_model(filename)
 
 
 
@@ -169,13 +295,27 @@ def main():
     LM.load_model("./trained_models/minGRU_attention.pth")
     LM.init_model(code_dataset)
     """
-    #LM.load_model("./minGRU_curriculum12025-04-15.pth")
+    LM_Test = LanguageModel(model_minGRU, len(vocab), device) 
+    date = datetime.datetime.now().strftime("%Y-%m-%d")
+    LM_Test.init_model(code_dataset)
+    LM_Test.load_model(f"./{filename}{date}.pth")
+    perplexity = 0
 
-    
-    print(LM.sample('print("Hello, Lua!")'))
-    print(LM.sample("print('Hello, Dude!')"))
-    #eval = Evaluator(testset, LM)
-    #eval.evaluate()
+    print(LM_Test.sample("tonumber('42')"))
+
+    eval = Evaluator(testset, LM_Test, k = 1)
+
+    #metrics = eval.evaluate(perplexity)
+    #print(f"Exact Match: {metrics['exact_match']:.4f}")
+    #print(f"Sentence Similarity: {metrics['similarity']:.4f}")
+    #print(f"F1: {metrics['f1']:.4f}")
+    #print(f"Precision: {metrics['precision']:.4f}")
+    #print(f"Recall: {metrics['recall']:.4f}")
+    #print(f"Perplexity: {metrics['perplexity']:.4f}")
+    #print(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
+
+
+
 
 
 if __name__ == "__main__":

@@ -4,16 +4,16 @@ from Utils.Logger import LOGGER, SHAPE_LOG
 import matplotlib.pyplot as plt
 from torch.optim import Optimizer
 from torch.utils.data import DataLoader
-from typing import List 
 from tqdm import tqdm
 from Parser import tokenizer
 from itertools import chain
+import datetime
 
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
         self.model: nn.Module        = model
         self.learning_rate: float   = 0.0006
-        self.criterion: nn.Module   = nn.NLLLoss()  #  negative log likelihood loss
+        self.criterion: nn.Module   = nn.CrossEntropyLoss()  #  negative log likelihood loss
         self.loss: torch.Tensor     = torch.Tensor([0]).to(device)
         self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
         self.max_sample_length: int = 2
@@ -24,10 +24,25 @@ class LanguageModel:
 
     def init_model(self, dataset):
         """Initialize the model with vocabulary from the dataset."""
-        self.vocab = dataset.build_vocab()
+        new_vocab = dataset.build_vocab()
+        self.word2idx = new_vocab["word2idx"]
+        self.idx2word = new_vocab["idx2word"]
+        """
+        if not hasattr(self, 'word2idx') or not hasattr(self, 'idx2word'):
+            self.word2idx = {}
+            self.idx2word = {}
+            self.vocab = 0 
 
-        self.word2idx = self.vocab["word2idx"]
-        self.idx2word = self.vocab["idx2word"]
+        current_idx = self.vocab_size
+        for token, idx in new_word2idx.items():
+            if token not in self.word2idx:
+                self.word2idx[token] = current_idx
+                self.idx2word[current_idx] = token
+                current_idx += 1
+        """
+        #self.vocab_size = len(self.word2idx)
+
+        #self.resuze_model_layers()
 
         # Collect all tokenized text from dataset
         all_indices = list(chain.from_iterable(data['input'].tolist() for data in dataset))
@@ -36,6 +51,44 @@ class LanguageModel:
         self.text_idx = torch.tensor(all_indices, dtype=torch.long, device=self.device)
 
         print(f"Vocabulary Size: {len(self.word2idx)}")
+
+    def resuze_model_layers(self):
+        old_embedding = self.embedding
+        new_embedding = nn.Embedding(self.vocab_size, self.model.embedding_dim).to(self.device)
+
+        with torch.no_grad():
+            for idx in range(min(old_embedding.num_embeddings, self.vocab_size)):
+                new_embedding.weight[idx] = old_embedding.weight[idx]
+
+        self.embedding = new_embedding
+
+        if hasattr(self.model, 'fc'):
+            old_fc = self.model.fc
+            new_fc = nn.Linear(old_fc.in_features, self.vocab_size).to(self.device)
+
+            with torch.no_grad():
+                for idx in range(min(old_fc.out_features, self.vocab_size)):
+                    new_fc.weight[idx] = old_fc.weight[idx]
+                    new_fc.bias[idx] = old_fc.bias[idx]
+
+            self.model.fc = new_fc
+
+            # Resize MoE gate layer
+        if hasattr(self.model, "moe") and hasattr(self.model.moe, "gate"):
+            old_gate = self.model.moe.gate
+            expected_input_dim = old_embedding.embedding_dim  # Adjust based on minGRU input
+            if old_gate.in_features != expected_input_dim:
+                new_gate = nn.Linear(expected_input_dim, old_gate.out_features).to(self.device)
+                self.model.moe.gate = new_gate
+                print(f"Resized MoE gate to input_dim={expected_input_dim}")
+
+            # Resize MoE experts (if applicable)
+            if hasattr(self.model.moe, "experts"):
+                for i, expert in enumerate(self.model.moe.experts):
+                    if expert.in_features != expected_input_dim:
+                        new_expert = nn.Linear(expected_input_dim, expert.out_features).to(self.device)
+                        self.model.moe.experts[i] = new_expert
+                        print(f"Resized MoE expert {i} to input_dim={expected_input_dim}")
 
     def update_vocab(self, new_word2idx):
         new_vocab_size = len(new_word2idx)
@@ -56,6 +109,8 @@ class LanguageModel:
                 self.model.fc.weight[idx] = old_fc.weight[idx]
                 self.model.fc.bias[idx] = old_fc.bias[idx]
         
+        print(f"Updated embedding layer from {old_embedding.num_embeddings} to {new_vocab_size}")
+        print(f"Updated final layer from {old_fc.out_features} to {new_vocab_size}")
         self.vocab["word2idx"] = new_word2idx
         self.word2idx = new_word2idx
         self.idx2word = {idx: token for token, idx in new_word2idx.items()}
@@ -110,8 +165,8 @@ class LanguageModel:
 
         return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
         
-    def train_loop(self, dataloader: DataLoader, suffix: str = "", use_teacher_forcing: bool = False):
-        n_iters = 1500
+    def train_loop(self, dataloader: DataLoader, suffix: str = "", validation: DataLoader = None ,use_teacher_forcing: bool = False):
+        n_iters = 3500
         print_every = 500
         plot_every = 250
 
@@ -135,38 +190,58 @@ class LanguageModel:
                 num_batches += 1
 
             avg_loss = total_loss / num_batches
+            perplexity = torch.exp(torch.tensor(avg_loss)).item()
 
             if iter % plot_every == 0:
                 loss_agg.append(avg_loss)
                 iter_agg.append(iter)
 
+
+            self.model.eval()
+            with torch.no_grad():
+                if validation is not None:
+                    val_loss = 0
+                    for batch in validation:
+                        self.input = batch['input'].to(self.device)
+                        self.target = batch['output'].to(self.device)
+                        _, loss = self.__train(self.input, self.target, use_teacher_forcing)
+                        val_loss += loss
+            val_loss /= len(validation)
+
             if iter % print_every == 0:
-                print(f"loss = {avg_loss}%")
+                print(f" loss = {avg_loss}%, Perplexity = {perplexity}, val = {val_loss}%")
 
         plt.figure()
         plt.title(f"Loss Plot {str(self.model)}")
         plt.plot(iter_agg, loss_agg)
         plt.xlabel("Iterations")
         plt.ylabel("Loss")
-        plt.savefig(f"{str(self.model)}_lossPlot_{suffix}.png")
+        date = datetime.datetime.now().strftime("%m-%d-%Y")
+        plt.savefig(f"lossPlot_{suffix}_{date}.png")
 
-
+        return perplexity
 
     def sample(self, prompt: str = " ", temperature: float = 1):
         prompt += " <PROGRAM END>"
-        print(f"Prompt: {prompt}")
+        # print(f"Prompt: {prompt}")
         with torch.no_grad():
-            (input_indices, _), (t_to_i, _) = tokenizer(prompt, self.word2idx)
+            (input_indices, _), (_, _) = tokenizer(prompt, self.word2idx)
 
-            new_tokens = [token for token, idx in t_to_i.items() if token not in self.word2idx]
-
-            if new_tokens:
-                # Update the model's vocabulary
-                new_word2idx = {token: idx for idx, token in enumerate(new_tokens, start=len(self.word2idx))}
-                self.update_vocab(new_word2idx)
+            # log unknown tokens
+            unk_idx = self.word2idx.get('<unk>', -1)
+            if unk_idx == -1:
+                print("[Error]: <unk> token not in Vocabulary")
+                return "ERROR: <unk> token not in Vocabulary"
+            
+            if input_indices.count(unk_idx) > 0:
+                # log the unknown tokens
+                print(f"Error: <unk> tokens found in prompt: {input_indices}")
+                return "ERROR: Prompt contains unknown tokens."
 
             input = torch.tensor(input_indices, dtype=torch.long).unsqueeze(0).to(self.device)
             hidden = self.model.initHidden()
+
+            print(f"Input: {[self.idx2word[i.item()] for i in input[0]]}")
 
             # Process the entire prompt sequence first
             embedded_input = self.embedding(input).to(self.device)
@@ -182,18 +257,18 @@ class LanguageModel:
 
             while next_word != '<eos>' and generated_count < self.max_sample_length: 
                 output_probs = nn.functional.softmax(output[:, -1, :] / temperature, dim=1)
-                topprobs = torch.topk(output_probs, 10, dim=1)
 
                 # Sample from full probability distribution
                 topi = torch.multinomial(output_probs, 1).item()
                 LOGGER(f"topV = {output_probs[0][topi]} topi = {topi}")
 
-                next_word = self.idx2word[topi]
+                next_word = self.idx2word.get(topi, '<unk>')
                 LOGGER(f"Generated: {next_word}")
 
                 if next_word == '<eos>' and generated_count == 0:
                     LOGGER("Warning: Model generated <eos> immediately, check input processing.")
-                    return "ERROR: Model terminated generation immediately."
+                    continue
+                    #return "ERROR: Model terminated generation immediately."
                 
                 if next_word == '<eos>':
                     break
@@ -207,6 +282,56 @@ class LanguageModel:
                 output, hidden = self.model(embedded_input, hidden)
 
         return output_text
+    
+    def samplek(self, input_indices: torch.Tensor, num_samples: int = 1,  temperature: float = .8):
+        self.model.eval()
+        with torch.no_grad():
+            input_indices = input_indices.to(self.device)
+
+            hidden = self.model.initHidden()
+
+            embedded_input = self.embedding(input_indices).to(self.device)
+            for i in range(embedded_input.size(1)):
+                curr_input = embedded_input[:, i:i+1, :]
+                output, hidden = self.model(curr_input, hidden)
+            
+            candiates = []
+            for _ in range(num_samples):
+                generated_indices = []
+                curr_hidden = hidden
+                curr_output = output
+                generated_count = 0
+                next_idx = -1
+                output_text = ""
+                
+                while generated_count < self.max_sample_length and next_idx != 0: 
+                    output_probs = nn.functional.softmax(curr_output[:, -1, :] / temperature, dim=1)
+                    # Sample from full probability distribution
+                    topi = torch.multinomial(output_probs, 1).item()
+                    generated_indices.append(topi)
+                    LOGGER(f"topV = {output_probs[0][topi]} topi = {topi}")
+
+                    next_idx = topi
+                    next_word = self.idx2word.get(topi, '<unk>')
+
+                    if next_word == '<eos>' and generated_count == 0:
+                        LOGGER("Warning: Model generated <eos> immediately, check input processing.")
+                        #return "ERROR: Model terminated generation immediately."
+                    
+                    if next_word == '<eos>':
+                        break
+
+                    output_text += ' ' + next_word
+                    # Update input and hidden state
+                    input = torch.tensor([[topi]], dtype=torch.long).to(self.device)
+                    embedded_input = self.embedding(input).to(self.device)
+                    curr_output, curr_hidden = self.model(embedded_input, curr_hidden)
+                    generated_count += 1
+
+                candiates.append(torch.tensor(generated_indices, dtype=torch.long).to(self.device))
+        return candiates
+
+        
 
     def save_model(self, path: str):
         import datetime

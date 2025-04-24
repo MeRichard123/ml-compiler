@@ -228,23 +228,19 @@ def tokenizer(text, word2idx):
     
     # Convert to index mapping
     t_to_i = word2idx.copy()
-    next_index = max(t_to_i.values()) + 1 if t_to_i else 0
+
+    # log unknown tokens
     for token in vocab:
         if token not in t_to_i:
-            t_to_i[token] = next_index
-            next_index += 1
+            print(f"Unknown token: {token}")
 
     unk_idx = t_to_i.get(PROMPT_TOKENS.UNK.value, -1)  # Ensure <unk> exists
-    if unk_idx == -1:
-        t_to_i[PROMPT_TOKENS.UNK.value] = next_index
-        unk_idx = next_index
-        next_index += 1
-    
+
     i_to_t = {idx: token for token, idx in t_to_i.items()}
     # Convert tokens to indices
     input_indices = [t_to_i.get(token, unk_idx) for token in input_tokens]
     output_indices = [t_to_i.get(token, unk_idx) for token in output_tokens]
-    
+
     return (input_indices, output_indices), (t_to_i, i_to_t)
 
 if __name__ == "__main__":

@@ -1,24 +1,11 @@
 import os
 import threading
 import subprocess
+from concurrent.futures import ThreadPoolExecutor
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__)).replace("src\\Utils", "")
 LUA_DIR = os.path.join(BASE_DIR, "Lua")
 CURRICULUM_DIR = os.path.join(BASE_DIR, "training_examples", "out")
-
-def list_and_process_files(directory, file_list):
-    """Function to list all files and process them with Lua."""
-    try:
-        for entry in os.scandir(directory):
-            if entry.is_file():
-                file_list.append(entry.path)
-                process_lua_file(entry.path)
-            elif entry.is_dir():
-                thread = threading.Thread(target=list_and_process_files, args=(entry.path, file_list))
-                thread.start()
-                thread.join()
-    except PermissionError:
-        pass  # Ignore directories we don't have permission to access
 
 def process_lua_file(file_path):
     """Runs a Lua file and writes output to a .luax file."""
@@ -39,16 +26,30 @@ def process_lua_file(file_path):
     except Exception as e:
         print(f"Error processing {file_path}: {e}")
 
-def main(directory):
-    """Main function to initiate file listing and processing."""
-    file_list = []
-    main_thread = threading.Thread(target=list_and_process_files, args=(directory, file_list))
-    main_thread.start()
-    main_thread.join()
-    
-    for file in file_list:
-        print(f"Processed: {file}")
+def list_and_process_files(directory, file_list, executor, lock):
+    """Thread-safe parallel file/directory processing."""
+    try:
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                if entry.is_file():
+                    with lock:  # Thread-safe append
+                        file_list.append(entry.path)
+                    executor.submit(process_lua_file, entry.path)
+                elif entry.is_dir():
+                    executor.submit(list_and_process_files, entry.path, file_list, executor, lock)
+    except PermissionError:
+        pass
 
-        
+def main(directory):
+    """Main function with controlled parallelism."""
+    file_list = []
+    lock = threading.Lock()
+    
+    # Use ThreadPoolExecutor (limits max threads)
+    with ThreadPoolExecutor(max_workers=8) as executor:
+        list_and_process_files(directory, file_list, executor, lock)
+    
+    print(f"Processed {len(file_list)} files.")
+
 if __name__ == "__main__":
-    main(os.path.join(LUA_DIR, "Curriculum1"))
+   main(os.path.join(LUA_DIR, "Curriculum1"))
