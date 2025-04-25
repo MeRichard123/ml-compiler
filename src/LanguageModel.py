@@ -3,30 +3,45 @@ import torch.nn as nn
 from Utils.Logger import LOGGER, SHAPE_LOG
 import matplotlib.pyplot as plt
 from torch.optim import Optimizer
+from torch.optim.lr_scheduler import StepLR, ReduceLROnPlateau
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 from Parser import tokenizer
 from itertools import chain
 import datetime
 
+class LabelSmoothingLoss(nn.Module):
+    def __init__(self, smoothing=0.1, vocab_size=None):
+        super().__init__()
+        self.smoothing = smoothing
+        self.vocab_size = vocab_size
+    def forward(self, output, target):
+        confidence = 1.0 - self.smoothing
+        low_confidence = self.smoothing / (self.vocab_size - 1)
+        true_dist = torch.zeros_like(output).fill_(low_confidence).scatter_(1, target.unsqueeze(1), confidence)
+        return nn.KLDivLoss(reduction='batchmean')(nn.functional.log_softmax(output, dim=1), true_dist)
+
 class LanguageModel:
     def __init__(self, model: nn.Module, vocab_size: int, device: str):
         self.model: nn.Module        = model
-        self.learning_rate: float   = 0.0006
+        self.learning_rate: float   = 9.912115401164314e-05
         self.criterion: nn.Module   = nn.CrossEntropyLoss()  #  negative log likelihood loss
         self.loss: torch.Tensor     = torch.Tensor([0]).to(device)
-        self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate)
+        self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate, weight_decay=1e-4)
         self.max_sample_length: int = 2
         self.device: str            = device
         self.vocab_size: int        = vocab_size
         
+        
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
+        self.dropout = nn.Dropout(p=0.3) 
 
     def init_model(self, dataset):
         """Initialize the model with vocabulary from the dataset."""
         new_vocab = dataset.build_vocab()
         self.word2idx = new_vocab["word2idx"]
         self.idx2word = new_vocab["idx2word"]
+        self.criterion = LabelSmoothingLoss(smoothing=0.1, vocab_size=len(self.word2idx))
         """
         if not hasattr(self, 'word2idx') or not hasattr(self, 'idx2word'):
             self.word2idx = {}
@@ -124,7 +139,7 @@ class LanguageModel:
         self.loss = 0
 
         # Process input sequence
-        embedded_input = self.embedding(input_tensor.long()).to(self.device)
+        embedded_input = self.dropout(self.embedding(input_tensor.long())).to(self.device)
 
         # Now generate output sequence
         output_seq = []
@@ -161,15 +176,46 @@ class LanguageModel:
 
         # Backpropagate and optimize the model
         self.loss.backward()
+        #nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
         self.optimizer.step()
 
-        return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1)
+        lr = self.optimizer.param_groups[0]['lr']
         
-    def train_loop(self, dataloader: DataLoader, suffix: str = "", validation: DataLoader = None ,use_teacher_forcing: bool = False):
-        n_iters = 3500
-        print_every = 500
-        plot_every = 250
 
+        return torch.stack(output_seq, dim=1), self.loss.item() / target_tensor.size(1), lr
+
+    def __validate(self, input, target):
+        self.model.eval()
+        with torch.no_grad():
+            batch_size = input.size(0)
+            hidden = self.model.initHidden(batch_size)
+            loss = 0
+
+            # Process input sequence
+            embedded_input = self.embedding(input.long()).to(self.device)
+            for t in range(input.size(1)):
+                curr_input = embedded_input[:, t:t+1, :]  # [batch_size, 1, n_embed]
+                _, hidden = self.model(curr_input, hidden)
+
+            # Generate output sequence
+            current_input = embedded_input[:, 0, :].unsqueeze(1)  # Start with first token
+            for t in range(target.size(1)):
+                output, hidden = self.model(current_input, hidden)
+                target_word = target[:, t].to(self.device)
+                loss += self.criterion(output[:, -1, :], target_word)
+
+                # Use target as next input (no teacher forcing needed, but align with __train)
+                if t < target.size(1) - 1:
+                    predicted_word = torch.argmax(output[:, -1, :], dim=1)
+                    current_input = self.embedding(predicted_word.long()).unsqueeze(1)
+
+            return loss.item() / target.size(1)
+        
+    def train_loop(self, dataloader: DataLoader, suffix: str = "", validation : DataLoader = None, use_teacher_forcing: bool = False):
+        n_iters = 3000
+        print_every = 250
+        plot_every = 250
+        self.scheduler: StepLR  = ReduceLROnPlateau(self.optimizer, mode='min', factor=0.5, patience=10, min_lr=1.45e-05)
         # {'learning_rate': 1.4515934828819934e-05, 'n_iters': 15000, 'input_layers': 50, 'hidden_layers': 300}
 
         loss_agg = []
@@ -185,7 +231,7 @@ class LanguageModel:
                 self.target = batch['output'].to(self.device)  # Get target tensor
 
                 # (batch_size, seq_length, vocab_size), Scalar
-                _, loss = self.__train(self.input, self.target, use_teacher_forcing) # add tensors
+                _, loss, lr = self.__train(self.input, self.target, use_teacher_forcing) # add tensors
                 total_loss += loss
                 num_batches += 1
 
@@ -196,36 +242,44 @@ class LanguageModel:
                 loss_agg.append(avg_loss)
                 iter_agg.append(iter)
 
-
             self.model.eval()
             with torch.no_grad():
                 if validation is not None:
                     val_loss = 0
                     for batch in validation:
-                        self.input = batch['input'].to(self.device)
-                        self.target = batch['output'].to(self.device)
-                        _, loss = self.__train(self.input, self.target, use_teacher_forcing)
+                        input = batch['input'].to(self.device)
+                        target = batch['output'].to(self.device)
+                        loss = self.__validate(input, target)
                         val_loss += loss
-            val_loss /= len(validation)
+                    val_loss /= len(validation)
 
             if iter % print_every == 0:
-                print(f" loss = {avg_loss}%, Perplexity = {perplexity}, val = {val_loss}%")
+                print(f" loss = {avg_loss}%, Perplexity = {perplexity}, lr = {lr}, val = {val_loss}")
+
+            self.scheduler.step(val_loss)
 
         plt.figure()
         plt.title(f"Loss Plot {str(self.model)}")
-        plt.plot(iter_agg, loss_agg)
+        plt.plot(iter_agg, loss_agg, c="blue", label="Training Loss")
+        if validation is not None:
+            plt.plot(iter_agg, [val_loss] * len(iter_agg), c="red", label="Validation Loss")
+            plt.legend()
+        else:
+            plt.legend(["Training Loss"])
         plt.xlabel("Iterations")
         plt.ylabel("Loss")
         date = datetime.datetime.now().strftime("%m-%d-%Y")
         plt.savefig(f"lossPlot_{suffix}_{date}.png")
 
+
         return perplexity
 
-    def sample(self, prompt: str = " ", temperature: float = 1):
+    def sample(self, prompt: str = " ", temperature: float = 0.8):
         prompt += " <PROGRAM END>"
         # print(f"Prompt: {prompt}")
         with torch.no_grad():
             (input_indices, _), (_, _) = tokenizer(prompt, self.word2idx)
+            self.max_sample_length = len(input_indices)
 
             # log unknown tokens
             unk_idx = self.word2idx.get('<unk>', -1)
@@ -233,7 +287,6 @@ class LanguageModel:
                 print("[Error]: <unk> token not in Vocabulary")
                 return "ERROR: <unk> token not in Vocabulary"
             
-            if input_indices.count(unk_idx) > 0:
                 # log the unknown tokens
                 print(f"Error: <unk> tokens found in prompt: {input_indices}")
                 return "ERROR: Prompt contains unknown tokens."
@@ -262,6 +315,13 @@ class LanguageModel:
                 topi = torch.multinomial(output_probs, 1).item()
                 LOGGER(f"topV = {output_probs[0][topi]} topi = {topi}")
 
+                # Sample from top-k
+                _, top_indices = torch.topk(output_probs, k=5)
+                top_indices = top_indices[0].tolist()
+                #print([self.idx2word.get(idx, '<unk>') for idx in top_indices])
+                #print("Raw logits for top 10:", torch.topk(output[:, -1, :], k=10)[0])
+                #print("Logit for <eos>:", output[:, -1, self.word2idx['<eos>']].item())
+
                 next_word = self.idx2word.get(topi, '<unk>')
                 LOGGER(f"Generated: {next_word}")
 
@@ -270,7 +330,7 @@ class LanguageModel:
                     continue
                     #return "ERROR: Model terminated generation immediately."
                 
-                if next_word == '<eos>':
+                elif next_word == '<eos>' and generated_count > 0:
                     break
 
                 output_text += ' ' + next_word

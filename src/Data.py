@@ -38,6 +38,9 @@ class CodeDatasetSubset(IterableDataset):
                 'output': torch.tensor(output_indices, dtype=torch.long),
             }
 
+    def __len__(self):
+        return len(self.data)
+
 
     def get_prompts(self):
         prompts = []
@@ -144,12 +147,14 @@ class CodeDataset(IterableDataset):
         return train_dataset, test_dataset, val_dataset
     """
 
-    def train_test_split(self, test_size=0.2):
+    def train_test_split(self, test_size=0.15, val_size=0.15):
         import random
         random.shuffle(self.data)
         # Split the data into training and testing sets and validation sets
         split_idx = int(len(self.data) * (1 - test_size))
-        train_files = self.data[:split_idx]
+        val_idx = int(len(self.data) * (1 - test_size - val_size))
+        train_files = self.data[:val_idx]
+        val_files = self.data[val_idx:split_idx]
         test_files = self.data[split_idx:]
         
         train_dataset = CodeDatasetSubset(
@@ -165,8 +170,14 @@ class CodeDataset(IterableDataset):
             self.word2idx
             )
         
+        val_dataset = CodeDatasetSubset(
+            self.data_dir,
+            val_files,
+            self.tokenizer,
+            self.word2idx
+            )
         
-        return train_dataset, test_dataset
+        return train_dataset, test_dataset, val_dataset
     
     def lpocv_split(self, p = 10):
         splits = []

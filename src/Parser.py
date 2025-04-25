@@ -42,6 +42,7 @@ class Tokeniser:
         # Parse the program
         tree = self.generate_ast(program)
 
+
         input_tokens = self.traverse_ast(tree)
         input_tokens.append(PROMPT_TOKENS.PROGRAM_END.value)
         output_tokens = output
@@ -160,6 +161,8 @@ class Tokeniser:
                 tokens.append('GREATER_THAN_EQUAL')
             case '%':
                 tokens.append('MODULUS')
+            case 'arguments':
+                tokens.append('ARGUMENTS')
             case 'function_call':
                 tokens.extend(self.process_function_call(node))
                 return tokens
@@ -178,45 +181,63 @@ class Tokeniser:
         """Process a function_call node and return its tokens."""
         tokens = []
         if node.child_count > 0:
-            func_node = node.children[0]  # First child is the function expression
+            func_node = node.children[0]
+            arguments = node.children[1] if node.child_count > 1 else None
+            
             if func_node.type == 'identifier':
                 func_name = self.program[func_node.start_byte:func_node.end_byte]
                 tokens.append(f'FUNCTION_CALL({func_name})')
-            elif func_node.type == 'field_expression':
+            elif func_node.type == 'string':
+                literal  = self.program[func_node.start_byte:func_node.end_byte]
+                literal = re.sub('[^A-Za-z0-9 ]+', '', literal)
+                tokens.append(f'STRING({literal})')
+            elif func_node.type == 'number':
+                literal  = self.program[func_node.start_byte:func_node.end_byte]
+                tokens.append(f'NUMBER({literal})')
+
+            elif func_node.type == 'dot_index_expression':
                 func_name = self._extract_field_expression(func_node)
                 tokens.append(f'FUNCTION_CALL({func_name})')
-            elif func_node.type == 'variable' and node.child_count > 1 and node.children[1].type == ':':
-                obj_node = func_node.children[0]
-                method_node = node.children[2]
-                if obj_node.type == 'identifier' and method_node.type == 'identifier':
-                    obj_name = self.program[obj_node.start_byte:obj_node.end_byte]
-                    method_name = self.program[method_node.start_byte:method_node.end_byte]
-                    tokens.append(f'FUNCTION_CALL({obj_name}:{method_name})')
-            # Process arguments (skip the function name child)
-            for child in node.children[1:]:
-                tokens.extend(self.traverse_ast(child))
+
+            if arguments:
+                for arg in arguments.children:
+                    if arg.type == 'function_call':
+                        tokens.extend(self.process_function_call(arg))
+                    elif arg.type == 'identifier':
+                        arg_name = self.program[arg.start_byte:arg.end_byte]
+                        tokens.append(f'IDENTIFIER({arg_name})')
+                    elif arg.type == 'string':
+                        literal  = self.program[arg.start_byte:arg.end_byte]
+                        literal = re.sub('[^A-Za-z0-9 ]+', '', literal)
+                        for word in literal.split():
+                            tokens.append(f'STRING({word})')
+                    elif arg.type == 'number':
+                        literal  = self.program[arg.start_byte:arg.end_byte]
+                        tokens.append(f'NUMBER({literal})')
+                    elif arg.type == 'boolean':
+                        literal  = self.program[arg.start_byte:arg.end_byte]
+                        tokens.append(f'BOOLEAN({literal})')
+
         return tokens
-    
+        
     def _extract_field_expression(self, node):
-        """Helper to extract full name from a field_expression like table.insert"""
+        """Helper to extract full name from a field_expression like string.upper or table.insert."""
         parts = []
         current = node
-        while current.child_count > 0:
-            if current.type == 'field_expression':
-                # Left part is the base (e.g., table), right is the field (e.g., insert)
-                if current.child_count >= 3:  # base, dot, field
-                    base = current.children[0]
-                    field = current.children[2]
-                    if base.type == 'identifier':
-                        parts.insert(0, self.program[base.start_byte:base.end_byte])
-                    if field.type == 'identifier':
-                        parts.append(self.program[field.start_byte:field.end_byte])
-                    current = base  # Continue with nested base if any
-                else:
-                    break
-            else:
+        while current.type == 'dot_index_expression' and current.child_count >= 3:
+            base = current.children[0]
+            field = current.children[2]
+            if field.type == 'identifier':
+                parts.append(self.program[field.start_byte:field.end_byte])
+            if base.type == 'identifier':
+                parts.append(self.program[base.start_byte:base.end_byte])
+            elif base.type == 'dot_index_expression':
+                # Recursively handle nested field expressions
+                nested_parts = self._extract_field_expression(base)
+                parts.append(nested_parts)
                 break
-        return '.'.join(parts[::-1])  # Reverse to get table.insert order
+            current = base
+        return '.'.join(parts[::-1])
 
 def tokenizer(text, word2idx):
     tokeniser = Tokeniser()
@@ -245,11 +266,10 @@ def tokenizer(text, word2idx):
 
 if __name__ == "__main__":
     text = """
-str = "LUA123"
-print(string.lower(str))
+print("Hello World!")
 
 <PROGRAM END>
-lua123
+Hello World!
  <eos>
 """
     input_tokens, output_tokens, all_tokens = Tokeniser().tokenise_code(text)

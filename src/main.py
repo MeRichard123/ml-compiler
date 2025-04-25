@@ -226,7 +226,7 @@ def main():
     vocab = code_dataset.build_vocab()["vocab"]
 
     batch_size = min(64, len(code_dataset) // 20)
-    trainset, testset = code_dataset.train_test_split()
+    trainset, testset, validation = code_dataset.train_test_split()
 
     train_dataloader = DataLoader(
         trainset, 
@@ -234,11 +234,13 @@ def main():
         collate_fn=collate_fn,
     )
 
-    # validation_dataloader = DataLoader(
-    #     validation, 
-    #     batch_size=batch_size,  
-    #     collate_fn=collate_fn,
-    # )
+    validation_dataloader = DataLoader(
+        validation, 
+        batch_size=batch_size,  
+        collate_fn=collate_fn,
+    )
+
+    # {'learning_rate': 9.912115401164314e-05, 'n_iters': 3000, 'input_layers': 500, 'hidden_layers': 350}
 
 
     MOE = {
@@ -249,7 +251,7 @@ def main():
         .to(device)
     model_gru = GRU(50, batch_size, 300, len(vocab), device)\
         .to(device)
-    model_minGRU = minGRU(50, batch_size, 300, len(vocab), device, MOE)\
+    model_minGRU = minGRU(500, batch_size, 900, len(vocab), device, MOE)\
         .to(device)
     model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device)\
         .to(device)
@@ -278,9 +280,10 @@ def main():
     filename = f"{model_filename}"
     
     
-    #LM.init_model(code_dataset)
-    #perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader)
-    #LM.save_model(filename)
+    LM.init_model(code_dataset)
+    
+    perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader)
+    LM.save_model(filename)
 
 
 
@@ -301,18 +304,18 @@ def main():
     LM_Test.load_model(f"./{filename}{date}.pth")
     perplexity = 0
 
-    print(LM_Test.sample("tonumber('42')"))
+    print(LM_Test.sample("print('Knell')"))
 
     eval = Evaluator(testset, LM_Test, k = 1)
 
-    #metrics = eval.evaluate(perplexity)
-    #print(f"Exact Match: {metrics['exact_match']:.4f}")
-    #print(f"Sentence Similarity: {metrics['similarity']:.4f}")
-    #print(f"F1: {metrics['f1']:.4f}")
-    #print(f"Precision: {metrics['precision']:.4f}")
-    #print(f"Recall: {metrics['recall']:.4f}")
-    #print(f"Perplexity: {metrics['perplexity']:.4f}")
-    #print(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
+    metrics = eval.evaluate(perplexity)
+    print(f"Exact Match: {metrics['exact_match']:.4f}")
+    print(f"Sentence Similarity: {metrics['similarity']:.4f}")
+    print(f"F1: {metrics['f1']:.4f}")
+    print(f"Precision: {metrics['precision']:.4f}")
+    print(f"Recall: {metrics['recall']:.4f}")
+    print(f"Perplexity: {metrics['perplexity']:.4f}")
+    print(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
 
 
 

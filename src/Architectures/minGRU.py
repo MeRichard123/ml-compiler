@@ -23,9 +23,9 @@ class minGRU(nn.Module):
             
         self.linear_z = nn.Linear(embedding_dim, hidden_size, device=device)
         self.linear_h = nn.Linear(embedding_dim, hidden_size, device=device)
+        self.dropout = nn.Dropout(0.5)
         self.fc = nn.Linear(hidden_size, output_size, device=device)
         self.softmax = nn.LogSoftmax(dim=-1)
-        self.dropout = nn.Dropout(0.1)
 
     def __str__(self):
         return "minGRU"
