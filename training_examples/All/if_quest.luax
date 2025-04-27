@@ -1,0 +1,8 @@
+if false then
+   print("quest")
+else
+   print("Know peace")
+end
+
+<PROGRAM END>
+Know peace

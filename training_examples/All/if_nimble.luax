@@ -1,0 +1,8 @@
+if true then
+   print("nimble")
+else
+   print("Hold fast")
+end
+
+<PROGRAM END>
+nimble

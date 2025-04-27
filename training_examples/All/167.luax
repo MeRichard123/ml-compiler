@@ -1,0 +1,9 @@
+for i = 5, 1, -1 do
+    print("Countdown: " .. i)
+end
+<PROGRAM END>
+Countdown: 5
+Countdown: 4
+Countdown: 3
+Countdown: 2
+Countdown: 1

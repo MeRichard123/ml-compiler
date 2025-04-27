@@ -1,0 +1,5 @@
+d = 3.14
+print(d)
+
+<PROGRAM END>
+3.14

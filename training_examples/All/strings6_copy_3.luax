@@ -1,0 +1,3 @@
+print(tonumber("-56"))
+<PROGRAM END>
+-56

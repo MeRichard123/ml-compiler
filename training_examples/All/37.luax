@@ -1,0 +1,11 @@
+z = 5
+while z > 0 do
+    print("Z countdown: " .. z)
+    z = z - 1
+end
+<PROGRAM END>
+Z countdown: 5
+Z countdown: 4
+Z countdown: 3
+Z countdown: 2
+Z countdown: 1

@@ -1,0 +1,11 @@
+i = 2
+while i < 10 do
+    print("Even numbers: " .. i)
+    i = i + 2
+end
+
+<PROGRAM END>
+Even numbers: 2
+Even numbers: 4
+Even numbers: 6
+Even numbers: 8

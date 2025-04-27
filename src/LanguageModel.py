@@ -27,21 +27,21 @@ class LanguageModel:
         self.learning_rate: float   = 9.912115401164314e-05
         self.criterion: nn.Module   = nn.CrossEntropyLoss()  #  negative log likelihood loss
         self.loss: torch.Tensor     = torch.Tensor([0]).to(device)
-        self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate, weight_decay=1e-4)
+        self.optimizer: Optimizer   = torch.optim.Adam(self.model.parameters(), lr=self.learning_rate, weight_decay=1e-3)
         self.max_sample_length: int = 2
         self.device: str            = device
         self.vocab_size: int        = vocab_size
         
         
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
-        self.dropout = nn.Dropout(p=0.3) 
+        self.dropout = nn.Dropout(p=0.5) 
 
     def init_model(self, dataset):
         """Initialize the model with vocabulary from the dataset."""
         new_vocab = dataset.build_vocab()
         self.word2idx = new_vocab["word2idx"]
         self.idx2word = new_vocab["idx2word"]
-        self.criterion = LabelSmoothingLoss(smoothing=0.1, vocab_size=len(self.word2idx))
+        self.criterion = LabelSmoothingLoss(smoothing=0.15, vocab_size=len(self.word2idx))
         """
         if not hasattr(self, 'word2idx') or not hasattr(self, 'idx2word'):
             self.word2idx = {}
@@ -137,6 +137,7 @@ class LanguageModel:
 
         self.optimizer.zero_grad()
         self.loss = 0
+        scheduled_teaching_prob = 1.0
 
         # Process input sequence
         embedded_input = self.dropout(self.embedding(input_tensor.long())).to(self.device)
@@ -166,9 +167,11 @@ class LanguageModel:
             #print(f"Target: {[self.idx2word[i.item()] for i in target_tensor[0]]}")
 
             if t < target_tensor.size(1) - 1:
-                if use_teacher_forcing:
+                if use_teacher_forcing and torch.rand(1).item() < scheduled_teaching_prob:
                     # Feed the target as the next input
                     current_input = self.embedding(target_word.long()).unsqueeze(1)
+                    # decay the teaching probability
+                    scheduled_teaching_prob *= 0.99
                 else:
                     # Use the predicted word as the next input
                     predicted_word = torch.argmax(output[:, -1, :], dim=1)

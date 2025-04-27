@@ -1,0 +1,8 @@
+if false then
+   print("blink")
+else
+   print("Move gently")
+end
+
+<PROGRAM END>
+Move gently

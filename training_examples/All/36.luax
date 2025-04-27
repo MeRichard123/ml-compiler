@@ -1,0 +1,9 @@
+for j = 1, 4 do
+    print("Looping... " .. j)
+end
+
+<PROGRAM END>
+Looping... 1
+Looping... 2
+Looping... 3
+Looping... 4

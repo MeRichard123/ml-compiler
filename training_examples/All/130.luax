@@ -1,0 +1,6 @@
+repeat
+    print("Repeat loop executing once")
+until true
+
+<PROGRAM END>
+Repeat loop executing once

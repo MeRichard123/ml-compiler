@@ -1,0 +1,4 @@
+lucky_number = 7
+print("Lucky number: " .. lucky_number)
+<PROGRAM END>
+Lucky number: 7

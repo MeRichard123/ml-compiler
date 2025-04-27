@@ -1,0 +1,8 @@
+if false then
+   print("thunder")
+else
+   print("Light the spark")
+end
+
+<PROGRAM END>
+Light the spark

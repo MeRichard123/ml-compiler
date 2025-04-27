@@ -1,0 +1,4 @@
+message = "Lua scripting"
+print("Message length: " .. #message)
+<PROGRAM END>
+Message length: 13

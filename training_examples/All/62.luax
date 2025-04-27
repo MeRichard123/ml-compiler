@@ -1,0 +1,4 @@
+alive = true
+print("Is alive: " .. tostring(alive))
+<PROGRAM END>
+Is alive: true

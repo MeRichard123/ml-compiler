@@ -1,0 +1,4 @@
+username = "guest"
+print("Logged in as: " .. username)
+<PROGRAM END>
+Logged in as: guest

@@ -1,0 +1,7 @@
+function greet()
+    print("Hi there!")
+end
+greet()
+
+<PROGRAM END>
+Hi there!

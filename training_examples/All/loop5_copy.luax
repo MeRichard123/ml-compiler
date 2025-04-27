@@ -1,0 +1,11 @@
+a = 3
+repeat
+    print(a)
+    a = a + 1
+until a == 7
+
+<PROGRAM END>
+3
+4
+5
+6

@@ -1,0 +1,10 @@
+for i = 20, 16, -1 do
+    print(i)
+end
+
+<PROGRAM END>
+20
+19
+18
+17
+16

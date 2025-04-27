@@ -1,0 +1,8 @@
+if false then
+   print("glow")
+else
+   print("Stay light")
+end
+
+<PROGRAM END>
+Stay light

@@ -1,0 +1,4 @@
+counter = 100
+print("Counter: " .. counter)
+<PROGRAM END>
+Counter: 100

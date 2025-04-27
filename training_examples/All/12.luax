@@ -1,0 +1,4 @@
+weight = 68
+print("Weight: " .. weight)
+<PROGRAM END>
+Weight: 68

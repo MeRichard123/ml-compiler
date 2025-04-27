@@ -1,0 +1,4 @@
+half = 1 / 2
+print("Half: " .. half)
+<PROGRAM END>
+Half: 0.5

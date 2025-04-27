@@ -1,0 +1,9 @@
+i = 1
+while i <= 3 do
+    print("While loop count: " .. i)
+    i = i + 1
+end
+<PROGRAM END>
+While loop count: 1
+While loop count: 2
+While loop count: 3

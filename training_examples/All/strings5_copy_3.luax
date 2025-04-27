@@ -1,0 +1,5 @@
+num = 1000000
+print(tostring(num))
+
+<PROGRAM END>
+1000000

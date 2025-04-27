@@ -1,0 +1,12 @@
+i = 10
+while i <= 14 do
+    print(i)
+    i = i + 1
+end
+
+<PROGRAM END>
+10
+11
+12
+13
+14

@@ -1,0 +1,9 @@
+for k = 1, 5 do
+    print("Iteration number: " .. k)
+end
+<PROGRAM END>
+Iteration number: 1
+Iteration number: 2
+Iteration number: 3
+Iteration number: 4
+Iteration number: 5

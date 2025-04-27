@@ -73,8 +73,11 @@ class CodeDatasetSubset(IterableDataset):
         }
 
 class CodeDataset(IterableDataset):
-    def __init__(self, curricum_num=1):
-        self.data_dir = f"./training_examples/Curriculum{curricum_num}"
+    def __init__(self, curricum_num=1, use_all=False):
+        if use_all:
+            self.data_dir = f"./training_examples/All"
+        else:
+            self.data_dir = f"./training_examples/Curriculum{curricum_num}"
         #self.data_dir = f"./training_examples/Testing"
         self.tokenizer = tokenizer
         self.data = []

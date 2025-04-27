@@ -1,0 +1,6 @@
+function greet()
+    print("Good morning britain!")
+end
+greet()
+<PROGRAM END>
+Good morning britain!

@@ -6,6 +6,7 @@ from Architectures.RNN import RNN
 from Architectures.GRU import GRU
 from Architectures.minGRU import minGRU
 from Architectures.minLSTM import minLSTM
+from Architectures.EnsembleMinGRU import StackedMinGRU
 
 from Utils.Logger import LOGGER
 from LanguageModel import LanguageModel
@@ -222,7 +223,7 @@ def main():
         LOGGER(f"Name of current CUDA device: {torch.cuda.get_device_name(cuda_id)}")
 
 
-    code_dataset = CodeDataset()
+    code_dataset = CodeDataset(use_all=True)
     vocab = code_dataset.build_vocab()["vocab"]
 
     batch_size = min(64, len(code_dataset) // 20)
@@ -244,7 +245,7 @@ def main():
 
 
     MOE = {
-        "number_of_experts": 12
+        "number_of_experts": 2
     }
 
     model = RNN(50, batch_size, 300, len(vocab), device)\
@@ -257,6 +258,9 @@ def main():
         .to(device)
     model_lstm = LSTM(50, batch_size, 300, len(vocab), device).\
         to(device)
+    
+    model_ensemble = StackedMinGRU(500, batch_size, 900, len(vocab), device, num_experts=12, num_layers=4)\
+        .to(device)
 
     model_file_names = [
         "rnn_model_code_ast",
@@ -271,7 +275,10 @@ def main():
         "minGRU_curriculum",
         "TestingPass",
         "LSTM_test",
+        "EnsembleMinGRU",
     ]
+
+
 
 
     LM = LanguageModel(model_minGRU, len(vocab), device) 
@@ -282,7 +289,7 @@ def main():
     
     LM.init_model(code_dataset)
     
-    perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader)
+    perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
     LM.save_model(filename)
 
 

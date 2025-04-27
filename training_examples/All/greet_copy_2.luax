@@ -1,0 +1,6 @@
+greeting = "Greetings"
+name = "Earth"
+print(greeting .. ", " .. name .. "!")
+
+<PROGRAM END>
+Greetings, Earth!
