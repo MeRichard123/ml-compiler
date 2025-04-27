@@ -1,0 +1,9 @@
+[EnsembleMinGRU] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.7279
+F1: 0.0238
+Precision: 0.0214
+Recall: 0.0291
+Perplexity: 1.1497
+pass@1 (dataset): 1.1

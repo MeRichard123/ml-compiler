@@ -11,3 +11,8 @@ def LOGGER(string: str):
 def SHAPE_LOG(place, tensor: Tensor):
     if SHAPE_LOGGING:
         print(f"[SHAPE] {place}: {tensor.shape}")
+
+def fprintf(string: str):
+    with open("log.txt", "a") as f:
+        f.write(string + "\n")
+    print(string)

@@ -8,7 +8,7 @@ from Architectures.minGRU import minGRU
 from Architectures.minLSTM import minLSTM
 from Architectures.EnsembleMinGRU import StackedMinGRU
 
-from Utils.Logger import LOGGER
+from Utils.Logger import LOGGER, fprintf
 from LanguageModel import LanguageModel
 from Data import collate_fn, CodeDataset
 from Evaluation import Evaluator
@@ -226,7 +226,7 @@ def main():
     code_dataset = CodeDataset(use_all=True)
     vocab = code_dataset.build_vocab()["vocab"]
 
-    batch_size = min(64, len(code_dataset) // 20)
+    batch_size = min(128, len(code_dataset) // 2)
     trainset, testset, validation = code_dataset.train_test_split()
 
     train_dataloader = DataLoader(
@@ -309,22 +309,21 @@ def main():
     date = datetime.datetime.now().strftime("%Y-%m-%d")
     LM_Test.init_model(code_dataset)
     LM_Test.load_model(f"./{filename}{date}.pth")
-    perplexity = 0
 
     print(LM_Test.sample("print('Knell')"))
 
     eval = Evaluator(testset, LM_Test, k = 1)
 
+    date = datetime.datetime.now().strftime("%Y-%m-%d - %H:%M:%S")
+    fprintf(f"[{filename} - {date}] Final Metrics:\n")
     metrics = eval.evaluate(perplexity)
-    print(f"Exact Match: {metrics['exact_match']:.4f}")
-    print(f"Sentence Similarity: {metrics['similarity']:.4f}")
-    print(f"F1: {metrics['f1']:.4f}")
-    print(f"Precision: {metrics['precision']:.4f}")
-    print(f"Recall: {metrics['recall']:.4f}")
-    print(f"Perplexity: {metrics['perplexity']:.4f}")
-    print(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
-
-
+    fprintf(f"Exact Match: {metrics['exact_match']:.4f}")
+    fprintf(f"Sentence Similarity: {metrics['similarity']:.4f}")
+    fprintf(f"F1: {metrics['f1']:.4f}")
+    fprintf(f"Precision: {metrics['precision']:.4f}")
+    fprintf(f"Recall: {metrics['recall']:.4f}")
+    fprintf(f"Perplexity: {metrics['perplexity']:.4f}")
+    fprintf(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
 
 
 
