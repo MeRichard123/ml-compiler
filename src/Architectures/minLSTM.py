@@ -1,11 +1,13 @@
 from torch import nn
 import torch
 from torch.nn import functional as F
+from Utils.Moe import MoeLayer
+from Utils.Attention import AttentionLayer
 from Utils.scan import log_g, parallel_scan_log
 from Utils.Logger import SHAPE_LOG
 
 class minLSTM(nn.Module):
-    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device = 'cpu'):
+    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device = 'cpu', MOE = None, Attention = False):
         super(minLSTM, self).__init__()
         self.batch_size = batch_size
         self.device = device
@@ -13,11 +15,18 @@ class minLSTM(nn.Module):
         self.output_size = output_size
         self.embedding_dim = embedding_dim
 
+        if MOE is not None:
+            self.moe = MoeLayer(MOE['number_of_experts'], embedding_dim)  
+        
+        if Attention:
+            self.attention = AttentionLayer(embedding_dim, 10) 
+
         self.linear_f = nn.Linear(embedding_dim, hidden_size, device=device)
         self.linear_i = nn.Linear(embedding_dim, hidden_size, device=device)
         self.linear_h = nn.Linear(embedding_dim, hidden_size, device=device)
         
         self.fc = nn.Linear(hidden_size, output_size, device=device)
+        self.dropout = nn.Dropout(0.5)
         self.softmax = nn.LogSoftmax(dim=-1)
 
     def __str__(self):
@@ -26,6 +35,13 @@ class minLSTM(nn.Module):
     def forward(self, x, h_0):
         # x_t: (batch_size, seq_length, input_size)
         # h_0: (batch_size, 1, hidden_size)
+
+        if hasattr(self, 'attention'):
+            x = self.attention(x)
+
+        if hasattr(self, 'moe'):
+            x = self.moe(x)
+
 
         SHAPE_LOG("minLSTM.FORWARD() x", x)
 
@@ -44,9 +60,8 @@ class minLSTM(nn.Module):
         SHAPE_LOG("minLSTM.FORWARD() LOG_F", log_f)
 
         h = parallel_scan_log(log_f, torch.cat([log_h_0, log_i + log_tilde_h],dim=1))
-        SHAPE_LOG("minLSTM.FORWARD() h", h)
         output = self.fc(h)
-        SHAPE_LOG("minLSTM.FORWARD() out fc", output)
+        output = self.dropout(output)
         output = self.softmax(output)
         SHAPE_LOG("minLSTM.FORWARD() softmax", output)
         return output, h

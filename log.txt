@@ -1,4 +1,4 @@
-[EnsembleMinGRU] Final Metrics:
+[MinGRU - MOE (2)] Final Metrics:
 
 Exact Match: 0.0000
 Sentence Similarity: 0.7279
@@ -7,3 +7,24 @@ Precision: 0.0214
 Recall: 0.0291
 Perplexity: 1.1497
 pass@1 (dataset): 1.1
+
+[MinGRU - 2025-04-27 - 18:31:08-  noMOE] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6725
+F1: 0.0014
+Precision: 0.0010
+Recall: 0.0023
+Perplexity: 1.1384
+pass@1 (dataset): 1.1494
+
+
+[EnsembleMinGRU - 2025-04-27 - 19:10:57] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6762
+F1: 0.0272
+Precision: 0.0278
+Recall: 0.0281
+Perplexity: 1.1981
+pass@1 (dataset): 0.0000

@@ -248,15 +248,15 @@ def main():
         "number_of_experts": 2
     }
 
-    model = RNN(50, batch_size, 300, len(vocab), device)\
+    model_RNN = RNN(50, batch_size, 300, len(vocab), device, MOE)\
         .to(device)
-    model_gru = GRU(50, batch_size, 300, len(vocab), device)\
+    model_gru = GRU(50, batch_size, 300, len(vocab), device, MOE)\
         .to(device)
     model_minGRU = minGRU(500, batch_size, 900, len(vocab), device, MOE)\
         .to(device)
-    model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device)\
+    model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device, MOE)\
         .to(device)
-    model_lstm = LSTM(50, batch_size, 300, len(vocab), device).\
+    model_lstm = LSTM(50, batch_size, 300, len(vocab), device, MOE).\
         to(device)
     
     model_ensemble = StackedMinGRU(500, batch_size, 900, len(vocab), device, num_experts=12, num_layers=4)\
@@ -279,51 +279,57 @@ def main():
     ]
 
 
+    models = [
+        model_RNN,
+        model_gru,
+        model_minGRU,
+        model_minLSTM,
+        model_lstm,
+    ]
+
+    for model in models:
+        LM = LanguageModel(model, len(vocab), device) 
+        model_filename = model_file_names[len(model_file_names) - 1]
+        filename = f"{model_filename}"
+        
+        
+        LM.init_model(code_dataset)
+        
+        perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
+        LM.save_model(filename)
 
 
-    LM = LanguageModel(model_minGRU, len(vocab), device) 
 
-    model_filename = model_file_names[len(model_file_names) - 1]
-    filename = f"{model_filename}"
-    
-    
-    LM.init_model(code_dataset)
-    
-    perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
-    LM.save_model(filename)
+        """"
+        # Min LSTM - Code, AST
+        print("Min LSTM - Code, AST")
+        LM = LanguageModel(model_minLSTM, len(vocab), device)
+        LM.load_model("./trained_models/minLSTM_model_code.pth")
+        LM.init_model(code_dataset)
+        print(LM.sample("print('Hello World!')"))
 
+        LM.load_model("./trained_models/minGRU_attention.pth")
+        LM.init_model(code_dataset)
+        """
+        LM_Test = LanguageModel(model, len(vocab), device) 
+        date = datetime.datetime.now().strftime("%Y-%m-%d")
+        LM_Test.init_model(code_dataset)
+        LM_Test.load_model(f"./{filename}{date}.pth")
 
+        print(LM_Test.sample("print('Knell')"))
 
-    """"
-    # Min LSTM - Code, AST
-    print("Min LSTM - Code, AST")
-    LM = LanguageModel(model_minLSTM, len(vocab), device)
-    LM.load_model("./trained_models/minLSTM_model_code.pth")
-    LM.init_model(code_dataset)
-    print(LM.sample("print('Hello World!')"))
+        eval = Evaluator(testset, LM_Test, k = 1)
 
-    LM.load_model("./trained_models/minGRU_attention.pth")
-    LM.init_model(code_dataset)
-    """
-    LM_Test = LanguageModel(model_minGRU, len(vocab), device) 
-    date = datetime.datetime.now().strftime("%Y-%m-%d")
-    LM_Test.init_model(code_dataset)
-    LM_Test.load_model(f"./{filename}{date}.pth")
-
-    print(LM_Test.sample("print('Knell')"))
-
-    eval = Evaluator(testset, LM_Test, k = 1)
-
-    date = datetime.datetime.now().strftime("%Y-%m-%d - %H:%M:%S")
-    fprintf(f"[{filename} - {date}] Final Metrics:\n")
-    metrics = eval.evaluate(perplexity)
-    fprintf(f"Exact Match: {metrics['exact_match']:.4f}")
-    fprintf(f"Sentence Similarity: {metrics['similarity']:.4f}")
-    fprintf(f"F1: {metrics['f1']:.4f}")
-    fprintf(f"Precision: {metrics['precision']:.4f}")
-    fprintf(f"Recall: {metrics['recall']:.4f}")
-    fprintf(f"Perplexity: {metrics['perplexity']:.4f}")
-    fprintf(f"pass@1 (dataset): {(metrics['pass@k']*100):.1f}")
+        date = datetime.datetime.now().strftime("%Y-%m-%d - %H:%M:%S")
+        fprintf(f"\n\n[{filename} - {date}] Final Metrics:\n")
+        metrics = eval.evaluate(perplexity)
+        fprintf(f"Exact Match: {metrics['exact_match']:.4f}")
+        fprintf(f"Sentence Similarity: {metrics['similarity']:.4f}")
+        fprintf(f"F1: {metrics['f1']:.4f}")
+        fprintf(f"Precision: {metrics['precision']:.4f}")
+        fprintf(f"Recall: {metrics['recall']:.4f}")
+        fprintf(f"Perplexity: {metrics['perplexity']:.4f}")
+        fprintf(f"pass@1 (dataset): {(metrics['pass@k']*100):.4f}")
 
 
 

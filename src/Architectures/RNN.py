@@ -1,18 +1,26 @@
 import torch
 import torch.nn as nn
+from Utils.Moe import MoeLayer
+from Utils.Attention import AttentionLayer
 
 class RNN(nn.Module):
-    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device) -> None:
+    def __init__(self, embedding_dim, batch_size, hidden_size, output_size, device, MOE = None, Attention = False):
         super(RNN, self).__init__()
         self.hidden_size = hidden_size
         self.batch_size = batch_size
         self.device = device
         self.embedding_dim = embedding_dim
 
+        if MOE is not None:
+            self.moe = MoeLayer(MOE['number_of_experts'], embedding_dim)  
+        
+        if Attention:
+            self.attention = AttentionLayer(embedding_dim, 10) 
+
         self.i2h = nn.Linear(embedding_dim + hidden_size, hidden_size, device=device)
         self.i2o = nn.Linear(embedding_dim + hidden_size, output_size, device=device)
         self.o2o = nn.Linear(hidden_size + output_size, output_size, device=device)
-        self.dropout = nn.Dropout(0.1)
+        self.dropout = nn.Dropout(0.5)
 
         '''
         - Since I am using nn.NLLLoss I need LogSoftmax
@@ -27,6 +35,14 @@ class RNN(nn.Module):
     def forward(self, input, hidden):
         # Input shape: (batch_size, seq_len, embedding_dim) or (1, 1, embedding_dim) for single input
         # Hidden shape: (1, batch_size, hidden_size)
+        if hasattr(self, 'attention'):
+            input = self.attention(input)
+        # x_t: (batch_size, seq_length, input_size)
+        # h_0: (batch_size, 1, hidden_size)
+
+        if hasattr(self, 'moe'):
+            input = self.moe(input)
+
         
         # Move to device
         input = input.to(self.device)
@@ -69,7 +85,7 @@ class RNN(nn.Module):
         
         # Stack outputs along sequence dimension
         output = torch.stack(outputs, dim=1)
-        
+        output = self.dropout(output)
         # Apply softmax to the output
         output = self.softmax(output)
         

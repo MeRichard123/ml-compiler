@@ -42,22 +42,7 @@ class LanguageModel:
         self.word2idx = new_vocab["word2idx"]
         self.idx2word = new_vocab["idx2word"]
         self.criterion = LabelSmoothingLoss(smoothing=0.2, vocab_size=len(self.word2idx))
-        """
-        if not hasattr(self, 'word2idx') or not hasattr(self, 'idx2word'):
-            self.word2idx = {}
-            self.idx2word = {}
-            self.vocab = 0 
 
-        current_idx = self.vocab_size
-        for token, idx in new_word2idx.items():
-            if token not in self.word2idx:
-                self.word2idx[token] = current_idx
-                self.idx2word[current_idx] = token
-                current_idx += 1
-        """
-        #self.vocab_size = len(self.word2idx)
-
-        #self.resuze_model_layers()
 
         # Collect all tokenized text from dataset
         all_indices = list(chain.from_iterable(data['input'].tolist() for data in dataset))
@@ -67,71 +52,9 @@ class LanguageModel:
 
         print(f"Vocabulary Size: {len(self.word2idx)}")
 
-    # def resuze_model_layers(self):
-    #     old_embedding = self.embedding
-    #     new_embedding = nn.Embedding(self.vocab_size, self.model.embedding_dim).to(self.device)
-
-    #     with torch.no_grad():
-    #         for idx in range(min(old_embedding.num_embeddings, self.vocab_size)):
-    #             new_embedding.weight[idx] = old_embedding.weight[idx]
-
-    #     self.embedding = new_embedding
-
-    #     if hasattr(self.model, 'fc'):
-    #         old_fc = self.model.fc
-    #         new_fc = nn.Linear(old_fc.in_features, self.vocab_size).to(self.device)
-
-    #         with torch.no_grad():
-    #             for idx in range(min(old_fc.out_features, self.vocab_size)):
-    #                 new_fc.weight[idx] = old_fc.weight[idx]
-    #                 new_fc.bias[idx] = old_fc.bias[idx]
-
-    #         self.model.fc = new_fc
-
-    #         # Resize MoE gate layer
-    #     if hasattr(self.model, "moe") and hasattr(self.model.moe, "gate"):
-    #         old_gate = self.model.moe.gate
-    #         expected_input_dim = old_embedding.embedding_dim  # Adjust based on minGRU input
-    #         if old_gate.in_features != expected_input_dim:
-    #             new_gate = nn.Linear(expected_input_dim, old_gate.out_features).to(self.device)
-    #             self.model.moe.gate = new_gate
-    #             print(f"Resized MoE gate to input_dim={expected_input_dim}")
-
-    #         # Resize MoE experts (if applicable)
-    #         if hasattr(self.model.moe, "experts"):
-    #             for i, expert in enumerate(self.model.moe.experts):
-    #                 if expert.in_features != expected_input_dim:
-    #                     new_expert = nn.Linear(expected_input_dim, expert.out_features).to(self.device)
-    #                     self.model.moe.experts[i] = new_expert
-    #                     print(f"Resized MoE expert {i} to input_dim={expected_input_dim}")
-
-    # def update_vocab(self, new_word2idx):
-    #     new_vocab_size = len(new_word2idx)
-    #     old_embedding = self.embedding 
-    #     old_fc = self.model.fc
-
-    #     # resize the embedding layer
-    #     self.embedding = nn.Embedding(new_vocab_size, self.model.embedding_dim).to(self.device)
-    #     with torch.no_grad():
-    #         for token, idx in new_word2idx.items():
-    #             if idx < old_embedding.num_embeddings:
-    #                 self.embedding.weight[idx] = old_embedding.weight[idx]
-
-    #     # resize the final fully connected layer
-    #     self.model.fc = nn.Linear(old_fc.in_features, new_vocab_size).to(self.device)
-    #     with torch.no_grad():
-    #         for idx in range(min(old_fc.out_features, new_vocab_size)):
-    #             self.model.fc.weight[idx] = old_fc.weight[idx]
-    #             self.model.fc.bias[idx] = old_fc.bias[idx]
-        
-    #     print(f"Updated embedding layer from {old_embedding.num_embeddings} to {new_vocab_size}")
-    #     print(f"Updated final layer from {old_fc.out_features} to {new_vocab_size}")
-    #     self.vocab["word2idx"] = new_word2idx
-    #     self.word2idx = new_word2idx
-    #     self.idx2word = {idx: token for token, idx in new_word2idx.items()}
-    #     self.vocab_size = new_vocab_size 
 
     def __train(self, input_tensor: torch.Tensor, target_tensor: torch.Tensor, use_teacher_forcing: bool = False):
+        self.model.train()
         batch_size = input_tensor.size(0)
         hidden = self.model.initHidden(batch_size)
 
