@@ -387,59 +387,81 @@ pass@1 (dataset): 0.0000
 
 
 
+
+
 model: model_RNN
-Time taken to sample Short: 0.1910 seconds
-Time taken to sample Long: 0.0200 seconds
+Time taken to sample Short: 0.2018 seconds
+Time taken to sample Long: 0.0250 seconds
 
 model: model_RNN_exp2
 Time taken to sample Short: 0.0090 seconds
-Time taken to sample Long: 0.0330 seconds
+Time taken to sample Long: 0.0250 seconds
 
 model: model_RNN_exp4
-Time taken to sample Short: 0.0110 seconds
-Time taken to sample Long: 0.0310 seconds
+Time taken to sample Short: 0.0070 seconds
+Time taken to sample Long: 0.0280 seconds
 
 model: model_RNN_exp10
-Time taken to sample Short: 0.0075 seconds
-Time taken to sample Long: 0.0360 seconds
+Time taken to sample Short: 0.0090 seconds
+Time taken to sample Long: 0.0450 seconds
 
 model: model_RNN_h
-Time taken to sample Short: 0.0060 seconds
+Time taken to sample Short: 0.0070 seconds
 Time taken to sample Long: 0.0220 seconds
 
 model: model_GRU
-Time taken to sample Short: 0.0120 seconds
-Time taken to sample Long: 0.0250 seconds
+Time taken to sample Short: 0.0135 seconds
+Time taken to sample Long: 0.0240 seconds
 
 model: model_GRU_exp2
-Time taken to sample Short: 0.0090 seconds
-Time taken to sample Long: 0.0310 seconds
+Time taken to sample Short: 0.0070 seconds
+Time taken to sample Long: 0.0350 seconds
 
 model: model_GRU_exp4
 Time taken to sample Short: 0.0090 seconds
-Time taken to sample Long: 0.0365 seconds
+Time taken to sample Long: 0.0320 seconds
 
 model: model_GRU_exp10
-Time taken to sample Short: 0.0130 seconds
-Time taken to sample Long: 0.0495 seconds
+Time taken to sample Short: 0.0080 seconds
+Time taken to sample Long: 0.0390 seconds
 
 model: model_GRU_h
-Time taken to sample Short: 0.0085 seconds
-Time taken to sample Long: 0.0210 seconds
+Time taken to sample Short: 0.0080 seconds
+Time taken to sample Long: 0.0262 seconds
 
 model: model_LSTM
-Time taken to sample Short: 0.0070 seconds
-Time taken to sample Long: 0.0230 seconds
+Time taken to sample Short: 0.0080 seconds
+Time taken to sample Long: 0.0260 seconds
 
 model: model_LSTM_exp2
-Time taken to sample Short: 0.0080 seconds
-Time taken to sample Long: 0.0430 seconds
+Time taken to sample Short: 0.0070 seconds
+Time taken to sample Long: 0.0321 seconds
 
 model: model_LSTM_exp4
-Time taken to sample Short: 0.0160 seconds
-Time taken to sample Long: 0.0671 seconds
+Time taken to sample Short: 0.0070 seconds
+Time taken to sample Long: 0.0320 seconds
 
 model: model_LSTM_exp10
-Time taken to sample Short: 0.0173 seconds
-Time taken to sample Long: 0.0760 seconds
+Time taken to sample Short: 0.0140 seconds
+Time taken to sample Long: 0.0400 seconds
+
+model: model_minGRU
+Time taken to sample Short: 0.4865 seconds
+Time taken to sample Long: 0.0630 seconds
+
+model: model_minGRU_exp4
+Time taken to sample Short: 0.0230 seconds
+Time taken to sample Long: 0.1395 seconds
+
+model: model_minGRU_exp10
+Time taken to sample Short: 0.0140 seconds
+Time taken to sample Long: 0.0770 seconds
+
+model: model_minGRU_h
+Time taken to sample Short: 0.0100 seconds
+Time taken to sample Long: 0.0510 seconds
+
+model: minLSTMExp2
+Time taken to sample Short: 0.2171 seconds
+Time taken to sample Long: 0.0221 seconds
 

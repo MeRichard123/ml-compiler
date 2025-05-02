@@ -314,60 +314,16 @@ def main():
 
 
     model_file_names = [
-        "model_RNN",
-        "model_RNN_exp2",
-        "model_RNN_exp4",
-        "model_RNN_exp10",
-        "model_RNN_h",
-        "model_GRU",
-        "model_GRU_exp2",
-        "model_GRU_exp4",
-        "model_GRU_exp10",
-        "model_GRU_h",
-        "model_LSTM",
-        "model_LSTM_exp2",
-        "model_LSTM_exp4",
-        "model_LSTM_exp10",
-        "model_LSTM_h",
-        "model_minGRU",
-        "model_minGRU_exp2",
-        "model_minGRU_exp4",
-        "model_minGRU_exp10",
-        "model_minGRU_h",
-        "model_minLSTM",
-        "model_minLSTM_exp2",
-        "model_minLSTM_exp4",
-        "model_minLSTM_exp10",
-        "model_minLSTM_h",
+        "minLSTM_model",
+        "minLSTMExp2",
+        "minLSTMExp4",
     ]
 
 
     models = [
-            model_RNN,
-            model_RNN_exp2,
-            model_RNN_exp4,
-            model_RNN_exp10,
-            model_RNN_h,
-            model_GRU,
-            model_GRU_exp2,
-            model_GRU_exp4,
-            model_GRU_exp10,
-            model_GRU_h,
-            model_LSTM,
-            model_LSTM_exp2,
-            model_LSTM_exp4,
-            model_LSTM_exp10,
-            model_LSTM_h,
-            model_minGRU,
-            model_minGRU_exp2,
-            model_minGRU_exp4,
-            model_minGRU_exp10,
-            model_minGRU_h,
             model_minLSTM,
             model_minLSTM_exp2,
             model_minLSTM_exp4,
-            model_minLSTM_exp10,
-            model_minLSTM_h,
     ]
 
     for idx in range(len(models) - 1):
@@ -385,26 +341,29 @@ def main():
         
         
         #LM.save_model(filename)
+        try:
+            LM_Test = LanguageModel(model, len(vocab), device) 
+            date = datetime.datetime.now().strftime("%Y-%m-%d")
+            yesterday = datetime.datetime.now() - datetime.timedelta(days=3)
+            yesterday = yesterday.strftime("%Y-%m-%d")
+            LM_Test.init_model(code_dataset)
+            LM_Test.load_model(f"./{filename}{yesterday}.pth")
 
-        LM_Test = LanguageModel(model, len(vocab), device) 
-        date = datetime.datetime.now().strftime("%Y-%m-%d")
-        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
-        yesterday = yesterday.strftime("%Y-%m-%d")
-        LM_Test.init_model(code_dataset)
-        LM_Test.load_model(f"./{filename}{yesterday}.pth")
+            fprintf(f"model: {filename}")
 
-        fprintf(f"model: {filename}")
+            import time
+            start = time.time()
+            print(LM_Test.sample("print('Knell')"))
+            end = time.time()
+            fprintf(f"Time taken to sample Short: {end - start:.4f} seconds")
 
-        import time
-        start = time.time()
-        print(LM_Test.sample("print('Knell')"))
-        end = time.time()
-        fprintf(f"Time taken to sample Short: {end - start:.4f} seconds")
-
-        start = time.time()
-        print(LM_Test.sample("a = 1 if a then function hello() print('hello') end end"))
-        end = time.time()
-        fprintf(f"Time taken to sample Long: {end - start:.4f} seconds\n")
+            start = time.time()
+            print(LM_Test.sample("a = 1 if a then function hello() print('hello') end end"))
+            end = time.time()
+            fprintf(f"Time taken to sample Long: {end - start:.4f} seconds\n")
+        except Exception as e:
+            print(f"Error loading model {filename}: {e}")
+            continue
         '''
         eval = Evaluator(testset, LM_Test, k = 1)
         
