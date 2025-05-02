@@ -1,0 +1,22 @@
+b = 2
+
+if b <= 2 then
+    print("b is at most 2")
+end
+
+<PROGRAM END>
+
+
+a = {} for i in pairs(a) do print(i .. ": " .. tostring(a[i])) end
+
+--print("1: ", a[1])
+
+if true then
+    print("true") else  print("false")
+end
+
+local l = {}
+for k, v in next, l do print(k, v) end
+
+
+

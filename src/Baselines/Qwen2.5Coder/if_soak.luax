@@ -1,0 +1,11 @@
+if false then
+   print("soak")
+else
+   print("Be the light")
+end
+
+<PROGRAM END>
+
+Be the light
+
+

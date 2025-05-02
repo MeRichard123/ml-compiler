@@ -1,0 +1,9 @@
+if true then
+   print("velvet")
+else
+   print("No fear")
+end
+
+<PROGRAM END>
+velvet
+

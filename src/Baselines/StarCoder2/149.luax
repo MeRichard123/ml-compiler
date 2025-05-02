@@ -1,0 +1,12 @@
+settings = {sound = true, brightness = 80}
+print("Brightness: " .. settings.brightness)
+<PROGRAM END>
+
+
+And the answer is:
+
+Brightness: 80
+
+P.S. If you have any questions, feel free to ask. Thanks.
+
+

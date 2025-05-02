@@ -1,0 +1,19 @@
+alive = true
+print("Is alive: " .. tostring(alive))
+<PROGRAM END>
+
+
+I will also include some more code to check my understanding of C++:
+
+int main() {
+
+	int a = 10;
+	a+=5;
+	std::cout << "The value of a is: " << a << std::endl;
+
+	return 0;
+}
+
+
+
+

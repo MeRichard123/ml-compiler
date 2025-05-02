@@ -1,0 +1,9 @@
+function greet()
+    print("Hello, World!")
+end
+greet()
+<PROGRAM END>
+
+Hello, World!
+
+

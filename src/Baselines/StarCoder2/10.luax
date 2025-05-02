@@ -1,0 +1,15 @@
+speed = 55.5
+print("Speed: " .. speed)
+<PROGRAM END>
+
+
+What did you expect to get?
+
+Speed: 55.5
+
+What did you see instead?
+
+Speed: 55.5555555556
+
+
+

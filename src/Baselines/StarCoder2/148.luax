@@ -1,0 +1,26 @@
+fruits = {"Apple", "Banana", "Cherry"}
+print("First fruit: " .. fruits[1])
+<PROGRAM END>
+
+
+LuaCode = 
+{
+	Fruits = 
+	{
+		"Apple", 
+		"Banana", 
+		"Cherry"
+
+	}, 
+
+	PrintFruits = function()
+
+		for Index, Fruit in pairs(Fruits) do
+
+			print("Fruit " .. Index .. ": " .. Fruit)
+
+		end
+
+	end
+}
+

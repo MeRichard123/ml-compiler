@@ -1,0 +1,5 @@
+money = 1000
+print("Money left: $" .. money)
+<PROGRAM END>
+Money left: $1000
+

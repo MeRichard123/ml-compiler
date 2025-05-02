@@ -1,0 +1,11 @@
+if false then
+   print("sprint")
+else
+   print("Dig deep")
+end
+
+<PROGRAM END>
+lua
+Dig deep
+
+

@@ -1,0 +1,10 @@
+function half(x)
+    print("Half: " .. (x / 2))
+end
+half(8)
+<PROGRAM END>
+
+
+output:
+Half: 4
+

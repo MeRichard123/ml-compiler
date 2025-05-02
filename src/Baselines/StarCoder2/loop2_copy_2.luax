@@ -1,0 +1,95 @@
+for i = 8, 3, -1 do
+    print(i)
+end
+<PROGRAM END>
+
+
+output: 8
+        7
+        6
+        5
+        4
+        3
+
+
+
+Now, write a loop that will print all the numbers from 0 to 20. Then, write another one that will print each number of the previous one 10 times.
+
+for i = 0, 20 do
+    print(i)
+    for j=1, 10 do
+        print(i)
+    end
+end
+
+8
+7
+6
+5
+4
+3
+2
+1
+0
+
+
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+
+
+
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+
+
+11
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+
+
+12
+11
+10
+9
+8
+7
+6
+5
+4
+3
+2
+1
+0
+
+
+I want you to try with 3 loops. So, first one will print all numbers from 0 to 20 (the previous one), then another one wil print each number of the previous loop 10 times and so on.
+
+
+
+

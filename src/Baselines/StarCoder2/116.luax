@@ -1,0 +1,12 @@
+favorite_food = "Pizza"
+print("I love " .. favorite_food)
+<PROGRAM END>
+
+
+--> Pizza
+
+favorite_food = "Pizza"
+print( "I love ".. favorite_food .. ".")
+
+
+

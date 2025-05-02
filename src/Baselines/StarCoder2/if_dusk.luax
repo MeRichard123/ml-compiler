@@ -1,0 +1,12 @@
+if true then
+   print("dusk")
+else
+   print("Almost there")
+end
+
+<PROGRAM END>
+
+
+If true: 1
+
+

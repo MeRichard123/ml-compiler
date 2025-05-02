@@ -1,0 +1,9 @@
+x, y = 5, 15
+print("x + y = " .. (x + y))
+<PROGRAM END>
+The output of the provided Lua code will be:
+
+
+x + y = 20
+
+

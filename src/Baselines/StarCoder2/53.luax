@@ -1,0 +1,10 @@
+status = {true, false, true}
+print("Second status: " .. tostring(status[2]))
+
+<PROGRAM END>
+
+
+
+Second status: false
+
+

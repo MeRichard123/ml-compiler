@@ -1,0 +1,12 @@
+if true then
+   print("swirl")
+else
+   print("Speak truth")
+end
+
+<PROGRAM END>
+
+
+The lua interpreter will show the error:  syntax error at line 1 near 'then'  because, at line 4 there is a space before the else
+
+

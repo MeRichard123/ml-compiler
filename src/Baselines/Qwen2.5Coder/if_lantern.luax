@@ -1,0 +1,11 @@
+if false then
+   print("lantern")
+else
+   print("Keep it simple")
+end
+
+<PROGRAM END>
+
+Keep it simple
+
+

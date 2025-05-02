@@ -1,0 +1,13 @@
+for i = 10, 6, -1 do
+    print(i)
+end
+
+<PROGRAM END>
+
+10
+9
+8
+7
+6
+
+

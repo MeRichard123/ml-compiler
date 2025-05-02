@@ -1,0 +1,11 @@
+repeat
+    print("Repeat loop executing")
+    i = i - 1
+until i == 0
+
+<PROGRAM END>
+The output will be:
+
+Repeat loop executing
+
+

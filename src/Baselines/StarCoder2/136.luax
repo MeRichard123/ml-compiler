@@ -1,0 +1,14 @@
+for a = 1, 5 do
+    print("Hello from loop " .. a)
+end
+<PROGRAM END>
+
+
+Hello from loop 1
+Hello from loop 2
+Hello from loop 3
+Hello from loop 4
+Hello from loop 5
+
+(Lua is a high level programming language. It uses the Lua byte code virtual machine (LVM) to execute. LVM is more efficient than any other VM and it runs on any platform. For example: Windows 98, Mac OS X and Linux are all supported by the Lua virtual machines.)
+

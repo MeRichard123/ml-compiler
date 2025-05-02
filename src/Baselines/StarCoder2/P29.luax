@@ -1,0 +1,15 @@
+print("Cacophony")
+
+<PROGRAM END>
+
+
+the output of the interpreter (for each line):
+
+Cacophony
+
+the output of a compiled program:
+
+Hello, World!
+
+<|end_of_program|>
+

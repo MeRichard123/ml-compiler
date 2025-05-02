@@ -1,0 +1,13 @@
+print("Be bold")
+
+<PROGRAM END>
+
+
+
+function main()
+print("Be bold")
+end
+
+main()
+
+

@@ -1,0 +1,17 @@
+function power_of_two(y)
+    return y * y
+end
+print(power_of_two(6))
+
+<PROGRAM END>
+
+
+Lua has a native function table.concat(). Which can concatenate multiple strings into one string with given delimiter.
+
+In the previous code, I have used .. operator as concatenation operator. This is because .. is a shorthand operator for concat() function of Lua. But I want to give you a more generic way of string concatenation.
+
+
+Lua has a native function table.concat(). Which can concatenate multiple strings into one string with given delimiter.
+
+
+

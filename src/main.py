@@ -12,6 +12,7 @@ from Utils.Logger import LOGGER, fprintf
 from LanguageModel import LanguageModel
 from Data import collate_fn, CodeDataset
 from Evaluation import Evaluator
+from Baselines.BaselineEval import Evaluator as BaselineEvaluator
 import datetime
 
 def calculate_average_metrics(metrics):
@@ -335,7 +336,7 @@ def main():
             
             
         
-        #LM.init_model(code_dataset)
+        LM.init_model(code_dataset)
             
         #perplexity, val_perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
         
@@ -347,10 +348,10 @@ def main():
             yesterday = datetime.datetime.now() - datetime.timedelta(days=3)
             yesterday = yesterday.strftime("%Y-%m-%d")
             LM_Test.init_model(code_dataset)
-            LM_Test.load_model(f"./{filename}{yesterday}.pth")
+            #LM_Test.load_model(f"./{filename}{yesterday}.pth")
 
             fprintf(f"model: {filename}")
-
+            """
             import time
             start = time.time()
             print(LM_Test.sample("print('Knell')"))
@@ -361,6 +362,7 @@ def main():
             print(LM_Test.sample("a = 1 if a then function hello() print('hello') end end"))
             end = time.time()
             fprintf(f"Time taken to sample Long: {end - start:.4f} seconds\n")
+            """
         except Exception as e:
             print(f"Error loading model {filename}: {e}")
             continue
@@ -383,6 +385,21 @@ def main():
         fprintf(f"Validation Perplexity: {val_perplexity:.4f}")
         fprintf(f"pass@1 (dataset): {(metrics['pass@k']*100):.4f}")
         '''
+
+        import os
+        BASE_PATH = os.path.join(os.path.dirname(__file__))
+        print(BASE_PATH)
+        QWEN_PATH = os.path.join(BASE_PATH, "Baselines", "StarCoder2")
+        evaluator = BaselineEvaluator(dir=QWEN_PATH, word2idx = LM.word2idx, device = device)
+        metrics = evaluator.evaluate(perplexity=0.0, log=True)
+
+        fprintf(f"\n\n[{filename} - {date}] Final Metrics:\n")
+
+        fprintf(f"Exact Match: {metrics['exact_match']:.4f}")
+        fprintf(f"Sentence Similarity: {metrics['similarity']:.4f}")
+        fprintf(f"F1: {metrics['f1']:.4f}")
+        fprintf(f"Precision: {metrics['precision']:.4f}")
+        fprintf(f"Recall: {metrics['recall']:.4f}")
         
 
 

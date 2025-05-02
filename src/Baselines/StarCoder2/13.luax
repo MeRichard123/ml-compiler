@@ -1,0 +1,9 @@
+x, y = 5, 15
+print("x + y = " .. (x + y))
+<PROGRAM END>
+
+
+You can't put comments between the ()
+
+So what is the output?
+

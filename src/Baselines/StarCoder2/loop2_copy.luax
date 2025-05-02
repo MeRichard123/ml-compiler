@@ -1,0 +1,28 @@
+for i = 10, 6, -1 do
+    print(i)
+end
+
+<PROGRAM END>
+
+
+The result is:
+
+for i = 10, 6, -1 do
+    print(i)
+end
+
+error: syntax error near 'print'
+
+for i = 10, 5, -1 do
+    print(i)
+end
+
+9
+8
+7
+6
+
+
+
+
+

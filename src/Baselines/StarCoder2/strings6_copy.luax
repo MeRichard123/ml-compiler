@@ -1,0 +1,10 @@
+print(tonumber("123"))
+<PROGRAM END>
+
+
+Output:
+
+error: attempt to call global 'print' (a nil value)
+
+
+

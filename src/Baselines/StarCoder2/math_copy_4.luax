@@ -1,0 +1,17 @@
+b = 5
+a = 3
+c = a - b
+print(c)
+
+<PROGRAM END>
+
+
+please give me the output and only the out of the program:
+
+b = 5
+a = 3
+c = a - b
+print(c)
+
+
+

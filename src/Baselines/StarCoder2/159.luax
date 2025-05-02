@@ -1,0 +1,11 @@
+is_day = true
+print("Is it daytime? " .. tostring(is_day))
+<PROGRAM END>
+
+
+the output in my case was: 
+
+Is it daytime? true
+
+I hope you understand.
+

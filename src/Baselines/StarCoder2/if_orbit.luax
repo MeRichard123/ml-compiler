@@ -1,0 +1,98 @@
+if true then
+   print("orbit")
+else
+   print("Listen closely")
+end
+
+<PROGRAM END>
+
+
+I'll be using a Lua interpreter to run this.
+
+
+So the first thing that comes into my mind is that we're given the following input, and our task is to output the correct line:
+
+    	if true then
+        	print("orbit")
+        else
+        	print("Listen closely")
+    	end
+
+So we have to find a way to make the interpreter understand that `if true` means that it's true. But that's not what `if` statement does! It is something else called [Control Flow Statements](http://www.lua.org/pil/23.10.html).  In Lua, a conditional expression in an if statement can be of one type:
+
+
+if boolean_expression then
+    statements
+end 
+
+This means that `statements` are executed when the expression is true, and control flow moves to the next line after the `then` part of this `if`. 
+
+    	if true then
+        	print("orbit")
+        end
+
+So in that case, the interpreter knows that there's a statement (the `print`) and it will execute this line. But what if we had something like
+
+    	if 10 > 5 
+       	print('1') 
+    	end
+
+
+In that case, it would print nothing! The reason is that you have to use parentheses, otherwise the interpreter won't understand your intentions. It's kind of confusing. So a good thing is that, if you don't put parenthesis around the conditional expression, you get an error:
+
+
+	if 10 > 5 then
+        print('1')
+    end
+
+
+This would give us this error:
+
+![if_statement](assets/images/if-statement.png)
+
+If you are unfamiliar with how to use parenthesis and why the interpreter doesn't like it, please read [this page about operators](http://www.lua.org/pil/23.4.html).
+
+
+
+So, you can imagine that `if 10 > 5 then` means `if this thing is true` (the 10 in this case) and `then` will be executed if it is true. So let's check:
+
+    	if 7 < 8 
+       	    print('1')
+        end
+
+So `7 < 8` is true, so we execute the line:
+
+    	if 7 > 5 then
+            print(7)
+        else
+            print(0)
+    	end
+        
+Let's say that `print(7)` would be executed. Since you already know how to print stuff using `print()` and this is what you should do, you'll be able to solve this problem!
+
+
+	if 7 < 8 
+       	    print('1')
+        end
+
+
+So, the thing that we need to do is find a way to make the interpreter understand that `7 < 8` means true. In fact, the thing we need to do is find a way to check if 10 is greater than 5! And that's how you can solve this problem! The answer is to use [comparison operators](http://www.lua.org/pil/23.4.html).
+
+![comparison_operators](assets/images/comparison-ops.png)
+
+So in Lua, a comparison operator means that it will check if the thing on the left side of the operator is greater than or equal to the thing on the right side of the operator. Let's try this out!
+
+    	if 10 >= 5
+    	print(7 > 8)
+
+This is going to print `true`. So, we need a way to get the interpreter to understand that 10 greater than or equal to 5 means true. Now, we need an operator for the thing on the right side of our comparison operator to be 5! That's where [arithmetic operators](http://www.lua.org/pil/23.4.html) come into play! So what arithmetic operators can you use?
+
+![arithmetic_ops](assets/images/arithmetic-ops.png)
+
+Let's try that out:
+
+    	if 10 >= 5 + 8
+    	print(7 > 8)
+
+
+

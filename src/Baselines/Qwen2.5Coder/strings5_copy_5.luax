@@ -1,0 +1,6 @@
+num = -789
+print(tostring(num))
+
+<PROGRAM END>
+-789
+

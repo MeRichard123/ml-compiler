@@ -1,0 +1,21 @@
+hour = 15
+if hour < 12 then
+    print("Good morning")
+else
+    print("Good afternoon")
+end
+<PROGRAM END>
+
+
+The program is written in Lua. It has a variable `hour` that holds an integer value of some time. Write a code which will check the value of `hour` and print one of two strings: "Good morning" or "Good afternoon". If the value of hour is less than 12, then output the first string, otherwise the second.
+
+You can use the code below for your solution (the result must be the same):
+lua
+hour = 15 -- it's a number here
+if hour < 12 then
+    print("Good morning")
+else
+    print("Good afternoon")
+end
+
+

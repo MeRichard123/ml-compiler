@@ -1,0 +1,14 @@
+print("Walk tall")
+
+<PROGRAM END>
+
+
+I did a lot of things.
+
+The output:
+
+	C:\Users\Antoine\Desktop>lua.exe .\code.lua
+	Walk tall
+	C:\Users\Antoine\Desktop>
+
+

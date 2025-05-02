@@ -1,0 +1,19 @@
+if false then
+   print("thunder")
+else
+   print("Light the spark")
+end
+
+<PROGRAM END>
+
+
+---
+
+#4.5 - 5
+
+There are two files that we want to compile together. We want to have a main.lua, which will call the other two. In main.lua there is this line:
+
+include("file1", "file2")
+
+The problem is that when we compile main with these two includes, it compiles both files at once and generates an output file that contains both of them. What we want instead to generate a file where only the first file will be compiled!
+

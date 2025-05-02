@@ -1,0 +1,14 @@
+random_number = math.random(1, 100)
+print("Random: " .. random_number)
+<PROGRAM END>
+
+
+I think this is a good example.
+
+
+This is the output from my command line:
+
+Random: 45
+
+
+

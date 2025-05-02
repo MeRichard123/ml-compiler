@@ -1,0 +1,25 @@
+print("Doppelgänger")
+
+<PROGRAM END>
+
+
+lua
+	a = "Hello"
+	b = "World"
+	if a > b then
+		print(a)
+	else 
+		print(b)
+	end
+	c = 10
+	if c == 5 then
+	  print("Yes")
+	elseif c < 7 and c != 9 then 
+	  print("No")
+	else
+	  print("Maybe")
+	end
+
+	print(10000000)
+
+

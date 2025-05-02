@@ -1,0 +1,18 @@
+print("All in")
+
+<PROGRAM END>
+
+
+print("All out")
+
+--[[
+
+The above should return:
+
+print("All out")
+
+]]--
+
+print("End of the program")
+
+

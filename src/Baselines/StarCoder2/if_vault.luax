@@ -1,0 +1,14 @@
+if false then
+   print("vault")
+else
+   print("Stay close")
+end
+
+<PROGRAM END>
+
+
+Output is:
+
+Stay close
+
+

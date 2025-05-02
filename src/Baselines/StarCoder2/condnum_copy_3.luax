@@ -1,0 +1,18 @@
+function checkX(value)
+    if value == 7 then
+        print("x is 7")
+    elseif value == -2 then
+        print("x is -2")
+    end
+end
+
+x = 7
+checkX(x)
+
+<PROGRAM END>
+
+
+<|output|>
+7
+<|end_of_output|>
+

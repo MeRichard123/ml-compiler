@@ -1,0 +1,10 @@
+for i = 1, 3 do
+    print("Looping... " .. i)
+end
+<PROGRAM END>
+
+Looping... 1
+Looping... 2
+Looping... 3
+
+

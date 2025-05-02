@@ -1,0 +1,17 @@
+for i = 20, 25 do
+    print(i)
+end
+
+<PROGRAM END>
+
+
+lua test.lua
+
+$1 = {
+  [1] = "test.lua",
+  [2] = "23",
+  [3] = "24"
+}
+
+
+

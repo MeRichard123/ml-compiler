@@ -1,0 +1,23 @@
+print("Quagmire")
+
+<PROGRAM END>
+
+
+This is a bit more complicated, the first 3 lines are not displayed (they are used to hide the code that is being executed). The middle line will be visible. The last line contains some special characters. They are interpreted by lua.
+
+function main(args)
+  print("Hey")
+end
+
+print("Quagmire")
+
+print("Hello")
+
+print( "Lua 5.2" .. "\n")
+
+print( "\t\t\t" .. "Hello world" .. "!")
+
+
+
+
+

@@ -1,0 +1,10 @@
+a = 10
+b = 20
+if a < b then
+    print("a is less than b")
+end
+<PROGRAM END>
+
+a is less than b
+
+

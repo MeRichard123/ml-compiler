@@ -1,0 +1,12 @@
+multiply = function(a, b)
+    return a * b
+end
+print(multiply(3, 4))
+
+<PROGRAM END>
+
+
+function: function: multiply(a,b): return a * b
+30
+
+

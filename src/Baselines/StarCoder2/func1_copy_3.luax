@@ -1,0 +1,14 @@
+local function say_hello()
+    print("Hello, Lua!")
+end
+say_hello()
+
+<PROGRAM END>
+
+
+Please input the file name: main.lua
+Lua 5.3.5  Copyright (C) 1994-2018 Lua Software Foundation
+> dofile "main.lua"
+Hello, Lua!
+
+

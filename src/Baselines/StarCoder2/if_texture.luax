@@ -1,0 +1,14 @@
+if false then
+   print("texture")
+else
+   print("Speak truth")
+end
+
+<PROGRAM END>
+
+
+The output: 
+Speak truth
+
+<|end_of_program|>
+

@@ -1,0 +1,48 @@
+name = "Lua User"
+print("Hello, " .. name .. "!")
+<PROGRAM END>
+
+Hello, Lua User!
+
+There are a lot of things to learn from here. You can start with variables, data types and control flow. It is important that you understand the syntax, the order of execution and that there are no surprises.
+
+
+The first line in the above code is the global "main" function call. The name of the main function in Lua is not fixed. But "main" is a good starting point for programmers looking to learn. In the example it just does the same thing as the previous example, except that it uses string concatenation and double quotes instead of single quotes. When this code is run the output will be:
+
+Hello, "Lua User"!
+
+The first line in the code is a comment. Lua comments are started by -- and continue to end of line. You can add comments anywhere inside your program. Comments should not be confused with blank lines. A blank line tells the interpreter that it should consider the rest of the current scope as a single block, while a comment on its own does nothing at all (unlike most other languages).
+
+
+Variables in Lua are local to blocks or functions and do not need to be declared using any particular statement. For example this code:
+
+a = 5
+print(a)
+b = "hello"
+print(b)
+c = a + b --this is an error!
+
+will print the following output (which we call the "lua interpreter" here, but in practice is not the one used by lua, but its interpreter):
+
+5 hello
+
+Variables are global by default. You can make them local to a block using a local statement:
+
+local a = 5
+print(a) -- prints out 5
+local b = "hello"
+print(b) -- prints out hello
+c = a + b -- this is fine, c is now defined
+
+
+The next section we are going to look at some common data types. This includes number, boolean and strings. These are the only types that we will be using in this guide. Everything else can be handled automatically by the interpreter as appropriate. Numbers can include decimals, integers or exponents:
+
+4 -- integer
+3.0 12E-5 -- decimal with exponent
+7.8E65 -- very large number!
+1e+10 -- decimal number with an E in it
+
+Numbers are not restricted to a particular size or representation and therefore can be arbitrarily large:
+
+9999999999999999999999999999999
+

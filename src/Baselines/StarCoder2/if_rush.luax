@@ -1,0 +1,14 @@
+if true then
+   print("rush")
+else
+   print("Be present")
+end
+
+<PROGRAM END>
+
+
+You can test it with the following command :
+
+`lua code-lua.lua`
+
+

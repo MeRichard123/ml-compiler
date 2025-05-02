@@ -1,0 +1,24 @@
+print("Think slow")
+
+<PROGRAM END>
+
+
+The file contains 491438 bytes of text.
+
+---
+
+I'm using Windows 7 64 bit.
+
+I'm editing the text in Notepad++ and it is encoded as utf-8.
+
+I'm compiling with LuaJIT 2.0.5 beta.<issue_comment>username_1: The text is not displayed, because Lua prints a lot of garbage. You can see the full output by running `luajit -e "print('Think slow')"` instead in the command line (Windows).
+Upvotes: 3 [selected_answer]<issue_comment>username_2: You can also run it via command prompt, just open cmd then type 
+
+
+luajit filename.lua
+
+
+
+if you are in the folder where your file is. If you want to run more than one file at once use `luajit -e "print('Think slow')"` or `luajit -e "print('This is a test')"`
+Upvotes: 0 
+

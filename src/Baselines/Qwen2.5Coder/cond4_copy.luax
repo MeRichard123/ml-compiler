@@ -1,0 +1,8 @@
+falsehood = false
+
+if falsehood == false then
+    print("This is false")
+end
+<PROGRAM END>
+This is false
+

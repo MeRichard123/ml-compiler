@@ -1,0 +1,14 @@
+if true then
+   print("radiant")
+else
+   print("Be present")
+end
+
+<PROGRAM END>
+
+
+You must be kidding me! A true value is a boolean in lua!
+
+
+
+

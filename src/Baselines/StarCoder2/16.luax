@@ -1,0 +1,10 @@
+my_bool = true
+print("Boolean value: " .. tostring(my_bool))
+<PROGRAM END>
+
+
+Lua 5.3.4  Copyright (C) 1994-2017 Lua.org, PUC-Rio
+> print("Boolean value: "..tostring(my_bool))
+Boolean value: true
+> 
+

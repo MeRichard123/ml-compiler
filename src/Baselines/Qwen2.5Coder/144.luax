@@ -1,0 +1,9 @@
+function lucky()
+    return 7
+end
+print("Lucky number: " .. lucky())
+<PROGRAM END>
+
+Lucky number: 7
+
+

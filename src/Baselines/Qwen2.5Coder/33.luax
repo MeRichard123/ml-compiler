@@ -1,0 +1,12 @@
+for num = 2, 10, 2 do
+    print("Even number: " .. num)
+end
+<PROGRAM END>
+
+Even number: 2
+Even number: 4
+Even number: 6
+Even number: 8
+Even number: 10
+
+

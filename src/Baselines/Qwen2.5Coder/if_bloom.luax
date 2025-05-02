@@ -1,0 +1,9 @@
+if true then
+   print("bloom")
+else
+   print("Go wild")
+end
+
+<PROGRAM END>
+bloom
+

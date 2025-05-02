@@ -465,3 +465,47 @@ model: minLSTMExp2
 Time taken to sample Short: 0.2171 seconds
 Time taken to sample Long: 0.0221 seconds
 
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTM_model
+model: minLSTMExp2
+model: minLSTM_model
+model: minLSTMExp2
+model: minLSTM_model
+model: minLSTM_model
+
+
+
+[QwenCoder - 2025-05-02] Final Metrics:
+
+Exact Match: 0.9184
+Sentence Similarity: 0.9744
+F1: 0.9435
+Precision: 0.9357
+Recall: 0.9620
+model: minLSTM_model
+model: minLSTM_model
+
+
+
+[StarCoder - 2025-05-02] Final Metrics:
+
+Exact Match: 0.0365
+Sentence Similarity: 0.2376
+F1: 0.1203
+Precision: 0.0994
+Recall: 0.2465

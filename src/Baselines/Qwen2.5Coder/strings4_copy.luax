@@ -1,0 +1,6 @@
+str = "LUA"
+print(string.lower(str))
+
+<PROGRAM END>
+lua
+

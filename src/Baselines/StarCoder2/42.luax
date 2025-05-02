@@ -1,0 +1,26 @@
+function is_even(n)
+    if n % 2 == 0 then
+        print(n .. " is even")
+    else
+        print(n .. " is odd")
+    end
+end
+is_even(10)
+<PROGRAM END>
+
+
+function is_even(n)
+    if n % 2 == 0 then
+        print(n .. " is even") 
+    elseif n % 3 == 0 then 
+        print("the number is evenly divisible by three")
+    else
+       print(n .. " is odd")
+     end
+    end
+end
+is_even(15)
+
+
+
+

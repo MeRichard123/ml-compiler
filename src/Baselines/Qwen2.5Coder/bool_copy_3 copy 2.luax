@@ -1,0 +1,7 @@
+misconception = false
+print(misconception)
+<PROGRAM END>
+lua
+false
+
+

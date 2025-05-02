@@ -1,0 +1,22 @@
+print("Feel alive")
+
+<PROGRAM END>
+
+
+"Feel alive"
+
+The text is a "string" of some type (in case of this example, it's a string).
+
+A "string" can be seen as a kind of text. It can contain numbers and special characters like 12345 " " ! @ # $ % ^ & * - _ + = \ | { } [ ] ; ' ` . , < > / ? : ". A "string" can also be "called" (in other programming languages) as a "string". 
+
+In Lua, a "string" is made of letters. But it also contains some special character (and spaces). For example, if we want to use a space for instance in a text. We need to add a backslash before the space ("\ "). When we print("Hello World") without quotes, the result will be:
+
+print("Hello World")
+
+Hello World
+
+The text is not between parentheses because this is a "print" function. In Lua, there are many ways of displaying a string. For example, to display a text with a "new line", we need to add a slash before the n ("\n"): 
+
+print("Hello World")
+
+

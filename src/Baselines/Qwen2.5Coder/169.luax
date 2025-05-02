@@ -1,0 +1,6 @@
+radius = 5
+area = math.pi * (radius^2)
+print("Circle area: " .. area)
+<PROGRAM END>
+Circle area: 78.53981633974483
+

@@ -1,0 +1,7 @@
+e = nil
+print(e)
+<PROGRAM END>
+lua
+nil
+
+

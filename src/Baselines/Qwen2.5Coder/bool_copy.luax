@@ -1,0 +1,7 @@
+truth = false
+print(truth)
+<PROGRAM END>
+lua
+false
+
+

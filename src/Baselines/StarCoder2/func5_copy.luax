@@ -1,0 +1,19 @@
+function max(a, b)
+    return math.max(a, b)
+end
+print(max(3, 7))
+
+<PROGRAM END>
+
+
+The max function takes two arguments a and b and returns the larger one.
+
+
+
+let a = 3;
+let b = 7;
+
+
+print(max(a,b))
+
+

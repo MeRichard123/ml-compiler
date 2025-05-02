@@ -1,0 +1,5 @@
+is_tired = true
+print("Are you tired? " .. tostring(is_tired))
+<PROGRAM END>
+Are you tired? true
+

@@ -1,0 +1,5 @@
+fruits = {"Apple", "Banana", "Cherry"}
+print("First fruit: " .. fruits[1])
+<PROGRAM END>
+First fruit: Apple
+

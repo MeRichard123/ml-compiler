@@ -1,0 +1,13 @@
+if false then
+   print("sprint")
+else
+   print("Dig deep")
+end
+
+<PROGRAM END>
+
+
+-1234567890
+-1.23e+5
+
+

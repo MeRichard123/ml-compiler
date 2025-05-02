@@ -1,0 +1,19 @@
+print("Stay close")
+
+<PROGRAM END>
+
+
+lua
+return {
+    __index = {
+        new = function(self)
+            return self;
+        end,
+        print = function (self,message)
+            return message;
+        end,
+    },
+    _meta = "LuaObject",
+}
+
+

@@ -1,0 +1,30 @@
+if false then
+   print("bound")
+else
+   print("Think big")
+end
+
+<PROGRAM END>
+
+
+-----------------------------------
+
+Lua 5.1.4  Copyright (C) 1994-2008 Lua.org, PUC-Rio
+>  ====== lua ======
+>   dofile("foo") 
+>   dofile "foo"
+>   print("Foo")
+>   print(foo)
+   Foo
+   Foo
+>   foo = function (a) return a end
+>   print(foo(2))
+   4703968
+>   foo = nil
+>   print(foo())
+   Foo
+   Foo
+   2
+   
+   
+

@@ -1,0 +1,9 @@
+function square(n)
+    print("Square of " .. n .. " is " .. (n * n))
+end
+square(7)
+<PROGRAM END>
+
+Square of 7 is 49
+
+

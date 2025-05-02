@@ -1,0 +1,13 @@
+for i = 1, 5 do
+    print("Iteration: " .. i)
+end
+
+<PROGRAM END>
+
+Iteration: 1
+Iteration: 2
+Iteration: 3
+Iteration: 4
+Iteration: 5
+
+

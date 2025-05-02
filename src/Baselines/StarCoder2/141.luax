@@ -1,0 +1,12 @@
+function square(n)
+    print("Square of " .. n .. " is " .. (n * n))
+end
+square(7)
+<PROGRAM END>
+
+
+The output will be:
+
+Square of 49 is 16025
+
+

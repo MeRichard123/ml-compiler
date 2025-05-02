@@ -1,0 +1,7 @@
+falsehood = true
+print(falsehood)
+<PROGRAM END>
+lua
+true
+
+

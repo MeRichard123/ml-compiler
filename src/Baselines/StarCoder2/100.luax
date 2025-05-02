@@ -1,0 +1,5 @@
+message = "Hello World"
+print(string.upper(message))
+<PROGRAM END>
+
+

@@ -1,0 +1,12 @@
+-- Repeat-until loop in Lua
+local number = 10
+
+repeat
+    number = number - 2
+until number < 5
+
+print("The final value after the repeat-until loop is " .. number)  -- Output: The final value after the repeat-until loop is 4
+
+<PROGRAM END>
+The final value after the repeat-until loop is 4
+

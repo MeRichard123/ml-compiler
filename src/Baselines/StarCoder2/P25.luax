@@ -1,0 +1,15 @@
+print("Yearning")
+
+<PROGRAM END>
+
+
+The 9th line, at first sight, doesn't seem to be relevant. But if you look at the 50th line (in the middle of the code),  you'll see that this line is not part of the program itself! It's a "comment" and is only used by the author (as I was writing this test).
+
+The output of the program is:
+
+Yearning
+
+I hope it's ok. I don't know why it doesn't work. But it works.
+
+
+

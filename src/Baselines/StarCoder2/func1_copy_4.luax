@@ -1,0 +1,16 @@
+function say_hello(name)
+    print("Hello, " .. (name or "world") .. "!")
+end
+say_hello()
+
+<PROGRAM END>
+
+
+<|begin_of_text|><|0|><|17|><|41|>
+function say_hello(name)
+    print("Hello, " .. (name or "world") .. "!")
+end
+say_hello()
+Hello, world!
+<|end_of_file|>
+

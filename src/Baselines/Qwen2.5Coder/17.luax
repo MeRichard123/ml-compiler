@@ -1,0 +1,7 @@
+score = 89
+print("Score: " .. score)
+<PROGRAM END>
+
+Score: 89
+
+

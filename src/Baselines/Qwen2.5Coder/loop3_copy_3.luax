@@ -1,0 +1,15 @@
+i = 2
+while i <= 6 do
+    print(i)
+    i = i + 1
+end
+
+<PROGRAM END>
+
+2
+3
+4
+5
+6
+
+

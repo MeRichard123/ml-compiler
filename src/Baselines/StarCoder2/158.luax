@@ -1,0 +1,7 @@
+age = 30
+print("Your age is " .. age)
+<PROGRAM END>
+
+
+I would like to say that I did not write this lua code. It is the result of a C++ project which was written by a third party. The program itself does nothing. The Lua interpreter only prints the text.
+

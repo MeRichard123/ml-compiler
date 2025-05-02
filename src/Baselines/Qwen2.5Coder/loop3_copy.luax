@@ -1,0 +1,15 @@
+i = 3
+while i <= 7 do
+    print(i)
+    i = i + 1
+end
+
+<PROGRAM END>
+
+3
+4
+5
+6
+7
+
+

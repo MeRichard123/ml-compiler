@@ -1,0 +1,8 @@
+a = 42
+print(a)
+
+<PROGRAM END>
+
+42
+
+

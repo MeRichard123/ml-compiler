@@ -1,0 +1,15 @@
+x = 7
+y = 3
+z = x / y
+print(z)
+
+<PROGRAM END>
+
+
+the output is:
+
+-6
+
+i think there was some sort of syntax error, because when i replaced / with a * it worked.
+
+

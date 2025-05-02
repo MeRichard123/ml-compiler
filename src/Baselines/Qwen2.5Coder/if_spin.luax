@@ -1,0 +1,9 @@
+if true then
+   print("spin")
+else
+   print("Keep faith")
+end
+
+<PROGRAM END>
+spin
+

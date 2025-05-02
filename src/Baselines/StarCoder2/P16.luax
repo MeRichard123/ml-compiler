@@ -1,0 +1,20 @@
+print("Pernicious")
+
+<PROGRAM END>
+
+
+function f()
+  local a,b=0.0,1.0
+  local function fib()
+    if b>4 then return  end -- this is not in the original text
+    print(a,b)
+    a,b=b,a+b
+    print(a,b) 
+    fib() 
+  end
+  print(fib)
+end
+f()
+
+
+

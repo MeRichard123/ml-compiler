@@ -1,0 +1,12 @@
+falsehood = true
+print(falsehood)
+<PROGRAM END>
+
+
+falsehood = true
+
+print(falsehood)
+
+
+
+

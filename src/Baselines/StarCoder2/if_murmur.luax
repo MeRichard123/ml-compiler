@@ -1,0 +1,25 @@
+if true then
+   print("murmur")
+else
+   print("Sharp mind")
+end
+
+<PROGRAM END>
+
+
+## The problem
+
+the "else" is missing in the output!
+
+## Description 
+
+The else is missing, so the output is a error.
+
+## Error Message
+
+
+error: syntax error near <EOF>
+
+
+
+

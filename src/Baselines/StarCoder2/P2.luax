@@ -1,0 +1,19 @@
+print("Brisket")
+
+<PROGRAM END>
+
+
+[code]
+
+print(end)
+
+[/code]
+
+I did it this way. But then I saw the "|" symbol, and I was shocked. What does this stand for? It seems that I have seen it before a few times in other programs. Is it like it starts and ends a certain section of text? And then there is a "code" section that looks exactly like the one that would be underneath the "|" symbol.
+
+I'll take the screenshot. It says that the "|" means "text that should not be read by the script, but that should be read and output by the script" but I'm not sure what it means.
+
+![img](https://i.imgur.com/68yO2q7.png)
+
+
+

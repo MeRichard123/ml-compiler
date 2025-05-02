@@ -1,0 +1,9 @@
+if false then
+   print("leap")
+else
+   print("Change is good")
+end
+
+<PROGRAM END>
+Change is good
+

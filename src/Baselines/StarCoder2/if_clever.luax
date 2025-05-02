@@ -1,0 +1,19 @@
+if true then
+   print("clever")
+else
+   print("Own it")
+end
+
+<PROGRAM END>
+
+
+function returnfunc() return "something" end
+print(returnfunc())
+
+
+function f() do return 123;end; end
+print(f())
+
+
+
+

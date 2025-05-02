@@ -1,0 +1,6 @@
+str = "lua programming"
+print(string.upper(str))
+
+<PROGRAM END>
+LUA PROGRAMMING
+

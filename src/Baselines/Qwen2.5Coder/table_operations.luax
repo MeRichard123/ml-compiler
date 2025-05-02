@@ -1,0 +1,11 @@
+-- Table operations in Lua
+local colors = {"red", "green", "blue"}
+table.insert(colors, "yellow")  -- Add an element to the end of the table
+
+print("The table now has " .. #colors .. " colors, and the last one is " .. colors[#colors])
+
+<PROGRAM END>
+
+The table now has 4 colors, and the last one is yellow
+
+

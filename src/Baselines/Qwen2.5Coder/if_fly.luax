@@ -1,0 +1,11 @@
+if true then
+   print("fly")
+else
+   print("Leave a mark")
+end
+
+<PROGRAM END>
+plaintext
+fly
+
+

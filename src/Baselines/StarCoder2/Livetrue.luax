@@ -1,0 +1,19 @@
+print("Live true")
+
+<PROGRAM END>
+
+
+----------------------------------------
+
+The following error occurred during execution:
+
+   string:1: attempt to call a nil value (global 'assert')
+
+
+stack traceback:
+    main.lua:2: in main chunk
+    [C]: in ?
+
+Press Enter to continue...
+
+

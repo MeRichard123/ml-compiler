@@ -1,0 +1,8 @@
+print("Never settle")
+
+<PROGRAM END>
+
+
+In this case, the Lua interpreter treats the first line as a comment. A line starting with <|> is considered to be the end of the text input, so no more input will be accepted and no further processing takes place.
+
+

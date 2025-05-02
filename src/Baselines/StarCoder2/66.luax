@@ -1,0 +1,9 @@
+rainy = false
+print("Is it raining? " .. tostring(rainy))
+<PROGRAM END>
+
+
+Is it raining? true
+
+
+

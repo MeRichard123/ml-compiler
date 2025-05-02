@@ -1,0 +1,9 @@
+repeat
+    print("Loop runs once at least")
+    a = 1
+until a == 1
+<PROGRAM END>
+
+Loop runs once at least
+
+

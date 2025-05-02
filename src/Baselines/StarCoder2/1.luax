@@ -1,0 +1,15 @@
+a = 42
+print(a)
+
+<PROGRAM END>
+
+
+There are 168 errors. Please fix these errors before running your program.
+
+The first error message is at line 5, column 3 of "C:\Users\Administrator\Desktop\test.lua":
+
+"...p\Desktop\test.lua:5: attempt to call global 'print' (a nil value)"
+
+	This is not a syntax or run-time error; this is a compile time error. There are many reasons why Lua cannot parse your code at the line you're pointing out, including missing parentheses in the code, wrongly used variables that don't exist, etc...
+
+

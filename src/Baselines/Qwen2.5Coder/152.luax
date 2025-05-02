@@ -1,0 +1,9 @@
+t = {}
+t["color"] = "blue"
+print("Selected color: " .. t["color"])
+
+<PROGRAM END>
+
+Selected color: blue
+
+

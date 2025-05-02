@@ -1,0 +1,13 @@
+c = true
+print(c)
+<PROGRAM END>
+
+
+---
+
+Hello World
+print("Hello World")
+
+
+ 
+

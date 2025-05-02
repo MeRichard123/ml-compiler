@@ -1,0 +1,11 @@
+a, b = 15, 10
+if a > b then
+    print(a .. " is greater than " .. b)
+else
+    print(b .. " is greater than " .. a)
+end
+<PROGRAM END>
+
+15 is greater than 10
+
+

@@ -1,0 +1,13 @@
+print("Ziggurat")
+
+<PROGRAM END>
+
+
+lua
+function main()
+  -- body:
+  print("Ziggurat")
+end
+
+
+

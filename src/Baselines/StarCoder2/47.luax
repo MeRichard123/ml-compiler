@@ -1,0 +1,25 @@
+function compare(a, b)
+    if a > b then
+        print(a .. " is greater")
+    else
+        print(b .. " is greater")
+    end
+end
+compare(8, 3)
+<PROGRAM END>
+
+
+1. 9595959608961 is greater
+
+function compare(a, b)
+    if a > b then
+        print("a is greater")
+    else
+        print("b is greater")
+    end
+end
+compare(8, 3)
+
+
+
+

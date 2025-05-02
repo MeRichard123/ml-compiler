@@ -1,0 +1,10 @@
+print("Lua is awesome!")
+
+<PROGRAM END>
+
+
+output: Lua is awesome!
+
+The program prints out "Lua is awesome!"
+
+

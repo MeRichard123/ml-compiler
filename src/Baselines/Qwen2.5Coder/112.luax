@@ -1,0 +1,5 @@
+name = "Lua User"
+print("Hello, " .. name .. "!")
+<PROGRAM END>
+Hello, Lua User!
+

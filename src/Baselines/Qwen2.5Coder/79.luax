@@ -1,0 +1,14 @@
+for i = 10, 15 do
+    print("i is: " .. i)
+end
+
+<PROGRAM END>
+
+i is: 10
+i is: 11
+i is: 12
+i is: 13
+i is: 14
+i is: 15
+
+

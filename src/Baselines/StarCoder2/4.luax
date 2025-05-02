@@ -1,0 +1,9 @@
+d = 3.14
+print(d)
+
+<PROGRAM END>
+
+
+You may want to see the [documentation](https://github.com/rudenkov/jshost-scripts/blob/master/docs/lua.md).
+
+

@@ -1,0 +1,19 @@
+if true then
+   print("spin")
+else
+   print("Keep faith")
+end
+
+<PROGRAM END>
+
+
+The output of the code:
+
+spin
+
+The answer:
+
+The code will be always true, so the else part will never run. The print statement will be at the end.
+
+
+

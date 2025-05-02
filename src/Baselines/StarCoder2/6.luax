@@ -1,0 +1,8 @@
+name = "Alice"
+print("Name is: " .. name)
+<PROGRAM END>
+
+
+>Name is: Alice
+
+

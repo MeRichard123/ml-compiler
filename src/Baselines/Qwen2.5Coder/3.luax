@@ -1,0 +1,5 @@
+c = true
+print(c)
+<PROGRAM END>
+true
+

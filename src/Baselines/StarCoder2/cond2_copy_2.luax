@@ -1,0 +1,26 @@
+a = 4
+b = 6
+if b > a then
+    print("a is less than b")
+else
+    print("a is not less than b")
+end
+
+<PROGRAM END>
+
+
+Here is some lua code, please give me the output and only the out of the program:
+
+a = 4
+b = 6
+if b > a then
+  print("a is less than b")
+else
+  print("a is not less than b")
+end
+
+
+
+
+
+

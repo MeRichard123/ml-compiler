@@ -1,0 +1,12 @@
+print("Trust the path")
+
+<PROGRAM END>
+
+
+the end of text is:
+
+/usr/bin/lua5.1:362: "then" unexpected near 'then'
+
+> 
+
+

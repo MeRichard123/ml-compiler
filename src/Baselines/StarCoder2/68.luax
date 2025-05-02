@@ -1,0 +1,10 @@
+half = 1 / 2
+print("Half: " .. half)
+<PROGRAM END>
+
+
+The problem is in line 3. The error message says: 
+	Syntax error: expected name near '1'
+
+	I dont understand why?
+

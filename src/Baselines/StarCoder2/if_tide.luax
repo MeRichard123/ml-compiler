@@ -1,0 +1,25 @@
+if true then
+   print("tide")
+else
+   print("Stay real")
+end
+
+<PROGRAM END>
+
+
+The output of the program:
+
+Stay real
+
+The error message:
+
+nil
+
+The error message:
+
+nil
+
+The error message:
+
+nil
+

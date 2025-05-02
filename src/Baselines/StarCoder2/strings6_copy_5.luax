@@ -1,0 +1,16 @@
+print(tonumber("42"))
+<PROGRAM END>
+
+
+And this is the output:
+
+"Hello"
+
+"World"
+
+135.0897
+
+135
+
+
+

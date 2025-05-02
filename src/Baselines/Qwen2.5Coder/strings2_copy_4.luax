@@ -1,0 +1,6 @@
+s = "Hello, World!"
+print(#s)
+
+<PROGRAM END>
+13
+

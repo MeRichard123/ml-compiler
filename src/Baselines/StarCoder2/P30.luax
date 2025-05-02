@@ -1,0 +1,16 @@
+print("Dissonance")
+
+<PROGRAM END>
+
+
+The above was an excerpt from a large text file. The discrepancies are:
+
+a) A bunch of words starting with 't' followed by the letter 't' are missing. (e.g. "the't")
+b) Capital letters are not used.
+c) Words that start with 't' followed by a space and a number are also missing. (e.g. "t 1")
+d) A lot of words that start with a capital letter and end with a period are missing. (e.g. "The.")
+
+The program should output the words from the file that have discrepancies and why they don't work.
+
+
+

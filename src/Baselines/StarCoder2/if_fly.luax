@@ -1,0 +1,17 @@
+if true then
+   print("fly")
+else
+   print("Leave a mark")
+end
+
+<PROGRAM END>
+
+
+Fly
+
+<!-
+
+end_of_text
+
+
+

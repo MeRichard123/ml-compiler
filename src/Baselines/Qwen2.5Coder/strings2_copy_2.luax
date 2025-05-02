@@ -1,0 +1,6 @@
+s = "Hello@123"
+print(#s)
+
+<PROGRAM END>
+6
+

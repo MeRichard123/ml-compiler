@@ -1,0 +1,9 @@
+if false then
+   print("bolt")
+else
+   print("Feel more")
+end
+
+<PROGRAM END>
+Feel more
+

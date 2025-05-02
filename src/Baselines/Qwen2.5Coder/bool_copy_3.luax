@@ -1,0 +1,7 @@
+untruth = true
+print(untruth)
+<PROGRAM END>
+
+true
+
+

@@ -1,0 +1,7 @@
+str = "lua"
+print(string.upper(str))
+
+<PROGRAM END>
+
+
+

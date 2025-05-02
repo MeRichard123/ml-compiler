@@ -1,0 +1,7 @@
+year = 2025
+print("Year: " .. year)
+<PROGRAM END>
+
+Year: 2025
+
+

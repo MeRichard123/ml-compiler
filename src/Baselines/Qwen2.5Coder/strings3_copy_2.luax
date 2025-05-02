@@ -1,0 +1,6 @@
+str = "hello world"
+print(string.upper(str))
+
+<PROGRAM END>
+HELLO WORLD
+

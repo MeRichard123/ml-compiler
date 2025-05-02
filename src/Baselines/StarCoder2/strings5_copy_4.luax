@@ -1,0 +1,10 @@
+num = 0.001
+print(tostring(num))
+
+<PROGRAM END>
+
+
+num = 0.001
+print(tostring(num))
+
+

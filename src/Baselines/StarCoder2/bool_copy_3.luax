@@ -1,0 +1,12 @@
+untruth = true
+print(untruth)
+<PROGRAM END>
+
+
+in:
+
+untruth = true
+print(untruth)
+
+
+

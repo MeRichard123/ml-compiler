@@ -1,0 +1,9 @@
+function add(x, y)
+    print("Sum: " .. (x + y))
+end
+add(5, 7)
+<PROGRAM END>
+
+Sum: 12
+
+

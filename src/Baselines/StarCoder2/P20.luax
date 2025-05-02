@@ -1,0 +1,22 @@
+print("Tintinnabulation")
+
+<PROGRAM END>
+
+
+
+----------------------------------------
+
+The output:
+
+![](./result.png)
+
+---------------------------------------
+
+And the code:
+
+lua
+local a = "Tintin"
+
+print(a)
+
+

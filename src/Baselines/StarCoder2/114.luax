@@ -1,0 +1,10 @@
+money = 1000
+print("Money left: $" .. money)
+<PROGRAM END>
+
+
+print("What is 3 + 4 ?")
+answer = io.read()
+
+
+

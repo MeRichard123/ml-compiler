@@ -1,0 +1,7 @@
+char = "A"
+if char == "A" then
+    print("Letter A detected")
+end
+<PROGRAM END>
+Letter A detected
+

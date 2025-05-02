@@ -1,0 +1,14 @@
+for k = 1, 5 do
+    print("Iteration number: " .. k)
+end
+<PROGRAM END>
+
+
+Lua version 5.3 (JIT enabled)
+
+lua -v
+
+Lua 5.3.4  Copyright (C) 1994-2017 Lua.org, PUC-Rio
+
+
+

@@ -1,0 +1,13 @@
+if true then
+   print("drift")
+else
+   print("Keep exploring")
+end
+
+<PROGRAM END>
+
+
+(1.10) 5.43.0-1-Ubuntu
+
+
+

@@ -1,0 +1,7 @@
+pi_value = math.pi
+print("Pi: " .. pi_value)
+<PROGRAM END>
+
+Pi: 3.141592653589793
+
+

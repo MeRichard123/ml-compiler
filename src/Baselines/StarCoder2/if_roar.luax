@@ -1,0 +1,17 @@
+if false then
+   print("roar")
+else
+   print("Time flies")
+end
+
+<PROGRAM END>
+
+
+lua
+if false then
+   print("roar")
+else
+   print("Time flies")
+end
+
+

@@ -1,0 +1,14 @@
+table1 = {10, 20, 30}
+print("First element: " .. table1[1])
+<PROGRAM END>
+
+
+---
+
+I'm sorry, 30
+
+---
+
+table1 = {[1]=10, [2]=20, [3]=30}
+print(table1)
+

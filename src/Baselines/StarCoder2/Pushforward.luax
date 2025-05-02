@@ -1,0 +1,24 @@
+print("Push forward")
+
+<PROGRAM END>
+
+
+I want it to look like this:
+
+push forward
+
+Thanks in advance.<issue_comment>username_1: I'm not familiar with Lua's syntax so I can't tell if this is an error or a bug, but the code looks like it should be working as intended (although the "end_of_text" is probably not what you're looking for).
+
+It might also help to know that this is actually Lua, not Python.<issue_comment>username_0: It seems to be an error. I used a copy of the demo.py and added a print statement after the text. In case the "endoftext" was wrongly interpreted, this is what it should look like (I took your example:
+
+print("Hello World")
+print("End Of Text")<issue_comment>username_2: It looks like you've got two different things going on here. One, the "end\_of\_text" thing is an artifact of how the demo works (i.e., it's a kind of placeholder that tells the demo that it should stop parsing input). But there seems to be another problem: the demo runs as long as it gets input, so when it hits the end_of_text, the code that reads the input stops.
+
+You could fix this by putting your print statement outside the while loop, and then make sure that the "end\_of\_text" is actually the last text string in your program:
+
+    print("Hello World")
+    print("End Of Text")
+    print("This will not be seen!")
+
+(I've also fixed the indentation - you had a lot of trailing spaces.)<issue_closed><issue_comment>username_0: Thanks, I didn't knew this. This is not the first time I'm facing this problem. But I did find a fix!
+

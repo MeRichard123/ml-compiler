@@ -1,0 +1,13 @@
+for j = 10, 5, -1 do
+    print("Counting down: " .. j)
+end
+
+<PROGRAM END>
+
+Counting down: 10
+Counting down: 9
+Counting down: 8
+Counting down: 7
+Counting down: 6
+
+

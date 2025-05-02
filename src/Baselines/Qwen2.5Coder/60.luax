@@ -1,0 +1,5 @@
+price = 99.99
+print("Price: $" .. price)
+<PROGRAM END>
+Price: $99.99
+

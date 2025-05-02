@@ -1,0 +1,53 @@
+print("Dulcimer")
+
+<PROGRAM END>
+
+
+#include <iostream>
+using namespace std;
+ 
+int main() {
+	string name = "<NAME>";
+	cout << name << endl;
+}
+
+#include <iostream>
+using namespace std;
+// This is a multiline comment, which you
+// have to escape in C-code.  I know, I know...
+
+int main() {
+    cout << "\"Hello world!\" - <NAME>" << endl; // A line-comment
+}
+
+
+#include <iostream>
+using namespace std;
+ 
+int main(void) {
+    int x = 5;
+    for (int i=1;i<=x;++i)
+        if ((x%i)==0)
+            cout<< "divided by "<<i << endl;
+        else
+            continue;
+}
+
+#include <iostream>
+using namespace std;
+ 
+class Fred {
+   public:
+      void methodA() {}
+      int methodB(int i, const char* c) {
+         return 0;
+      }
+};
+
+#include <iostream>
+using namespace std;
+ 
+template<typename T1, typename T2=double> class Fred {};
+
+
+

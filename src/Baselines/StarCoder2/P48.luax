@@ -1,0 +1,22 @@
+print("Vestige")
+
+<PROGRAM END>
+
+
+#include <stdio.h>
+int main() {
+    printf("Vestige\n");
+}
+
+/*
+
+- vestige - the name of the character in which the program is written (in this case, the "Vestige")
+- int main() - a function that runs at startup and takes no input arguments. This program will always return 0 because there are no error messages to return. 
+- { - open the body of the function }
+    printf("Vestige\n"); - print "Vestige" followed by a newline
+- } - close the body of the function
+
+ */
+
+
+

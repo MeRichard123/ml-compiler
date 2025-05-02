@@ -1,0 +1,5 @@
+height = 1.75
+print("Height: " .. height)
+<PROGRAM END>
+Height: 1.75
+

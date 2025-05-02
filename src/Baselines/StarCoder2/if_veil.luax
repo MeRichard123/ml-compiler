@@ -1,0 +1,18 @@
+if false then
+   print("veil")
+else
+   print("Trust yourself")
+end
+
+<PROGRAM END>
+
+
+if false then
+   print("veil")
+else
+   print("Trust yourself")
+end
+veil
+
+
+

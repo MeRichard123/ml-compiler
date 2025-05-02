@@ -1,0 +1,10 @@
+pi_value = 3.1416
+print("Pi: " .. pi_value)
+<PROGRAM END>
+
+
+There are many things you can do with Lua, some of them are listed below.
+
+- [ ] Tables
+- [x] Loops
+
