@@ -2,6 +2,7 @@ import torch.nn as nn
 from tree_sitter import Language, Parser
 from enum import Enum
 import re
+import time 
 
 LANGUAGE = Language("./src/Utils/lua.dll", name="lua")
 
@@ -50,7 +51,7 @@ class Tokeniser:
 
         # Combine for vocabulary building but keep track of what's output
         all_tokens = input_tokens + output_tokens
-        
+        end = time.time()
         return input_tokens, output_tokens, all_tokens
     
     def traverse_output(self, text):

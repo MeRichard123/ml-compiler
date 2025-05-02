@@ -20,6 +20,7 @@ class RNN(nn.Module):
         self.i2h = nn.Linear(embedding_dim + hidden_size, hidden_size, device=device)
         self.i2o = nn.Linear(embedding_dim + hidden_size, output_size, device=device)
         self.o2o = nn.Linear(hidden_size + output_size, output_size, device=device)
+        self.fc = nn.Linear(hidden_size, output_size, device=device)
         self.dropout = nn.Dropout(0.5)
 
         '''
@@ -57,17 +58,17 @@ class RNN(nn.Module):
             # Get current input slice (batch_size, embedding_dim)
             current_input = input[:, i, :]
             
-            # Reshape hidden from (1, batch_size, hidden_size) to (batch_size, hidden_size)
-            current_hidden = hidden.squeeze(0)
+            if hidden.dim() == 3:
+                current_hidden = hidden.squeeze(1)  # [batch_size, hidden_size]
+            else:
+                current_hidden = hidden  # Already [batch_size, hidden_size]
             
             # Handle batch size mismatch
             if current_input.size(0) != current_hidden.size(0):
                 if current_input.size(0) == 1:
-                    # During sampling: expand input to match hidden state
                     current_input = current_input.expand(current_hidden.size(0), -1)
                 else:
-                    # During training: use first hidden state for all batch items
-                    current_hidden = current_hidden[0:1].expand(current_input.size(0), -1)
+                    current_hidden = current_hidden[:1].expand(current_input.size(0), -1)
             
             # Combine input and hidden
             input_combined = torch.cat((current_input, current_hidden), 1)
@@ -81,7 +82,7 @@ class RNN(nn.Module):
             outputs.append(output)
             
             # Update hidden state
-            hidden = hidden.unsqueeze(0)
+            hidden = hidden.unsqueeze(1)
         
         # Stack outputs along sequence dimension
         output = torch.stack(outputs, dim=1)
@@ -91,7 +92,5 @@ class RNN(nn.Module):
         
         return output, hidden
 
-    def initHidden(self, batch_size=None):
-        if batch_size is None:
-            batch_size = self.batch_size
-        return torch.zeros(1, batch_size, self.hidden_size, device=self.device)
+    def initHidden(self, batch_size=1):
+        return torch.zeros(batch_size, 1, self.hidden_size, device=self.device)

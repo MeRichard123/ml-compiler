@@ -248,89 +248,183 @@ def main():
         "number_of_experts": 2
     }
 
-    model_RNN = RNN(50, batch_size, 300, len(vocab), device, MOE)\
+    model_RNN = RNN(500, batch_size, 900, len(vocab), device, MOE)\
         .to(device)
-    model_gru = GRU(50, batch_size, 300, len(vocab), device, MOE)\
+    model_gru = GRU(500, batch_size, 900, len(vocab), device, MOE)\
         .to(device)
-    model_minGRU = minGRU(500, batch_size, 900, len(vocab), device, MOE)\
-        .to(device)
-    model_minLSTM = minLSTM(50, batch_size, 300, len(vocab), device, MOE)\
-        .to(device)
-    model_lstm = LSTM(50, batch_size, 300, len(vocab), device, MOE).\
+    model_lstm = LSTM(500, batch_size, 900, len(vocab), device, MOE).\
         to(device)
     
-    model_ensemble = StackedMinGRU(500, batch_size, 900, len(vocab), device, num_experts=12, num_layers=4)\
+    model_minGRU = minGRU(500, batch_size, 900, len(vocab), device)\
         .to(device)
+    model_minGRU_exp2 = minGRU(500, batch_size, 900, len(vocab), device, MOE, True)\
+        .to(device)
+    model_minGRU_exp4 = minGRU(500, batch_size, 900, len(vocab), device, {"number_of_experts": 4})\
+        .to(device) 
+    model_minGRU_exp10 = minGRU(500, batch_size, 900, len(vocab), device, {"number_of_experts": 10})\
+        .to(device)
+    model_minGRU_h = minGRU(500, batch_size, 600, len(vocab), device)\
+        .to(device)
+    
+    model_minLSTM = minLSTM(500, batch_size, 900, len(vocab), device)\
+        .to(device)
+    model_minLSTM_exp2 = minLSTM(500, batch_size, 900, len(vocab), device, MOE)\
+        .to(device)
+    model_minLSTM_exp4 = minLSTM(500, batch_size, 900, len(vocab), device, {"number_of_experts": 4})\
+        .to(device)
+    model_minLSTM_exp10 = minLSTM(500, batch_size, 900, len(vocab), device, {"number_of_experts": 10})\
+        .to(device)
+    model_minLSTM_h = minLSTM(500, batch_size, 600, len(vocab), device)\
+        .to(device)
+    
+
+    model_RNN = RNN(500, batch_size, 900, len(vocab), device)\
+        .to(device)
+    model_RNN_exp2 = RNN(500, batch_size, 900, len(vocab), device, MOE)\
+        .to(device) 
+    model_RNN_exp4 = RNN(500, batch_size, 900, len(vocab), device, {"number_of_experts": 4})\
+        .to(device)
+    model_RNN_exp10 = RNN(500, batch_size, 900, len(vocab), device, {"number_of_experts": 10})\
+        .to(device)
+    model_RNN_h = RNN(500, batch_size, 600, len(vocab), device)\
+        .to(device)
+    
+    model_GRU = GRU(500, batch_size, 900, len(vocab), device)\
+        .to(device)
+    model_GRU_exp2 = GRU(500, batch_size, 900, len(vocab), device, MOE)\
+        .to(device)
+    model_GRU_exp4 = GRU(500, batch_size, 900, len(vocab), device, {"number_of_experts": 4})\
+        .to(device)
+    model_GRU_exp10 = GRU(500, batch_size, 900, len(vocab), device, {"number_of_experts": 10})\
+        .to(device)
+    model_GRU_h = GRU(500, batch_size, 600, len(vocab), device)\
+        .to(device)
+    
+    model_LSTM = LSTM(500, batch_size, 900, len(vocab), device)\
+        .to(device)
+    model_LSTM_exp2 = LSTM(500, batch_size, 900, len(vocab), device, MOE)\
+        .to(device)
+    model_LSTM_exp4 = LSTM(500, batch_size, 900, len(vocab), device, {"number_of_experts": 4})\
+        .to(device)
+    model_LSTM_exp10 = LSTM(500, batch_size, 900, len(vocab), device, {"number_of_experts": 10})\
+        .to(device)
+    model_LSTM_h = LSTM(500, batch_size, 600, len(vocab), device)\
+        .to(device)
+    
+
 
     model_file_names = [
-        "rnn_model_code_ast",
-        "gru_model_code_ast",
-        "minGRU_model_code_ast",
-        "lstm_model_code_ast",
-        "minLSTM_model_code_ast",
-        "minGRU_code_ast_moe_attn",
-        "minGRU_code_ast_moe_tf",
-        "Testing_Model_Fast",
-        "Attention_Model",
-        "minGRU_curriculum",
-        "TestingPass",
-        "LSTM_test",
-        "EnsembleMinGRU",
+        "model_RNN",
+        "model_RNN_exp2",
+        "model_RNN_exp4",
+        "model_RNN_exp10",
+        "model_RNN_h",
+        "model_GRU",
+        "model_GRU_exp2",
+        "model_GRU_exp4",
+        "model_GRU_exp10",
+        "model_GRU_h",
+        "model_LSTM",
+        "model_LSTM_exp2",
+        "model_LSTM_exp4",
+        "model_LSTM_exp10",
+        "model_LSTM_h",
+        "model_minGRU",
+        "model_minGRU_exp2",
+        "model_minGRU_exp4",
+        "model_minGRU_exp10",
+        "model_minGRU_h",
+        "model_minLSTM",
+        "model_minLSTM_exp2",
+        "model_minLSTM_exp4",
+        "model_minLSTM_exp10",
+        "model_minLSTM_h",
     ]
 
 
     models = [
-        model_RNN,
-        model_gru,
-        model_minGRU,
-        model_minLSTM,
-        model_lstm,
+            model_RNN,
+            model_RNN_exp2,
+            model_RNN_exp4,
+            model_RNN_exp10,
+            model_RNN_h,
+            model_GRU,
+            model_GRU_exp2,
+            model_GRU_exp4,
+            model_GRU_exp10,
+            model_GRU_h,
+            model_LSTM,
+            model_LSTM_exp2,
+            model_LSTM_exp4,
+            model_LSTM_exp10,
+            model_LSTM_h,
+            model_minGRU,
+            model_minGRU_exp2,
+            model_minGRU_exp4,
+            model_minGRU_exp10,
+            model_minGRU_h,
+            model_minLSTM,
+            model_minLSTM_exp2,
+            model_minLSTM_exp4,
+            model_minLSTM_exp10,
+            model_minLSTM_h,
     ]
 
-    for model in models:
+    for idx in range(len(models) - 1):
+        model = models[idx]
         LM = LanguageModel(model, len(vocab), device) 
-        model_filename = model_file_names[len(model_file_names) - 1]
+        model_filename = model_file_names[idx]
         filename = f"{model_filename}"
+        print(model_filename)
+            
+            
+        
+        #LM.init_model(code_dataset)
+            
+        #perplexity, val_perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
         
         
-        LM.init_model(code_dataset)
-        
-        perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
-        LM.save_model(filename)
+        #LM.save_model(filename)
 
-
-
-        """"
-        # Min LSTM - Code, AST
-        print("Min LSTM - Code, AST")
-        LM = LanguageModel(model_minLSTM, len(vocab), device)
-        LM.load_model("./trained_models/minLSTM_model_code.pth")
-        LM.init_model(code_dataset)
-        print(LM.sample("print('Hello World!')"))
-
-        LM.load_model("./trained_models/minGRU_attention.pth")
-        LM.init_model(code_dataset)
-        """
         LM_Test = LanguageModel(model, len(vocab), device) 
         date = datetime.datetime.now().strftime("%Y-%m-%d")
+        yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+        yesterday = yesterday.strftime("%Y-%m-%d")
         LM_Test.init_model(code_dataset)
-        LM_Test.load_model(f"./{filename}{date}.pth")
+        LM_Test.load_model(f"./{filename}{yesterday}.pth")
 
+        fprintf(f"model: {filename}")
+
+        import time
+        start = time.time()
         print(LM_Test.sample("print('Knell')"))
+        end = time.time()
+        fprintf(f"Time taken to sample Short: {end - start:.4f} seconds")
 
+        start = time.time()
+        print(LM_Test.sample("a = 1 if a then function hello() print('hello') end end"))
+        end = time.time()
+        fprintf(f"Time taken to sample Long: {end - start:.4f} seconds\n")
+        '''
         eval = Evaluator(testset, LM_Test, k = 1)
+        
 
         date = datetime.datetime.now().strftime("%Y-%m-%d - %H:%M:%S")
         fprintf(f"\n\n[{filename} - {date}] Final Metrics:\n")
+        start = time.time()
         metrics = eval.evaluate(perplexity)
+        end = time.time()
+        print(f"Time taken to evaluate: {end - start:.4f} seconds")
         fprintf(f"Exact Match: {metrics['exact_match']:.4f}")
         fprintf(f"Sentence Similarity: {metrics['similarity']:.4f}")
         fprintf(f"F1: {metrics['f1']:.4f}")
         fprintf(f"Precision: {metrics['precision']:.4f}")
         fprintf(f"Recall: {metrics['recall']:.4f}")
         fprintf(f"Perplexity: {metrics['perplexity']:.4f}")
+        fprintf(f"Validation Perplexity: {val_perplexity:.4f}")
         fprintf(f"pass@1 (dataset): {(metrics['pass@k']*100):.4f}")
-
+        '''
+        
 
 
 if __name__ == "__main__":

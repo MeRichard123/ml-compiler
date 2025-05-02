@@ -116,40 +116,6 @@ class CodeDataset(IterableDataset):
     def __len__(self):
         return len(self.data)
     
-    """
-        def train_test_split(self, test_size=0.15, val_size=0.15):
-        import random
-        random.shuffle(self.data)
-        # Split the data into training and testing sets and validation sets
-        split_idx = int(len(self.data) * (1 - test_size))
-        val_idx = int(len(self.data) * (1 - test_size - val_size))
-        train_files = self.data[:val_idx]
-        val_files = self.data[val_idx:split_idx]
-        test_files = self.data[split_idx:]
-        
-        train_dataset = CodeDatasetSubset(
-            self.data_dir,
-            train_files,
-            self.tokenizer,
-            self.word2idx
-            )
-        test_dataset = CodeDatasetSubset(
-            self.data_dir,
-            test_files,
-            self.tokenizer,
-            self.word2idx
-            )
-        
-        val_dataset = CodeDatasetSubset(
-            self.data_dir,
-            val_files,
-            self.tokenizer,
-            self.word2idx
-            )
-        
-        return train_dataset, test_dataset, val_dataset
-    """
-
     def train_test_split(self, test_size=0.15, val_size=0.15):
         import random
         random.shuffle(self.data)

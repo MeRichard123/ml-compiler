@@ -32,7 +32,7 @@ class minGRU(nn.Module):
 
     def forward(self, x, h_0):
         if hasattr(self, 'attention'):
-            x = self.attention(x)
+            x, _ = self.attention(x)
         # x_t: (batch_size, seq_length, input_size)
         # h_0: (batch_size, 1, hidden_size)
 

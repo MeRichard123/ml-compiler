@@ -1,30 +1,445 @@
-[MinGRU - MOE (2)] Final Metrics:
+NEW TRAINING
+
+[minGRUnoExp - 2025-04-29 - 18:29:40] Final Metrics:
 
 Exact Match: 0.0000
-Sentence Similarity: 0.7279
-F1: 0.0238
-Precision: 0.0214
-Recall: 0.0291
-Perplexity: 1.1497
-pass@1 (dataset): 1.1
+Sentence Similarity: 0.6645
+F1: 0.0067
+Precision: 0.0126
+Recall: 0.0047
+Perplexity: 1.0917
+Validation Perplexity: 3.6344
+pass@1 (dataset): 0.0000
 
-[MinGRU - 2025-04-27 - 18:31:08-  noMOE] Final Metrics:
 
-Exact Match: 0.0000
-Sentence Similarity: 0.6725
-F1: 0.0014
-Precision: 0.0010
-Recall: 0.0023
-Perplexity: 1.1384
+[minGRUExp2 - 2025-04-29 - 19:05:39] Final Metrics:
+
+Exact Match: 0.0115
+Sentence Similarity: 0.7030
+F1: 0.0391
+Precision: 0.0447
+Recall: 0.0363
+Perplexity: 1.0754
+Validation Perplexity: 3.2739
 pass@1 (dataset): 1.1494
 
 
-[EnsembleMinGRU - 2025-04-27 - 19:10:57] Final Metrics:
+[minGRUExp4 - 2025-04-29 - 19:44:06] Final Metrics:
 
 Exact Match: 0.0000
-Sentence Similarity: 0.6762
-F1: 0.0272
-Precision: 0.0278
-Recall: 0.0281
-Perplexity: 1.1981
+Sentence Similarity: 0.6593
+F1: 0.0021
+Precision: 0.0024
+Recall: 0.0018
+Perplexity: 1.1218
+Validation Perplexity: 3.4013
 pass@1 (dataset): 0.0000
+
+
+[minGRUExp10 - 2025-04-29 - 20:32:47] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6793
+F1: 0.0226
+Precision: 0.0253
+Recall: 0.0222
+Perplexity: 1.0770
+Validation Perplexity: 3.1342
+pass@1 (dataset): 0.0000
+
+
+[minGRUh - 2025-04-29 - 21:01:54] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6634
+F1: 0.0197
+Precision: 0.0230
+Recall: 0.0222
+Perplexity: 1.0877
+Validation Perplexity: 3.1917
+pass@1 (dataset): 0.0000
+
+
+[minLSTMnoExp - 2025-04-29 - 21:34:27] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6398
+F1: 0.0067
+Precision: 0.0077
+Recall: 0.0061
+Perplexity: 1.0931
+Validation Perplexity: 3.3153
+pass@1 (dataset): 0.0000
+
+
+[minLSTMExp2 - 2025-04-29 - 22:14:22] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6646
+F1: 0.0084
+Precision: 0.0079
+Recall: 0.0095
+Perplexity: 1.0816
+Validation Perplexity: 3.4999
+pass@1 (dataset): 1.1494
+
+
+[minLSTMExp4 - 2025-04-29 - 22:57:40] Final Metrics:
+
+Exact Match: 0.0115
+Sentence Similarity: 0.6673
+F1: 0.0193
+Precision: 0.0191
+Recall: 0.0200
+Perplexity: 1.1002
+Validation Perplexity: 2.9899
+pass@1 (dataset): 0.0000
+
+
+[minLSTMExp10 - 2025-04-30 - 12:29:29] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6649
+F1: 0.0109
+Precision: 0.0238
+Recall: 0.0073
+Perplexity: 1.1787
+Validation Perplexity: 5.2299
+pass@1 (dataset): 0.0000
+
+
+[minLSTMh - 2025-04-30 - 13:29:15] Final Metrics:
+
+Exact Match: 0.0115
+Sentence Similarity: 0.6516
+F1: 0.0317
+Precision: 0.0328
+Recall: 0.0320
+Perplexity: 1.1220
+Validation Perplexity: 4.8364
+pass@1 (dataset): 0.0000
+
+
+[minLSTMh - 2025-04-30 - 14:42:23] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.6932
+F1: 0.0080
+Precision: 0.0086
+Recall: 0.0090
+Perplexity: 1.1239
+Validation Perplexity: 3.3048
+pass@1 (dataset): 0.0000
+
+
+[model_RNN - 2025-04-30 - 22:02:58] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4831
+F1: 0.0021
+Precision: 0.0014
+Recall: 0.0046
+Perplexity: 36.6841
+Validation Perplexity: 32.4199
+pass@1 (dataset): 0.0000
+
+
+
+[model_minGRU - 2025-05-01 - 12:25:57] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4112
+F1: 0.0018
+Precision: 0.0010
+Recall: 0.0057
+Perplexity: 0.0000
+Validation Perplexity: 0.0000
+pass@1 (dataset): 0.0000
+
+== Attention
+
+[model_minGRU - 2025-05-01 - 12:58:40] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4257
+F1: 0.0031
+Precision: 0.0019
+Recall: 0.0086
+Perplexity: 1.8410
+Validation Perplexity: 3.3235
+pass@1 (dataset): 0.0000
+
+
+[model_minGRU_exp2 - 2025-05-01 - 13:34:51] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4447
+F1: 0.0038
+Precision: 0.0029
+Recall: 0.0057
+Perplexity: 1.8523
+Validation Perplexity: 3.3903
+pass@1 (dataset): 0.0000
+
+
+[model_minGRU_exp4 - 2025-05-01 - 14:13:20] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.3259
+F1: 0.0044
+Precision: 0.0031
+Recall: 0.0153
+Perplexity: 1.7477
+Validation Perplexity: 3.2134
+pass@1 (dataset): 0.0000
+
+
+[model_minGRU_exp10 - 2025-05-01 - 15:00:46] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.3304
+F1: 0.0010
+Precision: 0.0006
+Recall: 0.0038
+Perplexity: 1.7536
+Validation Perplexity: 3.8660
+pass@1 (dataset): 0.0000
+
+
+[model_minGRU_h - 2025-05-01 - 15:34:42] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.5248
+F1: 0.0015
+Precision: 0.0008
+Recall: 0.0115
+Perplexity: 1.8779
+Validation Perplexity: 3.3391
+pass@1 (dataset): 0.0000
+
+
+[model_RNN - 2025-05-01 - 16:51:48] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4414
+F1: 0.0077
+Precision: 0.0053
+Recall: 0.0161
+Perplexity: 2.0520
+Validation Perplexity: 13.4979
+pass@1 (dataset): 0.0000
+
+
+[model_RNN_exp2 - 2025-05-01 - 17:22:08] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4815
+F1: 0.0051
+Precision: 0.0037
+Recall: 0.0094
+Perplexity: 1.9784
+Validation Perplexity: 9.1533
+pass@1 (dataset): 0.0000
+
+
+[model_RNN_exp4 - 2025-05-01 - 17:55:04] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4411
+F1: 0.0018
+Precision: 0.0010
+Recall: 0.0115
+Perplexity: 1.9984
+Validation Perplexity: 13.2032
+pass@1 (dataset): 0.0000
+
+
+[model_RNN_exp10 - 2025-05-01 - 18:36:40] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4800
+F1: 0.0044
+Precision: 0.0033
+Recall: 0.0077
+Perplexity: 2.0404
+Validation Perplexity: 6.0734
+pass@1 (dataset): 0.0000
+
+
+[model_RNN_h - 2025-05-01 - 19:00:35] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4635
+F1: 0.0050
+Precision: 0.0029
+Recall: 0.0211
+Perplexity: 2.0078
+Validation Perplexity: 8.8521
+pass@1 (dataset): 0.0000
+
+
+[model_GRU - 2025-05-01 - 19:27:17] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4725
+F1: 0.0010
+Precision: 0.0006
+Recall: 0.0023
+Perplexity: 1.8531
+Validation Perplexity: 2.8622
+pass@1 (dataset): 0.0000
+
+
+[model_GRU_exp2 - 2025-05-01 - 19:58:48] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4685
+F1: 0.0018
+Precision: 0.0010
+Recall: 0.0057
+Perplexity: 1.9484
+Validation Perplexity: 4.7202
+pass@1 (dataset): 0.0000
+
+
+[model_GRU_exp4 - 2025-05-01 - 20:33:38] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4532
+F1: 0.0093
+Precision: 0.0068
+Recall: 0.0157
+Perplexity: 2.0079
+Validation Perplexity: 2.8042
+pass@1 (dataset): 0.0000
+
+
+[model_GRU_exp10 - 2025-05-01 - 21:18:07] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4196
+F1: 0.0019
+Precision: 0.0013
+Recall: 0.0038
+Perplexity: 1.9677
+Validation Perplexity: 2.8754
+pass@1 (dataset): 0.0000
+
+
+[model_GRU_h - 2025-05-01 - 21:44:35] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4208
+F1: 0.0070
+Precision: 0.0048
+Recall: 0.0172
+Perplexity: 2.0410
+Validation Perplexity: 4.2006
+pass@1 (dataset): 0.0000
+
+
+[model_LSTM - 2025-05-01 - 22:14:14] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4649
+F1: 0.0000
+Precision: 0.0000
+Recall: 0.0000
+Perplexity: 1.9268
+Validation Perplexity: 5.6946
+pass@1 (dataset): 0.0000
+
+
+[model_LSTM_exp2 - 2025-05-01 - 22:47:06] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4352
+F1: 0.0032
+Precision: 0.0020
+Recall: 0.0080
+Perplexity: 1.9974
+Validation Perplexity: 3.7309
+pass@1 (dataset): 0.0000
+
+
+[model_LSTM_exp4 - 2025-05-01 - 23:22:35] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4582
+F1: 0.0027
+Precision: 0.0016
+Recall: 0.0138
+Perplexity: 2.0208
+Validation Perplexity: 6.5726
+pass@1 (dataset): 0.0000
+
+
+[model_LSTM_exp10 - 2025-05-02 - 00:07:01] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4553
+F1: 0.0011
+Precision: 0.0006
+Recall: 0.0057
+Perplexity: 1.9749
+Validation Perplexity: 3.7037
+pass@1 (dataset): 0.0000
+
+
+
+model: model_RNN
+Time taken to sample Short: 0.1910 seconds
+Time taken to sample Long: 0.0200 seconds
+
+model: model_RNN_exp2
+Time taken to sample Short: 0.0090 seconds
+Time taken to sample Long: 0.0330 seconds
+
+model: model_RNN_exp4
+Time taken to sample Short: 0.0110 seconds
+Time taken to sample Long: 0.0310 seconds
+
+model: model_RNN_exp10
+Time taken to sample Short: 0.0075 seconds
+Time taken to sample Long: 0.0360 seconds
+
+model: model_RNN_h
+Time taken to sample Short: 0.0060 seconds
+Time taken to sample Long: 0.0220 seconds
+
+model: model_GRU
+Time taken to sample Short: 0.0120 seconds
+Time taken to sample Long: 0.0250 seconds
+
+model: model_GRU_exp2
+Time taken to sample Short: 0.0090 seconds
+Time taken to sample Long: 0.0310 seconds
+
+model: model_GRU_exp4
+Time taken to sample Short: 0.0090 seconds
+Time taken to sample Long: 0.0365 seconds
+
+model: model_GRU_exp10
+Time taken to sample Short: 0.0130 seconds
+Time taken to sample Long: 0.0495 seconds
+
+model: model_GRU_h
+Time taken to sample Short: 0.0085 seconds
+Time taken to sample Long: 0.0210 seconds
+
+model: model_LSTM
+Time taken to sample Short: 0.0070 seconds
+Time taken to sample Long: 0.0230 seconds
+
+model: model_LSTM_exp2
+Time taken to sample Short: 0.0080 seconds
+Time taken to sample Long: 0.0430 seconds
+
+model: model_LSTM_exp4
+Time taken to sample Short: 0.0160 seconds
+Time taken to sample Long: 0.0671 seconds
+
+model: model_LSTM_exp10
+Time taken to sample Short: 0.0173 seconds
+Time taken to sample Long: 0.0760 seconds
+

@@ -43,9 +43,6 @@ class GRU(nn.Module):
 
         if hasattr(self, 'moe'):
             input = self.moe(input)
-
-
-
         out, hidden = self.gru(input, hidden)
             
         out = self.fc(out)

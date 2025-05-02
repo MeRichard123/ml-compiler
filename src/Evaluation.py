@@ -137,7 +137,7 @@ class Evaluator:
                 return 1
         return 0
     
-    def pass_at_k_multiple(self, k = 1, num_samples = 10):
+    def pass_at_k_multiple(self, k = 1, num_samples = 20):
         pass_k_total = 0
         num_examples = 0
 

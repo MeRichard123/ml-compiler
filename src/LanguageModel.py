@@ -9,6 +9,8 @@ from tqdm import tqdm
 from Parser import tokenizer
 from itertools import chain
 import datetime
+import time 
+from Utils.Attention import AttentionLayer, generate_causal_mask
 
 class LabelSmoothingLoss(nn.Module):
     def __init__(self, smoothing=0.1, vocab_size=None):
@@ -34,11 +36,15 @@ class LanguageModel:
         
         
         self.embedding = nn.Embedding(vocab_size, model.embedding_dim).to(device)
-        self.dropout = nn.Dropout(p=0.5) 
+        self.attention = AttentionLayer(embed_dim=951, num_heads=3, device=device).to(device)
+        self.context_projection = nn.Linear(951, model.hidden_size).to(device)  # Project 951 to 900
 
     def init_model(self, dataset):
         """Initialize the model with vocabulary from the dataset."""
+        start = time.time()
         new_vocab = dataset.build_vocab()
+        end = time.time()
+        print(f"Vocabulary building took {end - start:.2f} seconds")
         self.word2idx = new_vocab["word2idx"]
         self.idx2word = new_vocab["idx2word"]
         self.criterion = LabelSmoothingLoss(smoothing=0.2, vocab_size=len(self.word2idx))
@@ -63,20 +69,30 @@ class LanguageModel:
         scheduled_teaching_prob = 1.0
 
         # Process input sequence
-        embedded_input = self.dropout(self.embedding(input_tensor.long())).to(self.device)
+        embedded_input = self.embedding(input_tensor.long()).to(self.device)
 
         # Now generate output sequence
         output_seq = []
+        hidden_states = []
         current_input = embedded_input[:, 0, :].unsqueeze(1)  # Start with the first token of the input sequence
 
         for t in range(input_tensor.size(1)):
             curr_input = embedded_input[:, t:t+1, :]
-            _, hidden = self.model(curr_input, hidden)
+            output, hidden = self.model(curr_input, hidden)
+            hidden_states.append(output[:, -1, :])
+
+        hidden_states = torch.stack(hidden_states, dim=1)  # Shape: (batch_size, seq_length, hidden_size)
+        # Apply attention mechanism
+        context, attention_scores = self.attention(hidden_states)
 
         # Iterate over the target sequence
         for t in range(target_tensor.size(1)):
             # Generate the model's output for the current input
             output, hidden = self.model(current_input, hidden)
+            context_t = context[:, t, :].unsqueeze(1)
+            context_t = self.context_projection(context_t)  # Project context to match hidden size
+            output = self.model.fc(context_t)
+            output = self.model.softmax(output)
             output_seq.append(output)
 
             # Get the target word for the current timestep
@@ -102,7 +118,7 @@ class LanguageModel:
 
         # Backpropagate and optimize the model
         self.loss.backward()
-        nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
+        #nn.utils.clip_grad_norm_(self.model.parameters(), max_norm=1.0)
         self.optimizer.step()
 
         lr = self.optimizer.param_groups[0]['lr']
@@ -119,14 +135,24 @@ class LanguageModel:
 
             # Process input sequence
             embedded_input = self.embedding(input.long()).to(self.device)
+            hidden_states = []
             for t in range(input.size(1)):
                 curr_input = embedded_input[:, t:t+1, :]  # [batch_size, 1, n_embed]
-                _, hidden = self.model(curr_input, hidden)
+                output, hidden = self.model(curr_input, hidden)
+                hidden_states.append(output[:, -1, :])
+
+            hidden_states = torch.stack(hidden_states, dim=1)  # Shape: (batch_size, seq_length, hidden_size)
+            # Apply attention mechanism
+            context, attention_scores = self.attention(hidden_states)
 
             # Generate output sequence
             current_input = embedded_input[:, 0, :].unsqueeze(1)  # Start with first token
             for t in range(target.size(1)):
                 output, hidden = self.model(current_input, hidden)
+                context_t = context[:, t, :].unsqueeze(1)
+                context_t = self.context_projection(context_t)  # Project context to match hidden size
+                output = self.model.fc(context_t)
+                output = self.model.softmax(output)
                 target_word = target[:, t].to(self.device)
                 loss += self.criterion(output[:, -1, :], target_word)
 
@@ -150,6 +176,7 @@ class LanguageModel:
         for iter in tqdm(range(1, n_iters + 1), desc="Training Loop", ncols=100):
             total_loss = 0
             num_batches = 0
+            
 
             for batch in dataloader:
                 # Access 'input' and 'output' from the batch dictionary
@@ -198,10 +225,9 @@ class LanguageModel:
         date = datetime.datetime.now().strftime("%m-%d-%Y")
         plt.savefig(f"lossPlot_{suffix}_{date}.png")
 
+        return perplexity, val_perplexity
 
-        return perplexity
-
-    def sample(self, prompt: str = " ", temperature: float = 0.8):
+    def sample(self, prompt: str = " ", temperature: float = .8):
         prompt += " <PROGRAM END>"
         # print(f"Prompt: {prompt}")
         with torch.no_grad():
@@ -220,6 +246,7 @@ class LanguageModel:
 
             input = torch.tensor(input_indices, dtype=torch.long).unsqueeze(0).to(self.device)
             hidden = self.model.initHidden()
+            hidden_states = []
 
             print(f"Input: {[self.idx2word[i.item()] for i in input[0]]}")
 
@@ -229,6 +256,11 @@ class LanguageModel:
             for i in range(embedded_input.size(1)):
                 curr_input = embedded_input[:, i:i+1, :]  # [1, 1, embedding_dim]
                 output, hidden = self.model(curr_input, hidden)
+                hidden_states.append(output[:, -1, :])
+
+            hidden_states = torch.stack(hidden_states, dim=1)  # Shape: (batch_size, seq_length, hidden_size)
+            # Apply attention mechanism
+            context, attention_scores = self.attention(hidden_states)
 
             output_text = prompt
             LOGGER(f"Starting with prompt: {output_text}")
@@ -237,6 +269,13 @@ class LanguageModel:
 
             while next_word != '<eos>' and generated_count < self.max_sample_length: 
                 output_probs = nn.functional.softmax(output[:, -1, :] / temperature, dim=1)
+                attention_weights = attention_scores[:, :, -1, -1].mean(dim=1)
+                attention_weights = torch.clamp(attention_weights, min=1e-10) + 1e-10
+                context_t = context[:, -1, :].unsqueeze(1)
+                context_t = self.context_projection(context_t)  # Project context to match hidden size
+                output = self.model.fc(context_t)
+                output_probs = output_probs * attention_weights.unsqueeze(1)  # Apply attention weights
+                output_probs = output_probs / torch.sum(output_probs, dim=1, keepdim=True)
 
                 # Sample from full probability distribution
                 topi = torch.multinomial(output_probs, 1).item()
@@ -267,6 +306,8 @@ class LanguageModel:
                 input = torch.tensor([[topi]], dtype=torch.long).to(self.device)
                 embedded_input = self.embedding(input).to(self.device)
                 output, hidden = self.model(embedded_input, hidden)
+                hidden_states = torch.cat((hidden_states, output[:, -1, :].unsqueeze(1)), dim=1)
+                context, attention_scores = self.attention(hidden_states)
 
         return output_text
     
