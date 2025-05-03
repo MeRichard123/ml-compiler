@@ -509,3 +509,31 @@ Sentence Similarity: 0.2376
 F1: 0.1203
 Precision: 0.0994
 Recall: 0.2465
+model: model_RNN_exp22025-05-01
+model: model_GRU_exp22025-05-01
+model: model_LSTM_exp22025-05-01
+model: model_RNN_exp22025-05-01
+model: model_GRU_exp22025-05-01
+model: model_LSTM_exp22025-05-01
+model: model_RNN_exp22025-05-01
+model: model_GRU_exp22025-05-01
+model: model_GRU_exp2
+model: model_minGRU_exp2
+model: model_LSTM_exp2
+
+
+[model_LSTM_exp2 - 2025-05-03 - 22:18:07] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.4007
+F1: 0.0000
+Precision: 0.0000
+Recall: 0.0000
+Perplexity: 1.9007
+Validation Perplexity: 2.5797
+pass@1 (dataset): 0.0000
+model: model_LSTM_exp2
+model: model_minLSTM_exp2
+model: model_LSTM_exp2
+model: model_minGRU_exp2
+model: model_minLSTM_exp2
