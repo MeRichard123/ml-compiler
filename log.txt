@@ -537,3 +537,16 @@ model: model_minLSTM_exp2
 model: model_LSTM_exp2
 model: model_minGRU_exp2
 model: model_minLSTM_exp2
+model: model_minGRU_exp2
+
+
+[model_minGRU_exp2 - 2025-05-05 - 13:01:01] Final Metrics:
+
+Exact Match: 0.0000
+Sentence Similarity: 0.5673
+F1: 0.0057
+Precision: 0.0072
+Recall: 0.0051
+Perplexity: 12.0009
+Validation Perplexity: 8.2686
+pass@1 (dataset): 0.0000

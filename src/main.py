@@ -52,16 +52,15 @@ def main_LPOCV():
     vocab = dataset.build_vocab()["vocab"]
     batch_size = min(64, len(dataset) // 10)
     MOE = {
-        "number_of_experts": 10,
-        "k": 3
+        "number_of_experts": 2,
     }
 
-    model = minGRU(50, batch_size, 500, len(vocab), device, MOE).to(device)
+    model =  minGRU(500, batch_size, 900, len(vocab), device, MOE, True).to(device)
 
     splits = dataset.lpocv_split(p = 10)
     all_metrics = []
 
-    for fold_idx, (train, test) in enumerate(splits):
+    for fold_idx, (train, test, val) in enumerate(splits):
         LOGGER(f"Training Fold {fold_idx + 1}/{len(splits)}")
 
         train_dataloader = DataLoader(
@@ -70,12 +69,19 @@ def main_LPOCV():
             collate_fn=collate_fn
         )
 
+        validation_dataloader = DataLoader(
+            val, 
+            batch_size=batch_size,
+            collate_fn=collate_fn
+        )
+
         LM = LanguageModel(model, len(vocab), device)
         LM.init_model(dataset)
-        LM.train_loop(train_dataloader, f"LPOCV_fold_{fold_idx + 1}")
+        perplexity, val_perplexity = LM.train_loop(train_dataloader, f"LPOCV_fold_{fold_idx + 1}", validation_dataloader, use_teacher_forcing=True)
+
 
         eval = Evaluator(test, LM)
-        metrics = eval.evaluate(log=False)
+        metrics = eval.evaluate(perplexity, log=False)
         all_metrics.append(metrics)
     
     avg_metrics = calculate_average_metrics(all_metrics)
@@ -338,7 +344,7 @@ def main():
         
         LM.init_model(code_dataset)
             
-        #perplexity, val_perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
+        perplexity, val_perplexity = LM.train_loop(train_dataloader, filename, validation_dataloader, use_teacher_forcing=True)
         
         
         LM.save_model(filename)
@@ -379,7 +385,7 @@ def main():
       
         eval = Evaluator(testset, LM_Test, k = 1)
         
-        if False:
+        if True:
             date = datetime.datetime.now().strftime("%Y-%m-%d - %H:%M:%S")
             fprintf(f"\n\n[{filename} - {date}] Final Metrics:\n")
             start = time.time()

@@ -267,15 +267,14 @@ def tokenizer(text, word2idx):
 
 if __name__ == "__main__":
     text = """
-print("Hello World!")
-
-<PROGRAM END>
-Hello World!
- <eos>
+    print("Hello World")
+    <PROGRAM END>
+    In the given set, the minimum is 2 and the maximum is 9
 """
     input_tokens, output_tokens, all_tokens = Tokeniser().tokenise_code(text)
     print("INPUT: \n")
     print(input_tokens)
-    
+
     print("\n\nOUTPUT: \n")
-    print(output_tokens)
+    for token in output_tokens:
+        print(token, end=" ")

@@ -83,16 +83,16 @@ class LanguageModel:
 
         hidden_states = torch.stack(hidden_states, dim=1)  # Shape: (batch_size, seq_length, hidden_size)
         # Apply attention mechanism
-        context, attention_scores = self.attention(hidden_states)
+        #context, attention_scores = self.attention(hidden_states)
 
         # Iterate over the target sequence
         for t in range(target_tensor.size(1)):
             # Generate the model's output for the current input
             output, hidden = self.model(current_input, hidden)
-            context_t = context[:, t, :].unsqueeze(1)
-            context_t = self.context_projection(context_t)  # Project context to match hidden size
-            output = self.model.fc(context_t)
-            output = self.model.softmax(output)
+            #context_t = context[:, t, :].unsqueeze(1)
+            #context_t = self.context_projection(context_t)  # Project context to match hidden size
+            #output = self.model.fc(context_t)
+            #output = self.model.softmax(output)
             output_seq.append(output)
 
             # Get the target word for the current timestep
@@ -143,16 +143,16 @@ class LanguageModel:
 
             hidden_states = torch.stack(hidden_states, dim=1)  # Shape: (batch_size, seq_length, hidden_size)
             # Apply attention mechanism
-            context, attention_scores = self.attention(hidden_states)
+            #context, attention_scores = self.attention(hidden_states)
 
             # Generate output sequence
             current_input = embedded_input[:, 0, :].unsqueeze(1)  # Start with first token
             for t in range(target.size(1)):
                 output, hidden = self.model(current_input, hidden)
-                context_t = context[:, t, :].unsqueeze(1)
-                context_t = self.context_projection(context_t)  # Project context to match hidden size
-                output = self.model.fc(context_t)
-                output = self.model.softmax(output)
+                #context_t = context[:, t, :].unsqueeze(1)
+                #context_t = self.context_projection(context_t)  # Project context to match hidden size
+                #output = self.model.fc(context_t)
+                #output = self.model.softmax(output)
                 target_word = target[:, t].to(self.device)
                 loss += self.criterion(output[:, -1, :], target_word)
 
@@ -269,12 +269,12 @@ class LanguageModel:
 
             while next_word != '<eos>' and generated_count < self.max_sample_length: 
                 output_probs = nn.functional.softmax(output[:, -1, :] / temperature, dim=1)
-                attention_weights = attention_scores[:, :, -1, -1].mean(dim=1)
-                attention_weights = torch.clamp(attention_weights, min=1e-10) + 1e-10
-                context_t = context[:, -1, :].unsqueeze(1)
-                context_t = self.context_projection(context_t)  # Project context to match hidden size
-                output = self.model.fc(context_t)
-                output_probs = output_probs * attention_weights.unsqueeze(1)  # Apply attention weights
+                #attention_weights = attention_scores[:, :, -1, -1].mean(dim=1)
+                #attention_weights = torch.clamp(attention_weights, min=1e-10) + 1e-10
+                #context_t = context[:, -1, :].unsqueeze(1)
+                #context_t = self.context_projection(context_t)  # Project context to match hidden size
+                #output = self.model.fc(context_t)
+                #output_probs = output_probs * attention_weights.unsqueeze(1)  # Apply attention weights
                 output_probs = output_probs / torch.sum(output_probs, dim=1, keepdim=True)
 
                 # Sample from full probability distribution
@@ -307,7 +307,7 @@ class LanguageModel:
                 embedded_input = self.embedding(input).to(self.device)
                 output, hidden = self.model(embedded_input, hidden)
                 hidden_states = torch.cat((hidden_states, output[:, -1, :].unsqueeze(1)), dim=1)
-                context, attention_scores = self.attention(hidden_states)
+                #context, attention_scores = self.attention(hidden_states)
 
         return output_text
     

@@ -151,8 +151,15 @@ class CodeDataset(IterableDataset):
     def lpocv_split(self, p = 10):
         splits = []
         for i in range(len(self.data) - p + 1):
-            test_file = [self.data[i:i+p]]
-            train_files = self.data[:i] + self.data[i+p:]
+            test_size, val_size = 0.15, 0.15
+
+            # Split the data into training and testing sets and validation sets
+            split_idx = int(len(self.data) * (1 - test_size))
+            val_idx = int(len(self.data) * (1 - test_size - val_size))
+            train_files = self.data[:val_idx] + self.data[val_idx + p:]
+            val_files = self.data[val_idx:split_idx]
+            test_file = self.data[val_idx:val_idx + p]
+            
 
             train_dataset = CodeDatasetSubset(
                 self.data_dir, 
@@ -166,8 +173,15 @@ class CodeDataset(IterableDataset):
                 self.tokenizer,
                 self.word2idx
                 )
+            
+            val_dataset = CodeDatasetSubset(
+                self.data_dir, 
+                val_files, 
+                self.tokenizer,
+                self.word2idx
+                )
 
-            splits.append((train_dataset, test_dataset))
+            splits.append((train_dataset, test_dataset, val_dataset))
         return splits
     
     def load_data(self):
