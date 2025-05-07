@@ -2,6 +2,20 @@
 
 Project Proposal: [here](./Proposal.pdf)
 
+
+## Installation
+
+1. Clone the repository
+```bash
+git clone https://github.com/MeRichard123/ml-compiler.git
+```
+2. Create and activate a Virtual environment
+3. Download and install PyTorch for GPU
+```bash
+pip3 install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu126
+```
+4. run `src/main.py`
+
 ## Model Performances
 ### Simple models, trained on only alice in the wonderland text
 | model | inference |
