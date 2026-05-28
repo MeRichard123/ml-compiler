@@ -1,0 +1,13 @@
+if false then
+   print("moss")
+else
+   print("Do it anyway")
+end
+
+<PROGRAM END>
+
+
+do file "test2.lua" end
+
+
+

@@ -1,0 +1,16 @@
+if true then
+   print("ignite")
+else
+   print("Stay curious")
+end
+
+<PROGRAM END>
+
+
+
+**Expected output**
+
+The expected output of the code is "ignite" because the if statement is true.
+
+
+

@@ -1,0 +1,15 @@
+function say_hello(person)
+    return "Hi, " .. person
+end
+print(say_hello("World"))
+
+<PROGRAM END>
+
+
+output:
+Hi, World
+
+Hello Lua!
+Hello Lua!
+Hello Lua!
+

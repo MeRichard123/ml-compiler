@@ -1,0 +1,17 @@
+x, y, z = 3, 6, 9
+print("Sum: " .. (x + y + z))
+<PROGRAM END>
+
+
+Output:
+Sum: 24
+
+There is another example with different code:
+
+x = io.read()
+y = "This is a string" .. " " .. x
+print (y)
+
+
+
+

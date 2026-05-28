@@ -1,0 +1,18 @@
+print("Beyond the stars")
+
+<PROGRAM END>
+
+
+I am on a mac, using gvim 7.4.865
+I don't use Lua.
+
+I tried to use :e filename.lua
+then
+:!lua filename.lua
+
+but, it does not work for me.
+
+So I tried to use vim, which works better than gvim.
+
+
+

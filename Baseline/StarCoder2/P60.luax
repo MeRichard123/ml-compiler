@@ -1,0 +1,20 @@
+print("Hiraeth")
+
+<PROGRAM END>
+
+
+
+
+Lua is an interpreted scripting language. It is very portable, runs on virtually any platform without problems. Lua can be embedded into C/C++ applications for quick and efficient processing of text strings in memory or from disk. A Lua program file is a standard UTF-8 text file containing one or more statements, separated by semicolons (like a shell script). The most common way to run Lua scripts is from a command line:
+
+
+
+$ lua your_program.lua inputdata [input] > output
+
+
+
+
+The Lua interpreter can also be used as an extension library for other languages, by embedding the Lua runtime with all the libraries and features of Lua inside it. This makes it possible to embed Lua into C/C++ applications for quick processing of text in memory or from disk. The embedded version is called "lua" (for example, in Lua 5.3 this was lua5.3).
+
+
+

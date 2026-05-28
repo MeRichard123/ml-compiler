@@ -1,0 +1,4 @@
+is_logged_in = true
+if is_logged_in then
+    print("Welcome, user!")
+end

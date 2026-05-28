@@ -1,0 +1,2 @@
+table_example = {1, 2, 3, 4, 5}
+print("First element: " .. table_example[1])

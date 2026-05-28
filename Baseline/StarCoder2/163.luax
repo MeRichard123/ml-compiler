@@ -1,0 +1,9 @@
+x, y = 7, 14
+print("x * y = " .. (x * y))
+<PROGRAM END>
+
+
+What do you think about it?
+
+
+

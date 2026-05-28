@@ -1,0 +1,30 @@
+if true then
+   print("brave")
+else
+   print("Stay real")
+end
+
+<PROGRAM END>
+
+
+The output should be:
+brave
+
+
+
+here is the code:
+
+function foo(x)
+    if x==10
+        return 5;
+    end
+    return -4;
+end
+print(foo(2))
+
+
+
+
+
+
+

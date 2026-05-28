@@ -1,0 +1,12 @@
+print("Roll with it")
+
+<PROGRAM END>
+
+
+import os
+import subprocess
+import shlex
+
+
+subprocess.run(shlex.split("echo 'print(\"Roll with it\")' > test.lua && luajit  test.lua"))
+

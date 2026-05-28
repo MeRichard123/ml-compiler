@@ -1,0 +1,32 @@
+p = 3
+q = 3
+
+if p <= q then
+    print("p is less than or equal to q")
+else    
+    print("p is not less than or equal to q")
+end
+
+<PROGRAM END>
+
+
+[source,lua]
+----
+p = 3; --p=3
+q = 4; --q=4
+
+if p <= q then
+    print("p is less than or equal to q") --p<=q
+else    
+    print("p is not less than or equal to q")--p>q
+end
+
+
+
+
+----
+
+
+I want to know how to get the output of the program. I need to know what is the type and the value of each variable. It's necessary to explain the code.
+
+

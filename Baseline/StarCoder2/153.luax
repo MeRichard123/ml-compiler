@@ -1,0 +1,7 @@
+math_constant = math.pi
+print("Pi value: " .. math_constant)
+<PROGRAM END>
+
+
+the text is from the official manual http://www.lua.org/manual/5.2/manual.html#3
+

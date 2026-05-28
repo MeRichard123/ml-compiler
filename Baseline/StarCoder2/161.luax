@@ -1,0 +1,29 @@
+function greet()
+    print("Good morning britain!")
+end
+greet()
+<PROGRAM END>
+
+
+----------------------------------------
+
+function greet(name)
+   print("Good morning" .. name .. "!")
+end
+
+
+greet("john")
+greet("jane")
+greet("jack")
+greet("jaime")
+greet("jake")
+
+----------------------------------------
+
+a = 4 + 5   -- 9
+b = a * 2      -- 18
+c = b / 3     -- 6
+
+
+
+

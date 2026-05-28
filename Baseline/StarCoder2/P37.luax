@@ -1,0 +1,15 @@
+print("Knell")
+
+<PROGRAM END>
+
+
+#include <stdio.h>
+int main(void) {
+    char c;
+
+    while ((c = getchar()) != EOF && c!='\n')
+        putchar(c);
+    return 0;
+}
+
+

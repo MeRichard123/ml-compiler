@@ -1,0 +1,14 @@
+if false then
+   print("soft")
+else
+   print("Be bold")
+end
+
+<PROGRAM END>
+
+
+soft
+
+If there were any error, please say why.
+
+

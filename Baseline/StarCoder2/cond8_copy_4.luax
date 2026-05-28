@@ -1,0 +1,21 @@
+a = 1000
+
+if a >= 1 then
+    print("a is at least 1")
+end
+
+<PROGRAM END>
+
+
+
+lua test.lua
+lua: test.lua:3: 'then' expected (to close 'if' at line 2)
+stack traceback:
+        [C]: in function 'error'
+        test.lua:3: in main chunk
+        [C]: ?
+
+
+
+
+

@@ -1,0 +1,5 @@
+truth = not false
+
+if truth then
+    print("This is true")
+end

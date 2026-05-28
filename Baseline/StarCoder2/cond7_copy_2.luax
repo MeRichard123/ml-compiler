@@ -1,0 +1,31 @@
+x = 11
+if x > 10 then
+    print("x is greater than 10")
+end
+
+<PROGRAM END>
+
+
+>>>  x = 25
+
+>>>  if (x > 3) then  print( "Hello world" ) end
+
+ Hello world
+>>>  if true and false then print ("Hi") else print("Hi2"); end
+
+
+ Hi
+ 
+>>>   print("Hello,World!")
+Hello,World!
+>>>  print("hello,world!") -- comment
+>>>     print("hello,world!")
+    print("hello,world!")
+>>>   print("Hello,World!")
+>>>   print("Hello,World!")
+
+Hello,World!
+Hello,World!
+
+
+

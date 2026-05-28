@@ -1,0 +1,19 @@
+if false then
+   print("border")
+else
+   print("Almost there")
+end
+
+<PROGRAM END>
+
+
+You are free to use the input from your own terminal.  For example in Windows, you might open a PowerShell window with the command:  `powershell -noprofile`
+
+Your output should look like this (without the date and time, and without the number of seconds that the program took):
+
+
+border
+Almost there
+
+
+

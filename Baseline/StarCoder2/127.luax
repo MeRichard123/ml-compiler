@@ -1,0 +1,41 @@
+temperature = 5
+if temperature < 10 then
+    print("It's cold!")
+end
+<PROGRAM END>
+
+
+The output:
+
+It's cold!
+
+Here is some lua code, please give me the output and only the out of the program:
+
+age = tonumber(io.read()) if age < 18 then
+    print("You can't drive")
+    else
+        print("You can drive!")
+    end
+
+The input:
+
+20
+
+The output:
+
+You can drive!
+
+Here is some lua code, please give me the output and only the out of the program:
+
+age = tonumber(io.read()) if age < 18 then
+    print("You can't drive") else
+        print("You can drive!") end
+
+The input:
+
+20
+
+The output:
+
+You can drive!
+

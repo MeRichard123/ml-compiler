@@ -1,0 +1,16 @@
+print("Trepidation")
+
+<PROGRAM END>
+
+
+-- This is some comment 
+print("I'm in a function")
+
+function func1()
+    print(true)
+    print(false)
+end
+func1()
+
+
+

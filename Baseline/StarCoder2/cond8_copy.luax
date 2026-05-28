@@ -1,0 +1,13 @@
+a = 10
+
+if a >= 1 then
+    print("a is at least 1")
+end
+
+<PROGRAM END>
+
+
+a = 123456789.23
+
+
+

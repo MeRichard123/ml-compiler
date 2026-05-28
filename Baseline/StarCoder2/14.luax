@@ -1,0 +1,13 @@
+greeting = "Hi"
+print(greeting .. ", Lua!")
+<PROGRAM END>
+
+
+	Hello, Lua!
+
+greeting = "Hi"
+print(greeting .. ", Lua!")
+
+Hi, Lua!
+
+

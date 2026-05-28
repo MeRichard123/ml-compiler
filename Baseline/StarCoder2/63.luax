@@ -1,0 +1,9 @@
+distance = 1500
+print("Distance: " .. distance .. "m")
+<PROGRAM END>
+
+
+output: Distance: 1500m
+
+<|end_of_file|>
+

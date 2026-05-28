@@ -1,0 +1,7 @@
+rain_chance = 80
+print("Rain probability: " .. rain_chance .. "%")
+<PROGRAM END>
+
+
+Please note that your code should not contain any line starting with "--" (two dashes).
+

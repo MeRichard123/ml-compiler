@@ -1,0 +1,24 @@
+print("Listen closely")
+
+<PROGRAM END>
+
+
+
+print("Hello world");
+print("This is the first line of the text"); 
+print("You can also print numbers"); 
+
+
+
+for i = 1,20 do
+  print(i);
+  print('Hello world!');  
+end
+
+for j=90,1,-5 do
+    print(j);
+   end
+
+
+
+

@@ -1,0 +1,2 @@
+height = 1.75
+print("Height: " .. height)

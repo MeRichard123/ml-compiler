@@ -1,0 +1,20 @@
+for i = 12, 7, -1 do
+    print(i)
+end
+
+<PROGRAM END>
+
+
+----------------
+
+-- luacheck: ignore
+
+local a = 5;
+if true then
+  local a = 3 -- 3, 3, 3, 2, 1
+else
+  a = 4 -- 4, 4, 4, 3, 2, 1
+end
+
+
+

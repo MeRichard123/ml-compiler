@@ -1,0 +1,14 @@
+if false then
+   print("blade")
+else
+   print("Walk tall")
+end
+
+<PROGRAM END>
+
+
+The output of the code:
+
+blade
+
+

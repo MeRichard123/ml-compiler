@@ -1,0 +1,22 @@
+for i = 10, 15 do
+    print("i is: " .. i)
+end
+
+<PROGRAM END>
+
+
+function main()
+    print("hello world")
+    local i = 3 
+    local j = 4
+    local k = 2
+    
+    print(i * j /k * (j*5))
+    print((10 * j + i)/8 *7)
+    print(9/3)
+end
+
+main()
+
+
+

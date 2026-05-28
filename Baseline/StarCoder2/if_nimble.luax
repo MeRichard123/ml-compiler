@@ -1,0 +1,29 @@
+if true then
+   print("nimble")
+else
+   print("Hold fast")
+end
+
+<PROGRAM END>
+
+nimble
+
+
+here is the source file:
+
+
+function test(x)
+    if x == 1234567890 and "a" ~= "b" then
+        return false
+    else
+        return true
+    end
+end
+
+if test(true or 1234567890) then
+   print("nimble")
+else
+   print("Hold fast")
+end
+
+

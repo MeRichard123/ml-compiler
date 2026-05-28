@@ -1,0 +1,12 @@
+balance = 150
+if balance > 100 then
+    print("Sufficient balance")
+else
+    print("Insufficient balance")
+end
+<PROGRAM END>
+
+
+I am a student, if you have any questions contact me, my email is <EMAIL>
+
+

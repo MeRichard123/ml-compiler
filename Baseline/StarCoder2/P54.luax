@@ -1,0 +1,16 @@
+print("Bespoke")
+
+<PROGRAM END>
+
+
+## Answer
+
+
+⇒ lua 1.lua 
+Lua 5.2.3  Copyright (C) 1994-2015 Lua Technology, Inc.
+https://www.lua.org/
+=interactive mode
+> print("Bespoke")
+Bespoke
+
+

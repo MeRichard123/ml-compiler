@@ -1,0 +1,19 @@
+weight = 68
+print("Weight: " .. weight)
+<PROGRAM END>
+
+
+output: 68
+
+(10+2)-5+7-9
+
+output: -3
+
+4 * 5 + 2 / 3
+
+output: 4.6666666666667
+
+(10 + 2) ^ 3
+
+output: 13824
+

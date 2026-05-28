@@ -1,0 +1,13 @@
+print(tonumber("  42  "))
+<PROGRAM END>
+
+
+lua
+return  nil
+
+
+
+lua
+return 1732920851
+
+

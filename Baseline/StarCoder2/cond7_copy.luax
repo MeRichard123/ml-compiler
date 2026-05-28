@@ -1,0 +1,17 @@
+x = 25
+if x > 10 then
+    print("x is greater than 10")
+end
+
+<PROGRAM END>
+
+
+---
+
+x = 34; if ( (not ( x > 10 )) or (( x == 3 ) and ( x ~= nil ))) then
+print("x is not greater than 25, and x ~=nil") end
+
+
+
+
+

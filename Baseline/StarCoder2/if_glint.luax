@@ -1,0 +1,16 @@
+if true then
+   print("glint")
+else
+   print("Find your fire")
+end
+
+<PROGRAM END>
+
+
+Output:
+
+glint
+
+<|end_of_program|><|end_of_file|>
+
+

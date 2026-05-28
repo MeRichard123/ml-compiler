@@ -1,0 +1,21 @@
+print("Kaleidoscope")
+
+<PROGRAM END>
+
+
+<|end_of_input|>
+
+[output]
+
+<|end_of_output|>
+
+[program]
+
+function test()
+
+end
+
+test()
+
+<|end_of_program|>
+

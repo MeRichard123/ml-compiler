@@ -1,0 +1,17 @@
+city = "London"
+print("City: " .. city)
+<PROGRAM END>
+
+
+---
+
+- [ ] Create a function `say_hello` that says hello. You are not allowed to use the string "Hello" as part of your code.
+
+
+- [x] Create another function `greet` that receives a name and greetst it: "Hello, <name>!". Do not create this function anywhere in your code.
+
+- [ ] Call both functions.
+
+- [x] Try to call the `greet` function with a string as argument.
+
+

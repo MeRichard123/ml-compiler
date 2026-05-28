@@ -1,0 +1,11 @@
+print("No regrets")
+
+<PROGRAM END>
+
+
+The result will be:
+
+The following error was encountered:
+	Lua Error	1	main		no_regrets		/home/frog/code/test/test.lua	19		attempt to call global 'print' (a nil value)
+
+

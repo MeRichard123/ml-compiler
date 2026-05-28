@@ -1,0 +1,6 @@
+temperature = 30
+if temperature > 25 then
+    print("It's warm today")
+else
+    print("It's cool today")
+end

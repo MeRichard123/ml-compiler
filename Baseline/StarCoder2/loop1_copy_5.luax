@@ -1,0 +1,18 @@
+for i = 10, 15 do
+    print(i)
+end
+
+<PROGRAM END>
+
+
+output:
+
+10
+11
+12
+13
+14
+15
+
+
+

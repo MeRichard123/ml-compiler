@@ -1,0 +1,20 @@
+function square(x)
+    local result = x * x
+    return result
+end
+print(square(4))
+
+<PROGRAM END>
+
+
+function square(x)
+    return x * x <|>
+
+function square(x)
+    return 2 <|>
+
+function square(x)
+    return 3.141592653589793 <|>
+
+
+

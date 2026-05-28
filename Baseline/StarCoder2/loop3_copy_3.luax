@@ -1,0 +1,12 @@
+i = 2
+while i <= 6 do
+    print(i)
+    i = i + 1
+end
+
+<PROGRAM END>
+
+
+-- line 4: 5
+-- line 7: 3.5
+

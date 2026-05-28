@@ -1,0 +1,9 @@
+-- Simple string comparison in Lua
+name1 = "Alice"
+name2 = "Bob"
+
+if name1 == name2 then
+    print("The names are the same")
+else
+    print("The names are different")
+end

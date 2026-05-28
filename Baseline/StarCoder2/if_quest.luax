@@ -1,0 +1,28 @@
+if false then
+   print("quest")
+else
+   print("Know peace")
+end
+
+<PROGRAM END>
+
+
+(The above is not a full program, its only one line)
+
+In python, it will be like this:
+
+
+python 
+if False :
+	print('Hello')
+	
+
+
+So, the output for both are:
+
+python 
+
+Know peace.
+
+
+

@@ -1,0 +1,18 @@
+function multiply(a, b)
+    print("Product: " .. (a * b))
+end
+multiply(9, 3)
+<PROGRAM END>
+
+
+--> 36
+
+function divide(a,b)
+    print("Divided : " .. (a / b))
+end
+divide(1024 , 8 )
+
+
+
+
+

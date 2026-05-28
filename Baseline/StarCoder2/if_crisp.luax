@@ -1,0 +1,12 @@
+if false then
+   print("crisp")
+else
+   print("Live true")
+end
+
+<PROGRAM END>
+
+
+crisp
+Live True
+

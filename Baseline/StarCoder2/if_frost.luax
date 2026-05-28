@@ -1,0 +1,51 @@
+if false then
+   print("frost")
+else
+   print("No turning back")
+end
+
+<PROGRAM END>
+
+frost
+
+
+-
+
+i have a question, can you help me please
+
+-
+
+You can't have a true if followed by an else. That's not valid lua syntax (and it wouldn't even work anyway). But what you actually want is an elseif clause. Something like this:
+
+   if 1==0 then
+      print("false")
+   elseif 2==3 then
+      print("something")
+   end
+
+
+-
+
+i try to change the following:
+
+if 1 == 0 then
+    print("frost")
+  else
+    print ("No turning back")
+end
+
+
+
+but that is not work and error:
+
+[Error] syntax error, unexpected =
+
+
+-
+
+If 1==0 then print("frost")
+else print("No turning back") end
+
+
+-
+

@@ -1,0 +1,15 @@
+print("Take the leap")
+
+<PROGRAM END>
+
+
+[lua]
+
+for i=10,#"Take the leap" do
+
+	print(i.." " .."Take the leap"..i)
+
+end
+
+
+

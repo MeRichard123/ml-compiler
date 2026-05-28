@@ -1,0 +1,3 @@
+numbers = {10, 20, 30}
+sum = numbers[1] + numbers[2] + numbers[3]
+print("Sum: " .. sum)

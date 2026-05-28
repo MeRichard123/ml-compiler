@@ -1,0 +1,9 @@
+print("Stay light")
+
+<PROGRAM END>
+
+
+I tried to translate a "normal" 4bit character but in my case, the character will always be 30, so that is not possible.<issue_comment>username_1: It's not really feasible for me to try and compile a Lua program for an embedded platform. You'll need to get a Lua interpreter that runs on your platform - you can compile a stand-alone interpreter from [Lua's official page](https://www.lua.org/start.html), or you could use one that has been ported already, such as the [LÖVE platform](https://love2d.org/). The latter will be more than 10 times faster on an embedded system.
+Upvotes: 3 <issue_comment>username_2: It may be a good idea to try and compile a lua interpreter for embedded systems, that way you won't have to worry about all the various Lua issues. If you can't find one I could try and create one but it would take some time. For example, my first attempt was a 6809 based 512 byte interpreter.
+Upvotes: 2 
+

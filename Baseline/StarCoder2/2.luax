@@ -1,0 +1,6 @@
+b = "Hello, Lua!"
+print(b)
+<PROGRAM END>
+
+
+

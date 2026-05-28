@@ -1,0 +1,12 @@
+function add(a, b)
+    local total = a + b
+    return total
+end
+result = add(7, 8)
+print(result)
+
+<PROGRAM END>
+
+
+I need only the number: 15
+

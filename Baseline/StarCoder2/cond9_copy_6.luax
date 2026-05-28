@@ -1,0 +1,17 @@
+b = 0
+
+if b <= 2 then
+    print("b is at most 2")
+end
+
+<PROGRAM END>
+
+
+b = -1345
+
+if b <= 2 then
+    print("b is at most 2")
+else
+    print(b)
+end
+

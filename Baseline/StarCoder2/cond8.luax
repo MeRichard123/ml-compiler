@@ -1,0 +1,14 @@
+a = 7
+
+if a >= 1 then
+    print("a is at least 1")
+end
+<PROGRAM END>
+
+
+Hello World!
+Hello World!
+Hello World!
+
+
+

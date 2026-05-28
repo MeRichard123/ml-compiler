@@ -1,0 +1,18 @@
+function greeting(name)
+    print("Hello, " .. name .. "!")
+end
+greeting("Alice")
+<PROGRAM END>
+
+
+--[=[
+
+function greeting(name)
+    print("Hello, " .. name .. "!")
+end
+greet("Alice")
+
+[end]=]
+
+Hello, Alice!
+

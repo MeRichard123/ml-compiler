@@ -1,0 +1,30 @@
+a = 1
+repeat
+    print(a)
+    a = a + 2
+until a == 5
+
+<PROGRAM END>
+
+
+You will see that this:
+
+a = 1
+until a == 5
+print(a) -- prints 3
+print(a) -- prints 4
+
+
+and this:
+
+a = 10
+while a > 0 do
+    print(a)
+    a = a - 2
+end
+
+
+
+
+
+

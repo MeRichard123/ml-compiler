@@ -1,0 +1,16 @@
+print("Wanderlust")
+
+<PROGRAM END>
+
+
+## Description
+
+The input to the program is a single word.  This word is interpreted as a
+single string.  The output of the program is that same single string, with
+the first and last letters swapped in place.
+
+
+
+
+
+

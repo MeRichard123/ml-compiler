@@ -1,0 +1,12 @@
+a = 5
+b = 6
+
+function compare(a, b)
+    if a < b then
+        return "a is less than b"
+    else
+        return "a is not less than b"
+    end
+end
+
+print(compare(a, b))

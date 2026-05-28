@@ -1,0 +1,12 @@
+if false then
+   print("journey")
+else
+   print("Live true")
+end
+
+<PROGRAM END>
+
+
+The 1st line of output is "journey".
+The 2nd line of output is "Live true"
+

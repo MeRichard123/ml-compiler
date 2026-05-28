@@ -1,0 +1,15 @@
+if false then
+   print("gleam")
+else
+   print("Watch closely")
+end
+
+<PROGRAM END>
+
+
+The result should be:
+
+gleam
+
+If you are unable to understand the task, do not worry. You can try to find the solution on Google. If you need help, you may ask your tutor or consult your friends on Telegram.
+

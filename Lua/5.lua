@@ -1,0 +1,2 @@
+e = nil
+print(e)

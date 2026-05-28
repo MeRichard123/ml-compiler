@@ -1,0 +1,12 @@
+print("Let it be")
+
+<PROGRAM END>
+
+
+Lua: 5.3.1
+
+The print is not defined in Lua 5.2
+
+The print is not defined in Lua 5.0
+
+

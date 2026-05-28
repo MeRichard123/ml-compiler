@@ -1,0 +1,27 @@
+-- String concatenation in Lua
+local firstName = "John"
+local lastName = "Doe"
+local fullName = firstName .. " " .. lastName
+
+print(fullName)  -- Output: John Doe
+
+<PROGRAM END>
+
+
+What is the result of the following code?
+
+function f1()
+  return 'f1'
+end
+
+function f2()
+  return 'f2'
+end
+
+print(f1())  -- f1
+
+print(f2())  -- f2
+
+
+ 
+

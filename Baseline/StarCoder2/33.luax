@@ -1,0 +1,18 @@
+for num = 2, 10, 2 do
+    print("Even number: " .. num)
+end
+<PROGRAM END>
+
+
+
+for num = 2, 5 do
+    print("Even number: " .. num)
+end
+
+
+
+
+Even number: 2
+Even number: 4
+
+

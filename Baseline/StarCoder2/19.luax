@@ -1,0 +1,8 @@
+user_age = 25
+print("User age: " .. user_age)
+<PROGRAM END>
+
+
+The program prints "User age: 13" on the screen.
+
+

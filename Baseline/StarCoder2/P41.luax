@@ -1,0 +1,31 @@
+print("Omniscient")
+
+<PROGRAM END>
+
+
+lua
+function say(s)
+	print(s .. " says: ")
+end
+
+say("The Eagle")
+
+print("The Eagle" .. 100 )
+
+
+print( "Eagle" .. 100)
+
+
+
+print( "The Eagle " .. 100)
+
+
+
+
+end
+
+
+
+
+
+

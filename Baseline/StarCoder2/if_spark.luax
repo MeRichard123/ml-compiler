@@ -1,0 +1,27 @@
+if false then
+   print("spark")
+else
+   print("Stay gold")
+end
+
+<PROGRAM END>
+
+
+If this file is not a lua file, output:
+
+error: [string "if false then
+   print( "spark" )
+else
+   print( "Stay gold" )
+end
+[C]: in main chunk
+    [string "if false then
+   print( "spark" )
+else
+   print( "Stay gold" )
+end
+
+[C]: ?
+
+
+

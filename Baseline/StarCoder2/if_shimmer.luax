@@ -1,0 +1,14 @@
+if false then
+   print("shimmer")
+else
+   print("Leave a mark")
+end
+
+<PROGRAM END>
+
+
+-1073741825
+
+-2.14748365E9
+
+

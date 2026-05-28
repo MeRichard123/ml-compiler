@@ -1,0 +1,6 @@
+-- Basic math operations in Lua
+local a = 10
+local b = 3
+local result = a % b  -- Modulo operation (remainder)
+
+print("The remainder of " .. a .. " divided by " .. b .. " is " .. result)  -- Output: The remainder of 10 divided by 3 is 1

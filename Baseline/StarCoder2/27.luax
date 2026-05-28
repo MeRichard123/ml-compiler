@@ -1,0 +1,12 @@
+char = "A"
+if char == "A" then
+    print("Letter A detected")
+end
+<PROGRAM END>
+
+
+===================
+
+Lua 5.2.4  Copyright (C) 1994-2018 Lua.org, PUC-Rio
+>
+

@@ -1,0 +1,13 @@
+if true then
+   print("dive")
+else
+   print("Run free")
+end
+
+<PROGRAM END>
+
+
+dive
+
+</end_of_text>
+

@@ -1,0 +1,7 @@
+temperature = 36.6
+print("Temperature: " .. temperature)
+<PROGRAM END>
+
+
+Temperature: 36.599998474121
+

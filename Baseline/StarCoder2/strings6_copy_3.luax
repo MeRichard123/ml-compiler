@@ -1,0 +1,9 @@
+print(tonumber("-56"))
+<PROGRAM END>
+
+
+print(string.char(-42))
+
+
+
+

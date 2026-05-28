@@ -1,0 +1,8 @@
+sqrt_value = math.sqrt(25)
+print("Square root of 25: " .. sqrt_value)
+<PROGRAM END>
+
+
+4.1600997323899e-001
+Square root of 25: 5
+

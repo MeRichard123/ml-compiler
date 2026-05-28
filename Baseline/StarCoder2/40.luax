@@ -1,0 +1,13 @@
+function greet()
+    print("Hello, World!")
+end
+greet()
+<PROGRAM END>
+
+
+the output is:
+
+Hello, World!
+
+
+

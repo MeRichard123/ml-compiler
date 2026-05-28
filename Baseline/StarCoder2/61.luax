@@ -1,0 +1,11 @@
+year = 2025
+print("Year: " .. year)
+<PROGRAM END>
+
+
+What will be the output?
+
+a. Year: 2030
+b. Year: 2029
+c. Year: 2014
+

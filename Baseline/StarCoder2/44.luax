@@ -1,0 +1,14 @@
+function check_temperature(temp)
+    if temp > 25 then
+        print("Hot")
+    else
+        print("Cold")
+    end
+end
+check_temperature(30)
+<PROGRAM END>
+
+
+[lua]: https://github.com/LuaJIT/LuaJIT/wiki/Manual-5.1
+
+

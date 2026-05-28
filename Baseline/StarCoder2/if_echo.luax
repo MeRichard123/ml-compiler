@@ -1,0 +1,15 @@
+if true then
+   print("echo")
+else
+   print("Time flies")
+end
+
+<PROGRAM END>
+
+
+the out of the program is:
+
+echo
+
+
+

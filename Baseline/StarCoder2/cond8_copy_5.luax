@@ -1,0 +1,28 @@
+a = 50
+
+if a >= 1 then
+    print("a is at least 1")
+end
+
+<PROGRAM END>
+
+
+a = 3.259874e-6
+
+if a == 0 or 1 / a > 1 and a < 0 then
+    print("the number is not equal to zero")
+
+    print("the number is 1/a greater than one and less than zero")
+elseif a ~= 0 and a <= 5.9e-3 * .4 + 6^2 - 7 then
+    print("this condition is true")
+else
+    print("this is the end of the program")
+
+    print(a, 1 / a)
+end
+
+
+
+
+
+

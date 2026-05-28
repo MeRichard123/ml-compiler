@@ -1,0 +1,18 @@
+greeting = "Hi"
+name = "Lua"
+print(greeting .. ", " .. name)
+
+<PROGRAM END>
+
+
+
+Lua code:
+
+local a = "Hello"
+b = "World"
+print(a .. b)
+
+print(a .. 3.14159265)
+
+ 
+

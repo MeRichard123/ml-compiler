@@ -1,0 +1,14 @@
+function square(n)
+    print("Square: " .. (n * n))
+end
+square(4)
+<PROGRAM END>
+
+
+function square(n)
+    print("Square: " .. (n * n))
+end
+square(4)
+
+
+

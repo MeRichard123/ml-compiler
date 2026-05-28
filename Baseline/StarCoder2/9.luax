@@ -1,0 +1,10 @@
+is_sunny = false
+print(is_sunny)
+<PROGRAM END>
+
+
+
+You have to return the output of the print function.
+
+If you want, you can print something else in the main.lua file
+

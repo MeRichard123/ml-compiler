@@ -1,0 +1,22 @@
+if false then
+   print("soothe")
+else
+   print("Dream big")
+end
+
+<PROGRAM END>
+
+
+
+
+The problem is that I get a lot of errors and I am not able to find any good one. 
+I have the following code to convert a lua file into xml: 
+
+lua
+    file = io.open("inputfile", "r") 
+    text = file:read("*a")
+    file:close()
+
+    -- open and read file
+    text = text .. '
+

@@ -1,0 +1,14 @@
+truth = true and true
+
+if truth then
+    print("This is true")
+end
+
+<PROGRAM END>
+
+
+true
+This is true
+
+If you want to learn more about lua, try to follow this link: https://www.lua.org/pil/21.3.html
+

@@ -1,0 +1,4 @@
+grade = "A"
+if grade == "A" or grade == "B" then
+    print("Good job!")
+end

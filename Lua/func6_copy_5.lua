@@ -1,0 +1,10 @@
+function factorial(n)
+    local result = 1
+    local cache = {}
+    for i = 1, n do
+        cache[i] = result
+        result = result * i
+    end
+    return result
+end
+print(factorial(5))

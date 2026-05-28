@@ -1,0 +1,10 @@
+x = 3
+while x > 0 do
+    print("x = " .. x)
+    x = x - 1
+end
+<PROGRAM END>
+
+
+print("x = " .. x)
+

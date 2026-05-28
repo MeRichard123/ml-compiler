@@ -1,0 +1,20 @@
+a = 3
+repeat
+    print(a)
+    a = a + 1
+until a == 7
+
+<PROGRAM END>
+
+
+a = 4
+repeat
+   print(a)
+   a = a + 1
+   if (a == 6 and 9) then
+      break; -- or return
+   end
+until false
+
+
+

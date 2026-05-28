@@ -1,0 +1,15 @@
+if true then
+   print("hush")
+else
+   print("Stay awake")
+end
+
+<PROGRAM END>
+
+
+The program will print out:
+
+Stay Awake
+
+
+

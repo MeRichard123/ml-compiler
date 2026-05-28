@@ -1,0 +1,7 @@
+-- Type conversion in Lua
+local numberValue = 42
+local stringValue = tostring(numberValue)  -- Convert number to string
+local boolValue = true
+local boolAsString = tostring(boolValue)   -- Convert boolean to string
+
+print("The string representation of " .. numberValue .. " is " .. stringValue .. " and its type is " .. type(stringValue))

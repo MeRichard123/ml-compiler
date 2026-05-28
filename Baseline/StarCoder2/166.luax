@@ -1,0 +1,10 @@
+score = 92
+if score > 90 then
+    print("Excellent score!")
+end
+<PROGRAM END>
+
+
+Score = 136873
+
+
